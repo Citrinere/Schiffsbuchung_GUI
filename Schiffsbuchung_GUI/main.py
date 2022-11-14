@@ -6,6 +6,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget
 from PyQt5.QtGui import QIcon
 
+
 app = QApplication(sys.argv)
 
 w = QWidget()   #Fenster aufbauen != Fenster anzeigen
