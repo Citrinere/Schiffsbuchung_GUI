@@ -14,7 +14,7 @@ print(reisenListe)
 reisenListe.append(excelDateien)
 print(reisenListe)
 print(reisenListe[-1])
-
+print()
 # ==================================================================================================================
 
 # Excel Datei einlesen
@@ -31,27 +31,14 @@ DATA_FILE = "../Aufgabe 2 Reiseportal/Schiffreisen.xlsx"
 df = pd.read_excel(DATA_FILE)
 
 # print the first five rows
-print(df.head(20))
+print(df.head(21))
+df_cleaned = df.dropna(how='all')
 
-#df_cleaned = df.dropna(how='all')
-#df_years = df_cleaned['Jahr'].astype(np.uint16)
 
-#x = df_years.values
-#y = df_cleaned['Arbeitslose'].values  # no value for 1993
+testValue = []
+testValue.append(df.head(21))
 
-#fig, ax = plt.subplots()
-
-#plt.title("Arbeitslose in Kiel\n(1989 - 2016)", size="x-large")
-#plt.ylabel("Arbeitslose", size="x-large")
-#plt.xlabel("Jahr", size="x-large")
-
-#plt.plot(y, "r*-", markersize=6, linewidth=1, color='r')
-
-#ax.set_xticks(range(len(x)))
-#ax.set_xticklabels(x, rotation='vertical')
-
-plt.show()
-print()
+print(testValue)
 print("End of Excel reading with panda")
 print()
 
@@ -88,7 +75,7 @@ print("Ausgabe von einer einzelnen Zelle:\n""Der Wert von F15 lautet: {0}".forma
 cell_values = []                                    # Liste zum Speichern der Werte jeder einzelnen Excel Zelle
 
 # Original Schleife !!! Nicht Verändern !!!
-#for row_of_cells in excel_sheet['A2':'H22']:
+#for row_of_cells in excel_sheet['A1':'H22']:
  #   for cell in row_of_cells:
   #      cell_values.append(cell.value)
 
@@ -105,9 +92,27 @@ for row_of_cells in excel_sheet['A1':'H22']:        # For-Schleife durchläuft a
 
 #print(cell_values)
 print("Komplette Excel Liste:", excelList)
+counter = 0
+while counter < excelList.__len__():
+    print(excelList[counter])
+    counter = counter + 1
+    #end while
 print("Beispiel Ausgabe von Datensatz 5", excelList[5])
 print("Beispiel Ausgabe von Datensatz 2 & 3 (slicing)", excelList[2:4])
 print()
 print("End of Excel reading with openpyxl")
 print()
+#meerFilter = input("Geben Sie ein Reisegebiet an (Ostsee/Nordsee/Mittelmeer): ")
+#listValues = ["Ostsee"]
+#listValues.append()
+
+
+#print("Hier Ihre möglichen Reisen gefiltert nach Ihrem Reisegebiet:")
+counter = 0
+#while counter < listValues.__len__():
+ #   print(listValues[counter])
+  #  counter = counter + 1
+    #end while
+counter = 0
+
 # ==================================================================================================================
