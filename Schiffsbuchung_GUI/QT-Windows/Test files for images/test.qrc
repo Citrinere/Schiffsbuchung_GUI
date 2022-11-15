@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="newPrefix">
+    <file>kreuzfahrtschiff-logo_74218-64.jpg</file>
+  </qresource>
+</RCC>
