@@ -1,98 +1,71 @@
-# Datei zur Programmierung der Filter Funktion
-# To-do-List
-# 1. Verkettete Liste erstellen
-# 2. Liste nach Elementen Filtern können
-# 3. Liste mit Test Werten ausgeben (Terminal)
-# 4. Excel Datei einlesen
-# 5. Liste mit den Werten aus der Excel Datei Füllen
-# 6. Filter austesten
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QTableView, QMainWindow, QVBoxLayout, QLineEdit
+from PyQt5.QtCore import Qt, QSortFilterProxyModel, QAbstractTableModel
 
-# 1 Klassen für Verkettete Liste
 
-class Node:
-
+class TableModel(QAbstractTableModel):
     def __init__(self, data):
-        ## data of the node
-        self.data = data
+        super().__init__()
+        self._data = data
 
-        ## next pointer
-        self.next = None
+    def data(self, index, role):
+        if role == Qt.DisplayRole:
+            # See below for the nested-list data structure.
+            # .row() indexes into the outer list,
+            # .column() indexes into the sub-list
+            return self._data[index.row()][index.column()]
+
+    def rowCount(self, index):
+        # The length of the outer list.
+        return len(self._data)
+
+    def columnCount(self, index):
+        # The following takes the first sub-list, and returns
+        # the length (only works if all rows are an equal length)
+        return len(self._data[0])
 
 
-class LinkedList:
-
+class MainWindow(QMainWindow):
     def __init__(self):
-        ## initializing the head with None
-        self.head = None
+        super().__init__()
 
-    def insert(self, new_node):
-        ## check whether the head is empty or not
-        if self.head:
-            ## getting the last node
-            last_node = self.head
-            while last_node.next != None:
-                last_node = last_node.next
+        self.table = QTableView()
 
-            ## assigning the new node to the next pointer of last node
-            last_node.next = new_node
+        data = [
+            [4, 9, 2],
+            [1, "hello", 0],
+            [3, 5, 0],
+            [3, 3, "what"],
+            ["this", 8, 9],
+        ]
 
-        else:
-            ## head is empty
-            ## assigning the node to head
-            self.head = new_node
+        self.model = TableModel(data)
+        self.proxy_model = QSortFilterProxyModel()
+        self.proxy_model.setFilterKeyColumn(-1) # Search all columns.
+        self.proxy_model.setSourceModel(self.model)
 
-    def display(self):
-        ## variable for iteration
-        temp_node = self.head
+        self.proxy_model.sort(0, Qt.AscendingOrder)
 
-        ## iterating until we reach the end of the linked list
-        while temp_node != None:
-            ## printing the node data
-            print(temp_node.data, end='->')
+        self.table.setModel(self.proxy_model)
 
-            ## moving to the next node
-            temp_node = temp_node.next
+        self.searchbar = QLineEdit()
 
-        print('Null')
+        # You can choose the type of search by connecting to a different slot here.
+        # see https://doc.qt.io/qt-5/qsortfilterproxymodel.html#public-slots
+        self.searchbar.textChanged.connect(self.proxy_model.setFilterFixedString)
 
+        layout = QVBoxLayout()
 
-if __name__ == '__main__':
-    ## instantiating the linked list
-    linked_list = LinkedList()
+        layout.addWidget(self.searchbar)
+        layout.addWidget(self.table)
 
-    ## inserting the data into the linked list
-    linked_list.insert(Node(1))
-    linked_list.insert(Node(2))
-    linked_list.insert(Node(3))
-    linked_list.insert(Node(4))
-    linked_list.insert(Node(5))
-    linked_list.insert(Node(6))
-    linked_list.insert(Node(7))
+        container = QWidget()
+        container.setLayout(layout)
 
-    ## printing the linked list
-    linked_list.display()
+        self.setCentralWidget(container)
 
 
-# 2 Test Liste Flitern
-def Testfilter():
-    print("Hier kommt ein Testfilter")
-    return 0
-Testfilter()
-
-# 3 Ausgabe
-
-
-# 4 Excel Datei einlesen
-read_excel(../Aufgabe 2 Reiseportal/Schiffreisen.xlsx) #excel datei lesen
-
-
-# 5 Liste mit Excel füllen
-
-
-# 6 Filtern
-def Filter():
-    print("Hier kommt der richtige Filter")
-    return 0
-
-Filter()
-
+app = QApplication(sys.argv)
+window = MainWindow()
+window.show()
+app.exec_()
