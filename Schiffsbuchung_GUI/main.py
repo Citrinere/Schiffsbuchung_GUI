@@ -10,8 +10,8 @@ import sys
 import pandas   #"pandas" und "openpyxl" installieren
 
 #Dateipfade
-IMGPATH = r'C:\Users\Alex Laptop\Desktop\GUI - Schiffsreisen\Aufgabe 2 Reiseportal\Schiffstypen' #Schiffstypen Bilder
-TABLEPATH = r"C:\Users\Alex Laptop\Desktop\GUI - Schiffsreisen\Aufgabe 2 Reiseportal\Schiffreisen.xlsx" #Excel Tabelle
+IMGPATH = r'Aufgabe 2 Reiseportal\Schiffstypen' #Schiffstypen Bilder C:\Users\Alex Laptop\Desktop\GUI - Schiffsreisen\
+TABLEPATH = r"Aufgabe 2 Reiseportal\Schiffreisen.xlsx" #Excel Tabelle C:\Users\Alex Laptop\Desktop\GUI - Schiffsreisen\
 
 #Funktion um Exceltabelle in Liste umzuwandeln
 def getTable():
@@ -90,8 +90,8 @@ def main(args):
         print("Ausgabe table.item(): " + str(table.item(x,1)))      #Debug/Testprint
         checkItem = table.item(x,1)
         print("Ausgabe des Textes in table.item(): " + checkItem.text())    #Debug/Testprint
-        if checkItem.text() == "Ostsee":
-            table.hideRow(x)
+        #if checkItem.text() == "Ostsee":
+         #   table.hideRow(x)
 
     table.show()
     sys.exit(app.exec_())
