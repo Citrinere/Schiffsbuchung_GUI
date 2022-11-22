@@ -90,8 +90,8 @@ def main(args):
         print("Ausgabe table.item(): " + str(table.item(x,1)))      #Debug/Testprint
         checkItem = table.item(x,1)
         print("Ausgabe des Textes in table.item(): " + checkItem.text())    #Debug/Testprint
-        #if checkItem.text() == "Ostsee":
-         #   table.hideRow(x)
+        if checkItem.text() == "Ostsee":
+            table.hideRow(x)
 
     table.show()
     sys.exit(app.exec_())
