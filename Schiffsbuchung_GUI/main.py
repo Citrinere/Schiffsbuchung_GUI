@@ -10,8 +10,8 @@ import sys
 import pandas   #"pandas" und "openpyxl" installieren
 
 #Dateipfade
-IMGPATH = r'Aufgabe 2 Reiseportal\Schiffstypen' #Schiffstypen Bilder C:\Users\Alex Laptop\Desktop\GUI - Schiffsreisen\
-TABLEPATH = r"Aufgabe 2 Reiseportal\Schiffreisen.xlsx" #Excel Tabelle C:\Users\Alex Laptop\Desktop\GUI - Schiffsreisen\
+IMGPATH = r'Bilder\Schiffstypen' #Schiffstypen Bilder
+TABLEPATH = r"C:\Users\Alex Laptop\Desktop\GUI - Schiffsreisen\Aufgabe 2 Reiseportal\Schiffreisen.xlsx" #Excel Tabelle
 
 #Funktion um Exceltabelle in Liste umzuwandeln
 def getTable():
@@ -40,6 +40,19 @@ class ImageCruiseShip(QWidget):
         self.label.setPixmap(self.pixmap)
 
 """
+Filter
+"""
+class Filter(QVBoxLayout):
+    def __init__(self):
+        #super(Filter, self).__init__()
+        QVBoxLayout.__init__(self)
+        self.filterLayout = QVBoxLayout()
+        self.filterLayout.addWidget(QPushButton("PushButton"))
+        self.filterLayout.addWidget(QCheckBox("Checkbox"))
+
+        #self.setLayout(self.filterLayout)
+
+"""
 QTableWidget für die Tabelle
 https://pythonbasics.org/pyqt-table/
 https://doc.qt.io/qt-6/qtablewidget.html
@@ -54,7 +67,7 @@ class TableView(QTableWidget):
 
 
     def setData(self):  #
-        horHeaders = ["Reisenummer","Meerart","Übernachtungen","Besuchte Städte", "Schiffstyp", "Preise Innenkabine", "Preise Außenkabine", "Preise Balkonkabine"]  #Headerliste. Vielleicht aus Excel lesen?
+        horHeaders = ["Reisenummer", "Meerart", "Übernachtungen", "Besuchte Städte", "Schiffstyp", "Preise Innenkabine", "Preise Außenkabine", "Preise Balkonkabine"]  #Headerliste. Vielleicht aus Excel lesen?
 
         for row_number, row_data in enumerate(self.data):   #Schleife, die alle Tabellenelemente durchgeht
             for column_number, column_data in enumerate(row_data):
@@ -63,8 +76,9 @@ class TableView(QTableWidget):
                     item = self.getImageLabel(imagePath)
                     self.setCellWidget(row_number, column_number, item)
 
-                newitem = QTableWidgetItem(str(column_data))
-                self.setItem(row_number, column_number, newitem)
+                newItem = QTableWidgetItem(str(column_data))
+                self.setItem(row_number, column_number, newItem)
+                self.show()
 
         self.setHorizontalHeaderLabels(horHeaders)  #Header setzen
 
@@ -72,10 +86,94 @@ class TableView(QTableWidget):
         imageLabel = ImageCruiseShip(image)
         return imageLabel
 
+class Window(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setGeometry(300, 100, 1400, 700)
+        self.setWindowTitle("Schiffsbuchung")
+        self.setWindowIcon(QIcon("Schifficon.png"))
+
+        outerLayout = QVBoxLayout()     #Layout Anker für alle andern Layouts
+
+        """
+        self.filter = Filter()
+        filterLayout = QVBoxLayout()       #TopBar für Filter
+        filterLayout.addLayout(self.filter)
+        """
+
+        filterLayout = QGridLayout()
+
+        filterOceanLabel = QLabel()
+        filterOceanLabel.setText("Meeresart")
+        filterLayout.addWidget(filterOceanLabel, 0, 0)
+
+        oceanCheckbox1 = QCheckBox("Mittelmeer")
+        filterLayout.addWidget(oceanCheckbox1, 1, 0)
+
+        oceanCheckbox2 = QCheckBox("Ostsee")
+        oceanCheckbox2.setChecked(True)
+        oceanCheckbox2.stateChanged.connect(lambda:self.filterState(oceanCheckbox3))
+        filterLayout.addWidget(oceanCheckbox2, 2, 0)
+
+        oceanCheckbox3 = QCheckBox("Nordsee")
+        oceanCheckbox3.setChecked(True)
+        oceanCheckbox3.stateChanged.connect(lambda:self.filterState(oceanCheckbox3))
+        filterLayout.addWidget(oceanCheckbox3, 3, 0)
+
+        self.table_view = TableView(getTable(), len(getTable()), 8)
+        tableLayout = QVBoxLayout()     #Tabellen Layout
+        tableLayout.addWidget(self.table_view)
+
+        outerLayout.addLayout(filterLayout)    #UnterLayouts zum Main Layout hinzufügen
+        outerLayout.addLayout(tableLayout)
+        self.setLayout(outerLayout)
+
+
+        for x in range(len(getTable())):  # Row-Höhe festlegen
+            self.table_view.setRowHeight(x, 128)
+
+        self.table_view.setColumnWidth(4, 256)  # Schiffstypen größer machen für Bilder
+        # table.setColumnHidden(4, True)   #Schiffstypen ausblenden, später durch Button einblenden lassen
+        """
+        for x in range(25):  # Test um spezifische Reihen anhand von Keywords auszublenden
+            #print("Ausgabe table.item(): " + str(self.table_view.item(x, 1)))  # Debug/Testprint
+            checkItem = self.table_view.item(x, 1)
+            #print("Ausgabe des Textes in table.item(): " + checkItem.text())  # Debug/Testprint
+            if checkItem.text() == "Ostsee":
+                self.table_view.hideRow(x)
+        """
+
+    def filterState(self, button):
+        print("Check Filter State")
+        print(button.text)
+        if button.text() == "Ostsee":
+            print("Ostsee")
+            if button.isChecked() == True:
+                for x in range(25):  # Test um spezifische Reihen anhand von Keywords auszublenden
+                    # print("Ausgabe table.item(): " + str(self.table_view.item(x, 1)))  # Debug/Testprint
+                    checkItem = self.table_view.item(x, 1)
+                    # print("Ausgabe des Textes in table.item(): " + checkItem.text())  # Debug/Testprint
+                    if checkItem.text() == "Ostsee":
+                        self.table_view.showRow(x)
+            else:
+                for x in range(25):  # Test um spezifische Reihen anhand von Keywords auszublenden
+                    # print("Ausgabe table.item(): " + str(self.table_view.item(x, 1)))  # Debug/Testprint
+                    checkItem = self.table_view.item(x, 1)
+                    # print("Ausgabe des Textes in table.item(): " + checkItem.text())  # Debug/Testprint
+                    if checkItem.text() == "Ostsee":
+                        self.table_view.hideRow(x)
+"""
 def main(args):
     app = QApplication(args)
 
-    table = TableView(getTable(),len(getTable()),8)    #Tabellenfenster generieren
+    filter = QGridLayout()
+    filter.addWidget(QPushButton("Button at (0, 0)"), 0, 0)
+    filter.addWidget(QPushButton("Button at (0, 1)"), 0, 1)
+    filter.addWidget(QPushButton("Button Spans two Cols"), 1, 0, 1, 2)
+
+
+
+    table = TableView(getTable(), len(getTable()), 8)    #Tabellenfenster generieren
     table.setGeometry(300, 100, 1400, 700)  # (horizontale position, vertikale position, breite des Fensters, hoehe des Fensters)
     table.setWindowTitle("Schiffsbuchung")
     table.setWindowIcon(QIcon("Schifficon.png"))
@@ -84,18 +182,23 @@ def main(args):
         table.setRowHeight(x, 128)
 
     table.setColumnWidth(4, 256)    #Schiffstypen größer machen für Bilder
-    table.setColumnHidden(4,True)   #Schiffstypen ausblenden, später durch Button einblenden lassen
-
+    #table.setColumnHidden(4, True)   #Schiffstypen ausblenden, später durch Button einblenden lassen
+    
     for x in range(25):     #Test um spezifische Reihen anhand von Keywords auszublenden
         print("Ausgabe table.item(): " + str(table.item(x,1)))      #Debug/Testprint
-        checkItem = table.item(x,1)
+        checkItem = table.item(x, 1)
         print("Ausgabe des Textes in table.item(): " + checkItem.text())    #Debug/Testprint
         if checkItem.text() == "Ostsee":
             table.hideRow(x)
-
+    
     table.show()
     sys.exit(app.exec_())
 
+"""
+
 
 if __name__ == "__main__":
-    main(sys.argv)
+    app = QApplication(sys.argv)
+    window = Window()
+    window.show()
+    sys.exit(app.exec_())
