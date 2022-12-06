@@ -11,7 +11,7 @@ import pandas   #"pandas" und "openpyxl" installieren
 
 #Dateipfade
 IMGPATH = r'Bilder\Schiffstypen' #Schiffstypen Bilder
-TABLEPATH = r"C:\Users\Alex Laptop\Desktop\GUI - Schiffsreisen\Aufgabe 2 Reiseportal\Schiffreisen.xlsx" #Excel Tabelle
+TABLEPATH = r'Schiffreisen.xlsx' #Excel Tabelle
 
 #Funktion um Exceltabelle in Liste umzuwandeln
 def getTable():
