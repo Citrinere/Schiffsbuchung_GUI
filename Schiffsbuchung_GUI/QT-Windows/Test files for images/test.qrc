@@ -1,5 +1,8 @@
 <RCC>
   <qresource prefix="newPrefix">
+    <file>Cruise Background 2.jpg</file>
+    <file>Cruise Background 3.jpg</file>
+    <file>Cruise Background 1.jpg</file>
     <file>kreuzfahrtschiff-logo_74218-64.jpg</file>
   </qresource>
 </RCC>

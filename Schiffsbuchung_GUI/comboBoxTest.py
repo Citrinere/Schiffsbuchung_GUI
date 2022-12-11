@@ -45,7 +45,7 @@ class Window(QMainWindow):
         # adding action to button
         button.pressed.connect(self.find)
 
-        # creating label to
+        # creating label to display input
         self.label = QLabel(self)
 
         # setting geometry of the label
