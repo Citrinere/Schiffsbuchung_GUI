@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'NeuesHauptmenu2.ui'
+# Form implementation generated from reading ui file 'NeuesHauptmenu3.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.0
 #
@@ -7,6 +7,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QIcon
 
 
 class Ui_MainWindow(object):
@@ -16,21 +17,21 @@ class Ui_MainWindow(object):
         MainWindow.resize(802, 595)
         MainWindow.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
         MainWindow.setAutoFillBackground(False)
+        MainWindow.setWindowIcon(QIcon("Schifficon.png"))
         MainWindow.setStyleSheet(
-        "background-image: url(Bilder/Cruise Background 3.jpg) 0 0 0 0 stretch stretch;\n"
-        "      \n"
-        "    /*\n"
+        "QMainWindow{background-image: url(Bilder/Cruise Background 3.jpg) 0 0 0 0 stretch stretch;}\n"
         "    background-position: top;\n"
-        "    background-repeat: repeat-xy;\n"
+        "    background-repeat: false;\n"
         "    background-size: cover;\n"
         "    background-attachment: fixed;\n"
-        "    */")
+        )
         MainWindow.setIconSize(QtCore.QSize(24, 24))
         MainWindow.setAnimated(True)
         MainWindow.setDocumentMode(False)
         MainWindow.setDockOptions(QtWidgets.QMainWindow.AllowTabbedDocks|QtWidgets.QMainWindow.AnimatedDocks)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+
         self.CBOrt = QtWidgets.QComboBox(self.centralwidget)
         self.CBOrt.setGeometry(QtCore.QRect(250, 20, 231, 41))
         self.CBOrt.setStyleSheet("CBOrt{background-color: white;}")
@@ -39,16 +40,18 @@ class Ui_MainWindow(object):
         self.CBOrt.addItem("")
         self.CBOrt.addItem("")
         self.CBOrt.addItem("")
-        self.CBPersonen = QtWidgets.QComboBox(self.centralwidget)
-        self.CBPersonen.setGeometry(QtCore.QRect(490, 20, 231, 41))
-        self.CBPersonen.setObjectName("CBPersonen")
-        self.CBPersonen.addItem("")
-        self.CBPersonen.addItem("")
-        self.CBPersonen.addItem("")
-        self.CBPersonen.addItem("")
-        self.CBPersonen.addItem("")
-        self.CBPersonen.addItem("")
-        self.CBPersonen.addItem("")
+
+        self.CBSchiffsTyp = QtWidgets.QComboBox(self.centralwidget)
+        self.CBSchiffsTyp.setGeometry(QtCore.QRect(490, 20, 231, 41))
+        self.CBSchiffsTyp.setObjectName("CBSchiffsTyp")
+        self.CBSchiffsTyp.addItem("")
+        self.CBSchiffsTyp.addItem("")
+        self.CBSchiffsTyp.addItem("")
+        self.CBSchiffsTyp.addItem("")
+        self.CBSchiffsTyp.addItem("")
+        self.CBSchiffsTyp.addItem("")
+        self.CBSchiffsTyp.addItem("")
+
         self.SearchButton = QtWidgets.QPushButton(self.centralwidget)
         self.SearchButton.setGeometry(QtCore.QRect(730, 20, 51, 41))
         font = QtGui.QFont()
@@ -60,12 +63,18 @@ class Ui_MainWindow(object):
         self.SearchButton.setFont(font)
         self.SearchButton.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
         self.SearchButton.setMouseTracking(False)
-        self.SearchButton.setStyleSheet("color: yellow;")
+        # self.SearchButton.setStyleSheet("background-color: red;\n" "color: yellow;")
         self.SearchButton.setAutoRepeat(False)
         self.SearchButton.setObjectName("SearchButton")
-        self.dateEdit_2 = QtWidgets.QDateEdit(self.centralwidget)
-        self.dateEdit_2.setGeometry(QtCore.QRect(10, 20, 231, 41))
-        self.dateEdit_2.setObjectName("dateEdit_2")
+
+        self.UbernachtungenSB = QtWidgets.QSpinBox(self.centralwidget)
+        self.UbernachtungenSB.setGeometry(QtCore.QRect(10, 20, 231, 41))
+        self.UbernachtungenSB.setStyleSheet("UbernachtungenSB{background-color: white;}")
+        self.UbernachtungenSB.setMinimum(7)
+        self.UbernachtungenSB.setMaximum(21)
+        self.UbernachtungenSB.setProperty("value", 7)
+        self.UbernachtungenSB.setObjectName("UbernachtungenSB")
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -81,20 +90,38 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+
         self.CBOrt.setToolTip(_translate("MainWindow", "<html><head/><body><p><br/></p></body></html>"))
         self.CBOrt.setWhatsThis(_translate("MainWindow", "<html><head/><body><p><br/></p></body></html>"))
-        self.CBOrt.setItemText(0, _translate("MainWindow", "Bitte Auswählen", "True"))
+        self.CBOrt.setItemText(0, _translate("MainWindow", "Region", "True"))
         self.CBOrt.setItemText(1, _translate("MainWindow", "Ostsee"))
         self.CBOrt.setItemText(2, _translate("MainWindow", "Nordsee"))
         self.CBOrt.setItemText(3, _translate("MainWindow", "Mittelmeer"))
-        self.CBPersonen.setItemText(0, _translate("MainWindow", "2 Personen"))
-        self.CBPersonen.setItemText(1, _translate("MainWindow", "3 Personen"))
-        self.CBPersonen.setItemText(2, _translate("MainWindow", "4 Personen"))
-        self.CBPersonen.setItemText(3, _translate("MainWindow", "5 Personen"))
-        self.CBPersonen.setItemText(4, _translate("MainWindow", "6 Personen"))
-        self.CBPersonen.setItemText(5, _translate("MainWindow", "7 Personen"))
-        self.CBPersonen.setItemText(6, _translate("MainWindow", "8 Personen"))
+
+        self.CBSchiffsTyp.setItemText(0, _translate("MainWindow", "Schiffstyp"))
+        self.CBSchiffsTyp.setItemText(1, _translate("MainWindow", "A"))
+        self.CBSchiffsTyp.setItemText(2, _translate("MainWindow", "B"))
+        self.CBSchiffsTyp.setItemText(3, _translate("MainWindow", "C"))
+        self.CBSchiffsTyp.setItemText(4, _translate("MainWindow", "D"))
+        self.CBSchiffsTyp.setItemText(5, _translate("MainWindow", "E"))
+        self.CBSchiffsTyp.setItemText(6, _translate("MainWindow", "F"))
+
         self.SearchButton.setText(_translate("MainWindow", "Search"))
+
+        # adding action to button
+        # button = SearchButton("", self)
+        self.SearchButton.pressed.connect(self.Search)
+
+    # define button action
+    def Search(self):
+        naechte = self.UbernachtungenSB.currentText()
+        ort = self.CBOrt.currentText()
+        personen = self.CBSchiffsTyp.currentText()
+
+        # showing content on the screen though label
+        self.label.setText("Uebernachtungen: " + naechte)
+        self.label.setText("Reiseziel: " + ort)
+        self.label.setText("Anzahl Personen: " + personen)
 
 
 if __name__ == "__main__":

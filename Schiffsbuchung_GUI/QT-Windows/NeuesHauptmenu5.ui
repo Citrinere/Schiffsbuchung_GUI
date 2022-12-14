@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>802</width>
+    <height>606</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../Bilder/SchiffIcon.png</normaloff>../Bilder/SchiffIcon.png</iconset>
+  </property>
+  <property name="layoutDirection">
+   <enum>Qt::LeftToRight</enum>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow{background-image: url(:/newPrefix/Cruise Background 3.jpg) 0 0 0 0 stretch stretch;}</string>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>24</width>
+    <height>24</height>
+   </size>
+  </property>
+  <property name="animated">
+   <bool>true</bool>
+  </property>
+  <property name="documentMode">
+   <bool>false</bool>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QComboBox" name="CBOrt">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>181</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="whatsThis">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">CBOrt{background-color: white;}</string>
+    </property>
+    <item>
+     <property name="text">
+      <string comment="True">Region</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Ostsee</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Nordsee</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Mittelmeer</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="CBStadt">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>70</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">CBPersonen{background-color: white;}</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>Stadt</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Nordsee">Aberdeen</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Algier</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Nordsee">Amsterdam</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Athen</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Barcelona</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Bari</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Nordsee">Bergen</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Cagliari</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Catania</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Ostsee">Danzig</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Nordsee">Den Haag</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Nordsee">Edinburg</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Genua</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Gibraltar</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Nordsee">Göteborg</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Nordsee">Haugesund</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Ostsee">Helsinki</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Ostsee">Kaliningrad</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Ostsee">Kleipeda</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Ostsee">Kopenhagen</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Nordsee">Kristiansand</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Malaga</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Marseille</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Neapel</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Palermo</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Ostsee">Riga</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Nordsee">Reykjavik</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Ostsee">Sankt Petersburg</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Split</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Ostsee">Stockholm</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Ostsee">Stralsund</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Ostsee">Tallin</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Tanger</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Nordsee">Torshavn</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Nordsee">Tromsö</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Nordsee">Trondheim</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Tunis</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Valencia</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Valetta</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Mittelmeer">Venedig</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Ostsee">Visby</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="Ostsee">Ystad</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QPushButton" name="SearchButton">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>20</y>
+      <width>61</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+      <underline>false</underline>
+      <strikeout>false</strikeout>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(70, 206, 60);
+color: white;</string>
+    </property>
+    <property name="text">
+     <string>Search</string>
+    </property>
+    <property name="autoRepeat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="UbernachtungenSB">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>20</y>
+      <width>100</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">UbernachtungenSB{background-color: white;}</string>
+    </property>
+    <property name="minimum">
+     <number>7</number>
+    </property>
+    <property name="maximum">
+     <number>21</number>
+    </property>
+    <property name="value">
+     <number>7</number>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="CBSchiffsTyp">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>20</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">CBPersonen{background-color: white;}</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>Schiffstyp</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>A</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>B</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>C</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>D</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>E</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>F</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QToolButton" name="toolButtonStadt">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>20</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>NeuStadt</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="Test files for images/test.qrc"/>
+ </resources>
+ <connections/>
+</ui>

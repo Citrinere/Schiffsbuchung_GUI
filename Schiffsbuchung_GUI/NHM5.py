@@ -9,7 +9,14 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_MainWindow(object):
+class Ui_MainWindow(QtWidgets.QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.dateedit = QtWidgets.QDateEdit(calendarPopup=True)
+        self.menuBar().setCornerWidget(self.dateedit, QtCore.Qt.TopLeftCorner)
+        self.dateedit.setDateTime(QtCore.QDateTime.currentDateTime())
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setEnabled(True)
@@ -29,16 +36,18 @@ class Ui_MainWindow(object):
         MainWindow.setAnimated(True)
         MainWindow.setDocumentMode(False)
         MainWindow.setDockOptions(QtWidgets.QMainWindow.AllowTabbedDocks|QtWidgets.QMainWindow.AnimatedDocks)
+
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+
         self.CBOrt = QtWidgets.QComboBox(self.centralwidget)
         self.CBOrt.setGeometry(QtCore.QRect(250, 20, 231, 41))
-        self.CBOrt.setStyleSheet("CBOrt{background-color: white;}")
         self.CBOrt.setObjectName("CBOrt")
         self.CBOrt.addItem("")
         self.CBOrt.addItem("")
         self.CBOrt.addItem("")
         self.CBOrt.addItem("")
+
         self.CBPersonen = QtWidgets.QComboBox(self.centralwidget)
         self.CBPersonen.setGeometry(QtCore.QRect(490, 20, 231, 41))
         self.CBPersonen.setObjectName("CBPersonen")
@@ -49,6 +58,7 @@ class Ui_MainWindow(object):
         self.CBPersonen.addItem("")
         self.CBPersonen.addItem("")
         self.CBPersonen.addItem("")
+
         self.SearchButton = QtWidgets.QPushButton(self.centralwidget)
         self.SearchButton.setGeometry(QtCore.QRect(730, 20, 51, 41))
         font = QtGui.QFont()

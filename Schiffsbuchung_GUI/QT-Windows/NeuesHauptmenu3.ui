@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>802</width>
+    <height>595</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="layoutDirection">
+   <enum>Qt::LeftToRight</enum>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget{	background-image: url(:/newPrefix/Cruise Background 3.jpg) 0 0 0 0 stretch stretch;}
+	
+	/*
+	background-position: top;
+	background-repeat: repeat-xy;
+	background-size: cover;
+	background-attachment: fixed;
+	*/</string>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>24</width>
+    <height>24</height>
+   </size>
+  </property>
+  <property name="animated">
+   <bool>true</bool>
+  </property>
+  <property name="documentMode">
+   <bool>false</bool>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QComboBox" name="CBOrt">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>20</y>
+      <width>231</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="whatsThis">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">CBOrt{background-color: white;}</string>
+    </property>
+    <item>
+     <property name="text">
+      <string comment="True">Region</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Ostsee</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Nordsee</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Mittelmeer</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="CBPersonen">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>20</y>
+      <width>231</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">CBPersonen{background-color: white;}</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>Reisende</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>2 Personen</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>3 Personen</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>4 Personen</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>5 Personen</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>6 Personen</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>7 Personen</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>8 Personen</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QPushButton" name="SearchButton">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>20</y>
+      <width>51</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+      <underline>false</underline>
+      <strikeout>false</strikeout>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: red;
+color: yellow;</string>
+    </property>
+    <property name="text">
+     <string>Search</string>
+    </property>
+    <property name="autoRepeat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="UbernachtungenSB">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>231</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">UbernachtungenSB{background-color: white;}</string>
+    </property>
+    <property name="minimum">
+     <number>7</number>
+    </property>
+    <property name="maximum">
+     <number>21</number>
+    </property>
+    <property name="value">
+     <number>7</number>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>802</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <resources>
+  <include location="Test files for images/test.qrc"/>
+ </resources>
+ <connections/>
+</ui>
