@@ -7,7 +7,54 @@ from PyQt5.QtGui import QStandardItemModel, QIcon
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
 import sys
+import pandas
 
+IMGPATH = r'Bilder\Schiffstypen' #Schiffstypen Bilder
+TABLEPATH = r'Schiffreisen.xlsx' #Excel Tabelle
+
+#Funktion um Exceltabelle in Liste umzuwandeln
+def getTable():
+    df = pandas.read_excel(TABLEPATH, header=3, usecols=lambda x: 'Unnamed' not in x)
+    dfList = df.values.tolist()
+    return dfList
+
+
+#Funktion zur Abfrage der Städte an einer bestimmten Meeresart
+def getCityList(FullList, regiontype): # Bsp.: getCityList(getTable(), "Nordsee")
+
+    cityList = []
+
+    for row_number, row_data in enumerate(FullList):  # Schleife, die alle Tabellenelemente durchgeht
+        for column_number, column_data in enumerate(row_data):
+            if column_number == 3:
+                if row_data[1] == regiontype:
+                    cityBuff = column_data.split()
+                    for city_num, city_data in enumerate(cityBuff):
+                        cityBuff[city_num] = city_data.replace(",","")
+                        if cityBuff[city_num] not in cityList:
+                            cityList.append(cityBuff[city_num])
+
+    return cityList
+
+
+"""
+Klasse zum Anzeigen von Schiffstyp Bildern mit pixmap
+https://www.geeksforgeeks.org/pyqt5-how-to-add-image-in-window/
+https://doc.qt.io/qt-6/qwidget.html
+https://doc.qt.io/qtforpython-5/PySide2/QtGui/QPixmap.html
+
+Aufbau: QWidget -> QLabel -> QPixmap
+"""
+class ImageCruiseShip(QWidget):
+
+    def __init__(self, image):
+        super(ImageCruiseShip, self).__init__()
+
+        self.label = QLabel(self)
+        self.pixmap = QPixmap(image)
+        self.pixmap = self.pixmap.scaledToHeight(128) #Bild auf 128px Höhe anpassen
+
+        self.label.setPixmap(self.pixmap)
 
 # creating checkable combo box class
 class CheckableComboBox(QComboBox):
@@ -94,7 +141,42 @@ class CheckableComboBox(QComboBox):
     # flush
     sys.stdout.flush()
 
+#Tabelle
+class TableView(QTableWidget):
+    def __init__(self, data, *args):
+        QTableWidget.__init__(self, *args)
+        self.data = data
+        self.setData()
+        self.resizeColumnsToContents()
+        self.resizeRowsToContents()
 
+
+    def setData(self):  #
+        horHeaders = ["Reisenummer", "Meerart", "Übernachtungen", "Besuchte Städte", "Schiffstyp", "Preise Innenkabine", "Preise Außenkabine", "Preise Balkonkabine"]  #Headerliste. Vielleicht aus Excel lesen?
+
+        for row_number, row_data in enumerate(self.data):   #Schleife, die alle Tabellenelemente durchgeht
+            for column_number, column_data in enumerate(row_data):
+                if column_number == 4:  #In Column 4 (Schiffstyp) Text durch Bilder ersetzen
+                    imagePath = IMGPATH + "\Schiffstyp " + str(column_data) + ".jpg"
+                    item = self.getImageLabel(imagePath)
+                    self.setCellWidget(row_number, column_number, item)
+
+                newItem = QTableWidgetItem(str(column_data))
+                self.setItem(row_number, column_number, newItem)
+                self.show()
+
+
+
+        for row_number, row_data in enumerate(self.data):
+            selectionButton = QPushButton("Bestellen")
+            self.setCellWidget(row_number, 8, selectionButton)
+            self.show()
+
+        self.setHorizontalHeaderLabels(horHeaders)  #Header setzen
+
+    def getImageLabel(self, image):
+        imageLabel = ImageCruiseShip(image)
+        return imageLabel
 class Window(QMainWindow):
     def __init__(self):
         super(QMainWindow, self).__init__()
@@ -113,6 +195,11 @@ class Window(QMainWindow):
         #myHLayout.addLayout(myVLayout)      # Vertikales Layout in das horizontale einfügen
         myVLayout.addLayout(myGridLayout)   # Grid Layout in Vertikales Layout einfügen
 
+        #Tabelle ins Hauptlayout einfügen
+        self.table_view = TableView(getTable(), len(getTable()), 9)
+        tableLayout = QVBoxLayout()  # Tabellen Layout
+        tableLayout.addWidget(self.table_view)
+        myVLayout.addLayout(tableLayout)
 
         # central widget
         self.setCentralWidget(myQWidget)
@@ -258,16 +345,27 @@ class Window(QMainWindow):
         #self.RegionLabelErgebnis = QLabel(self)
         #self.RegionComboBox.setGeometry(100, 100, 200, 50)
 
+        # Funktionstest
+        getCityList(getTable(), "Mittelmeer")
+        #Tabellenkonfiguration
+        for x in range(len(getTable())):  # Row-Höhe festlegen
+            self.table_view.setRowHeight(x, 128)
+
+        self.table_view.setColumnWidth(4, 256)  # Schiffstypen größer machen für Bilder
+
+
     # define button action
     def Search(self):
+
         region = self.RegionComboBox.currentText()
         naechte = self.NachtSpinBox.value()
         staedte = self.StadtComboBox.currentText()
         typ = self.CBSchiffsTyp.currentText()
 
+
         # showing content on the screen though label
         self.RegionLabelErgebnis.setText("Region: " + str(region))
-        self.NachtLabelErgebnis.setText("Uebernachtungen: " + int(naechte))
+        self.NachtLabelErgebnis.setText("Uebernachtungen: " + str(naechte))
         self.StadtLabelErgebnis.setText("Staedte: " + str(staedte))
         self.SchiffsTypLabelErgebnis.setText("Schiffstyp: " + str(typ))
 
