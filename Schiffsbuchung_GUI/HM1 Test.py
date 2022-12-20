@@ -1,105 +1,150 @@
 
 from PyQt5 import QtCore
+from PyQt5 import QtGui
 #from PyQt5.QtWidgets import QApplication, QComboBox, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSpinBox, QLabel
 from PyQt5.QtWidgets import *
 #from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGridLayout, QPushButton, QSpinBox
 from PyQt5.QtGui import QStandardItemModel, QIcon
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
+from PyQt5.QtCore import *
 import sys
 
 
-# creating checkable combo box class
-class CheckableComboBox(QComboBox):
-    def __init__(self):
-        super(CheckableComboBox, self).__init__()
-        self.view().pressed.connect(self.handle_item_pressed)
-        self.setModel(QStandardItemModel(self))
+# creating checkable combo box class which will close after a selection
+# class CheckableComboBox(QComboBox):
+#     def __init__(self):
+#         super(CheckableComboBox, self).__init__()
+#         self.view().pressed.connect(self.handle_item_pressed)
+#         self.setModel(QStandardItemModel(self))
+#
+#     # when any item get pressed
+#     def handle_item_pressed(self, index):
+#
+#         # getting which item is pressed
+#         item = self.model().itemFromIndex(index)
+#
+#         # make it check if unchecked and vice-versa
+#         if item.checkState() == Qt.Checked:
+#             item.setCheckState(Qt.Unchecked)
+#         else:
+#             item.setCheckState(Qt.Checked)
+#
+#         # calling method
+#         self.check_items()
+#
+#     # method called by check_items
+#     def item_checked(self, index):
+#
+#         # getting item at index
+#         item = self.model().item(index, 0)
+#
+#         # return true if checked else false
+#         return item.checkState() == Qt.Checked
+#
+#     # calling method
+#     def check_items(self):
+#         # blank list
+#         checkedItems = []
+#
+#         # traversing the items
+#         for i in range(self.count()):
+#
+#             # if item is checked add it to the list
+#             if self.item_checked(i):
+#                 checkedItems.append(i)
+#
+#         # call this method
+#         self.update_labels(checkedItems)
+#
+#     # method to update the label
+#     def update_labels(self, item_list):
+#
+#         n = ''
+#         count = 0
+#
+#         # traversing the list
+#         for i in item_list:
+#
+#             # if count value is 0 don't add comma
+#             if count == 0:
+#                 n += ' % s' % i
+#             # else value is greater then 0
+#             # add comma
+#             else:
+#                 n += ', % s' % i
+#
+#             # increment count
+#             count += 1
+#
+#         # loop
+#         for i in range(self.count()):
+#
+#             # getting label
+#             text_label = self.model().item(i, 0).text()
+#
+#             # default state
+#             if text_label.find('-') >= 0:
+#                 text_label = text_label.split('-')[0]
+#
+#             # shows the selected items
+#             item_new_text_label = text_label + ' - selected index: ' + n
+#
+#             # setting text to StadtComboBox
+#             #self.setItemText(i, item_new_text_label)
+#
+#     # flush
+#     sys.stdout.flush()
 
-    # when any item get pressed
-    def handle_item_pressed(self, index):
 
-        # getting which item is pressed
+
+
+class CheckableComboBox(QComboBox):     # creating checkable combo box class which will stay open after a selection
+    def __init__(self, parent=None):
+        super(CheckableComboBox, self).__init__(parent)
+        self.view().pressed.connect(self.handleItemPressed)
+        self._changed = False
+
+    def handleItemPressed(self, index):
         item = self.model().itemFromIndex(index)
-
-        # make it check if unchecked and vice-versa
-        if item.checkState() == Qt.Checked:
-            item.setCheckState(Qt.Unchecked)
+        if item.checkState() == QtCore.Qt.Checked:
+            item.setCheckState(QtCore.Qt.Unchecked)
         else:
-            item.setCheckState(Qt.Checked)
+            item.setCheckState(QtCore.Qt.Checked)
+        self._changed = True
 
-        # calling method
-        self.check_items()
+    def hidePopup(self):
+        if not self._changed:
+            super(CheckableComboBox, self).hidePopup()
+        self._changed = False   # verhindert, dass wenn die combobox geoeffnett ist, man nichts anderes anklicken kann
 
-    # method called by check_items
-    def item_checked(self, index):
+    def itemChecked(self, index):
+        item = self.model().item(index, self.modelColumn())
+        return item.checkState() == QtCore.Qt.Checked
 
-        # getting item at index
-        item = self.model().item(index, 0)
+    def setItemChecked(self, index, checked=True):
+        item = self.model().item(index, self.modelColumn())
+        if checked:
+            item.setCheckState(QtCore.Qt.Checked)
+        else:
+            item.setCheckState(QtCore.Qt.Unchecked)
 
-        # return true if checked else false
-        return item.checkState() == Qt.Checked
 
-    # calling method
-    def check_items(self):
-        # blank list
-        checkedItems = []
+class SearchWindow(QMainWindow):
+    def __init__(self):
+        super(SearchWindow, self).__init__()
 
-        # traversing the items
-        for i in range(self.count()):
+        self.setGeometry(400, 200, 800, 600)
+        # self.StadtLabelErgebnis = QLabel()          # Label zum Anzeigen der Auswahl
+        # self.SchiffsTypLabelErgebnis.setStyleSheet("background-color: cyan;")
 
-            # if item is checked add it to the list
-            if self.item_checked(i):
-                checkedItems.append(i)
-
-        # call this method
-        self.update_labels(checkedItems)
-
-    # method to update the label
-    def update_labels(self, item_list):
-
-        n = ''
-        count = 0
-
-        # traversing the list
-        for i in item_list:
-
-            # if count value is 0 don't add comma
-            if count == 0:
-                n += ' % s' % i
-            # else value is greater then 0
-            # add comma
-            else:
-                n += ', % s' % i
-
-            # increment count
-            count += 1
-
-        # loop
-        for i in range(self.count()):
-
-            # getting label
-            text_label = self.model().item(i, 0).text()
-
-            # default state
-            if text_label.find('-') >= 0:
-                text_label = text_label.split('-')[0]
-
-            # shows the selected items
-            item_new_text_label = text_label + ' - selected index: ' + n
-
-            # setting text to StadtComboBox
-            #self.setItemText(i, item_new_text_label)
-
-    # flush
-    sys.stdout.flush()
 
 
 class Window(QMainWindow):
     def __init__(self):
         super(QMainWindow, self).__init__()
 
-        self.setWindowTitle("Kreuzfahrt-Buchung JaJa")
+        self.setWindowTitle("Kreuzfahrt-Buchung")
         self.setGeometry(400, 150, 1000, 1000)
         self.UiComponents()
         self.show()
@@ -271,9 +316,16 @@ class Window(QMainWindow):
 
         # showing content on the screen though label
         self.RegionLabelErgebnis.setText("Region: " + str(region))
-        self.NachtLabelErgebnis.setText("Uebernachtungen: " + int(naechte))
+        self.NachtLabelErgebnis.setText("Uebernachtungen: " + str(naechte))
         self.StadtLabelErgebnis.setText("Staedte: " + str(staedte))
         self.SchiffsTypLabelErgebnis.setText("Schiffstyp: " + str(typ))
+
+        #Neues Fenster
+        # Fenster zuweisen
+        self.dialog = SearchWindow()
+        # Neues Fenster bei anklicken anzeigen
+        self.dialog.show()
+
 
 
 # drivers code
