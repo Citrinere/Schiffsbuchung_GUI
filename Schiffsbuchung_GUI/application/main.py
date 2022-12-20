@@ -152,7 +152,7 @@ class TableView(QTableWidget):
 
 
     def setData(self):  #
-        horHeaders = ["Reisenummer", "Meerart", "Übernachtungen", "Besuchte Städte", "Schiffstyp", "Preise Innenkabine", "Preise Außenkabine", "Preise Balkonkabine"]  #Headerliste. Vielleicht aus Excel lesen?
+        horHeaders = ["Reisenummer", "Meeresart", "Anzahl\nÜbernachtungen", "Besuchte Städte", "Schiffstyp", "Preis\nInnenkabine", "Preis\nAußenkabine", "Preis\nBalkonkabine"]  #Headerliste. Vielleicht aus Excel lesen?
 
         for row_number, row_data in enumerate(self.data):   #Schleife, die alle Tabellenelemente durchgeht
             for column_number, column_data in enumerate(row_data):
