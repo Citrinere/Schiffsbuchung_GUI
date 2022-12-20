@@ -146,6 +146,7 @@ class TableView(QTableWidget):
         QTableWidget.__init__(self, *args)
         self.data = data
         self.setData()
+        self.setStyleSheet("font-size: 18pt; background-color: rgba(255, 255, 255, 0.6)")
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
 
