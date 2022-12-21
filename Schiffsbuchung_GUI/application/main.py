@@ -55,6 +55,12 @@ class ImageCruiseShip(QWidget):
 
         self.label.setPixmap(self.pixmap)
 
+class SearchWindow(QMainWindow):
+    def __init__(self):
+        super(SearchWindow, self).__init__()
+
+        self.setGeometry(400, 200, 800, 600)
+
 # creating checkable combo box class
 # class CheckableComboBox(QComboBox):
 #     def __init__(self):
@@ -398,6 +404,12 @@ class Window(QMainWindow):
         self.NachtLabelErgebnis.setText("Uebernachtungen: " + str(naechte))
         self.StadtLabelErgebnis.setText("Staedte: " + str(staedte))
         self.SchiffsTypLabelErgebnis.setText("Schiffstyp: " + str(typ))
+
+        # Neues Fenster
+        # Fenster zuweisen
+        self.dialog = SearchWindow()
+        # Neues Fenster bei anklicken anzeigen
+        self.dialog.show()
 
 
 # drivers code
