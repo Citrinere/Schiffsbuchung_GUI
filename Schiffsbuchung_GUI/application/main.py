@@ -13,26 +13,28 @@ TABLEPATH = r'data\Schiffreisen.xlsx' #Excel Tabelle
 
 #Funktion um Exceltabelle in Liste umzuwandeln
 def getTable():
-    df = pandas.read_excel(TABLEPATH, header=3, usecols=lambda x: 'Unnamed' not in x)
+    df = pandas.read_excel(TABLEPATH, header=3, usecols=lambda x: 'Unnamed' not in x, skiprows=range(25,29))
     dfList = df.values.tolist()
+
     return dfList
 
 
 #Funktion zur Abfrage der Städte an einer bestimmten Meeresart
-def getCityList(FullList, regiontype): # Bsp.: getCityList(getTable(), "Nordsee")
+def getCityList(regiontype="all"): # Bsp.: getCityList(getTable(), "Nordsee")
 
+    FullList = getTable()
     cityList = []
 
     for row_number, row_data in enumerate(FullList):  # Schleife, die alle Tabellenelemente durchgeht
         for column_number, column_data in enumerate(row_data):
             if column_number == 3:
-                if row_data[1] == regiontype:
+                if row_data[1] == regiontype or regiontype == "all":
                     cityBuff = column_data.split()
                     for city_num, city_data in enumerate(cityBuff):
                         cityBuff[city_num] = city_data.replace(",","")
                         if cityBuff[city_num] not in cityList:
                             cityList.append(cityBuff[city_num])
-
+    print(cityList)
     return cityList
 
 
@@ -213,6 +215,9 @@ class TableView(QTableWidget):
     def getImageLabel(self, image):
         imageLabel = ImageCruiseShip(image)
         return imageLabel
+
+
+
 class Window(QMainWindow):
     def __init__(self):
         super(QMainWindow, self).__init__()
@@ -317,6 +322,10 @@ class Window(QMainWindow):
         #for i in range(1):         # setzt leere checkboxen vor die items (Fehler: for i in range(i) ist die anzahl
                                     # wie viele items eine box bekommen aber auch wie oft die items ge-added werden
         # add items to StadtComboBox
+        for city in getCityList():
+            self.StadtComboBox.addItem(city)
+
+        """
         self.StadtComboBox.addItem("Aberdeen", "Nordsee")
         self.StadtComboBox.addItem("Algier")
         self.StadtComboBox.addItem("Amsterdam")
@@ -359,7 +368,7 @@ class Window(QMainWindow):
         self.StadtComboBox.addItem("Venedig")
         self.StadtComboBox.addItem("Visby")
         self.StadtComboBox.addItem("Ystad")
-
+        """
             #item = self.StadtComboBox.model().item(i, 0)
 
             # setting item unchecked
@@ -372,6 +381,7 @@ class Window(QMainWindow):
         self.RegionComboBox.addItem("Mittelmeer")
 
 
+
         #self.SearchComponents() # calling method
         self.show()
 
@@ -381,8 +391,7 @@ class Window(QMainWindow):
         #self.RegionLabelErgebnis = QLabel(self)
         #self.RegionComboBox.setGeometry(100, 100, 200, 50)
 
-        # Funktionstest
-        getCityList(getTable(), "Mittelmeer")
+
         #Tabellenkonfiguration
         for x in range(len(getTable())):  # Row-Höhe festlegen
             self.table_view.setRowHeight(x, 128)
