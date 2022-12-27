@@ -214,11 +214,11 @@ class TableView(QTableWidget):
         QTableWidget.__init__(self, *args)
         self.data = data
         self.setData()
-        self.setStyleSheet("font-size: 12pt; background-color: rgba(255, 255, 255, 0.6); selection-background-color: rgba(156,222,255, 0.8); selection-color: black;")
-        self.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.setSelectionMode(QAbstractItemView.SingleSelection)
-        self.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
+        self.setStyleSheet("font-size: 12pt; background-color: rgba(255, 255, 255, 0.6); selection-background-color: rgba(156,222,255, 0.8); selection-color: black;")
+        self.setSelectionBehavior(QAbstractItemView.SelectRows)     # Whole Row will be marked on click
+        self.setSelectionMode(QAbstractItemView.SingleSelection)    # Only one Row can be selected at any time
+        self.setEditTriggers(QAbstractItemView.NoEditTriggers)      # Data cant be edited
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
 
@@ -239,12 +239,12 @@ class TableView(QTableWidget):
                             column_data = column_data[:char_count+2] + '\n' + column_data[char_count+2:]
                             count = 0
 
-                if column_number == 4:  #In Column 4 (Schiffstyp) Text durch Bilder ersetzen
+                if column_number == 4:  # In Column 4 (Schiffstyp) Text durch Bilder ersetzen
                     imagePath = IMGPATH + "\Schiffstyp " + str(column_data) + ".jpg"
                     item = self.getImageLabel(imagePath)
                     self.setCellWidget(row_number, column_number, item)
 
-                if 5 <= column_number <= 7:
+                if 5 <= column_number <= 7: # Preis Formatting
                     if column_data != "nicht vorhanden":
                         newItem = QTableWidgetItem(str(column_data) + " €")
                     else:
@@ -321,18 +321,20 @@ class Window(QMainWindow):
         self.setCentralWidget(myQWidget)
 
         # creating widgets and their details
-    # main window
+        # main window
         self.setObjectName("MainWindow>")
         self.setWindowTitle("Kreuzfahrt-Buchung")
         self.setGeometry(400, 150, 1400, 720)
         self.setWindowIcon(QIcon("data\images\SchiffIcon.png"))
+
         # Region Auswahl
         self.RegionLabel = QLabel()
         self.RegionLabelErgebnis = QLabel()         # Label zum Anzeigen der Auswahl
             #self.RegionLabelErgebnis.setStyleSheet("background-color: white;")
         self.RegionLabel.setText("Region")
         self.RegionLabel.setStyleSheet("background-color: white;")
-        self.RegionComboBox = QComboBox()
+        self.RegionComboBox = CheckableComboBox()
+
         # Uebernachtungen Anzahl
         self.NachtLabel = QLabel()
         self.NachtLabelErgebnis = QLabel()          # Label zum Anzeigen der Auswahl
@@ -342,13 +344,7 @@ class Window(QMainWindow):
         self.NachtSpinBox = QSpinBox()
         self.NachtSpinBox.setMinimum(7)
         self.NachtSpinBox.setMaximum(21)
-        # Schiffstyp Auswahl
-        self.SchiffsTypLabel = QLabel()
-        self.SchiffsTypLabelErgebnis = QLabel()     # Label zum Anzeigen der Auswahl
-            #self.SchiffsTypLabelErgebnis.setStyleSheet("background-color: white;")
-        self.SchiffsTypLabel.setText("Schiffstyp")
-        self.SchiffsTypLabel.setStyleSheet("background-color: white;")
-        self.CBSchiffsTyp = QComboBox()
+
         # Zu besuchende Staedte
         self.StadtLabel = QLabel()
         self.StadtLabelErgebnis = QLabel()          # Label zum Anzeigen der Auswahl
@@ -357,6 +353,15 @@ class Window(QMainWindow):
         self.StadtLabel.setStyleSheet("background-color: white;")
         self.StadtComboBox = CheckableComboBox()
             #self.StadtComboBox.setGeometry(QtCore.QRect(310, 70, 200, 41))
+
+        # Schiffstyp Auswahl
+        self.SchiffsTypLabel = QLabel()
+        self.SchiffsTypLabelErgebnis = QLabel()     # Label zum Anzeigen der Auswahl
+            #self.SchiffsTypLabelErgebnis.setStyleSheet("background-color: white;")
+        self.SchiffsTypLabel.setText("Schiffstyp")
+        self.SchiffsTypLabel.setStyleSheet("background-color: white;")
+        self.SchiffsTypComboBox = CheckableComboBox()
+
         # Such Knopf
         self.SearchButton = QPushButton()
         self.SearchButton.setText("Search")
@@ -378,24 +383,22 @@ class Window(QMainWindow):
         FilterGridLayout.addWidget(self.StadtLabelErgebnis, 3, 3)
 
         FilterGridLayout.addWidget(self.SchiffsTypLabel, 1, 4)
-        FilterGridLayout.addWidget(self.CBSchiffsTyp, 2, 4)
+        FilterGridLayout.addWidget(self.SchiffsTypComboBox, 2, 4)
         FilterGridLayout.addWidget(self.SchiffsTypLabelErgebnis, 3, 4)
 
         FilterGridLayout.addWidget(self.SearchButton, 2, 5)
         #myLayout.addStretch()
 
 
-        # add items to Schiffstyp
-        self.CBSchiffsTyp.addItem("A")
-        self.CBSchiffsTyp.addItem("B")
-        self.CBSchiffsTyp.addItem("C")
-        self.CBSchiffsTyp.addItem("D")
-        self.CBSchiffsTyp.addItem("E")
-        self.CBSchiffsTyp.addItem("F")
+        # add items to Region CB
+        self.RegionComboBox.addItem("Ostsee")
+        self.RegionComboBox.addItem("Nordsee")
+        self.RegionComboBox.addItem("Mittelmeer")
 
         # traversing items
         #for i in range(1):         # setzt leere checkboxen vor die items (Fehler: for i in range(i) ist die anzahl
                                     # wie viele items eine box bekommen aber auch wie oft die items ge-added werden
+
         # add items to StadtComboBox with Image Tooltip
         for city_num, city in enumerate(getCityList()):
             self.StadtComboBox.addItem(city)
@@ -454,11 +457,14 @@ class Window(QMainWindow):
             # setting item unchecked
             #item.setCheckState(Qt.Unchecked)
 
+        # add items to Schiffstyp
+        self.SchiffsTypComboBox.addItem("A")
+        self.SchiffsTypComboBox.addItem("B")
+        self.SchiffsTypComboBox.addItem("C")
+        self.SchiffsTypComboBox.addItem("D")
+        self.SchiffsTypComboBox.addItem("E")
+        self.SchiffsTypComboBox.addItem("F")
 
-        # add items to Region CB
-        self.RegionComboBox.addItem("Ostsee")
-        self.RegionComboBox.addItem("Nordsee")
-        self.RegionComboBox.addItem("Mittelmeer")
 
 
 
@@ -494,11 +500,28 @@ class Window(QMainWindow):
     # define button action
     def Search(self):
 
-        region = self.RegionComboBox.currentText()
-        naechte = self.NachtSpinBox.value()
-        staedte = self.StadtComboBox.currentText()
-        typ = self.CBSchiffsTyp.currentText()
+        region = []
+        naechte = []
+        staedte = []
+        typ = []
 
+        for i in range(self.RegionComboBox.count()):
+            if self.RegionComboBox.itemChecked(i) == True:
+                region.append(self.RegionComboBox.itemText(i))
+
+        for i in range(-2,2):
+            naechte.append(self.NachtSpinBox.value()+i)
+
+        for i in range(self.StadtComboBox.count()):
+            if self.StadtComboBox.itemChecked(i) == True:
+                staedte.append(self.StadtComboBox.itemText(i))
+
+        for i in range(self.SchiffsTypComboBox.count()):
+            if self.SchiffsTypComboBox.itemChecked(i) == True:
+                typ.append(self.SchiffsTypComboBox.itemText(i))
+
+        FilterErgebnis = [region, naechte, staedte, typ]
+        print(FilterErgebnis)
 
         # showing content on the screen though label
         self.RegionLabelErgebnis.setText("Region: " + str(region))
@@ -513,7 +536,20 @@ class Window(QMainWindow):
         #self.dialog.show()
 
 
-
+        for row_count in range(self.table_view.rowCount()):
+            for column_count in range(1,4):
+                checkItem = self.table_view.item(row_count, column_count)
+                if column_count == 1:
+                    if checkItem.text() == "Mittelmeer":
+                        self.table_view.hideRow(x)
+        """
+                for x in range(25):  # Test um spezifische Reihen anhand von Keywords auszublenden
+                    #print("Ausgabe table.item(): " + str(self.table_view.item(x, 1)))  # Debug/Testprint
+                    checkItem = self.table_view.item(x, 1)
+                    #print("Ausgabe des Textes in table.item(): " + checkItem.text())  # Debug/Testprint
+                    if checkItem.text() == "Ostsee":
+                        self.table_view.hideRow(x)
+                """
 
 # drivers code
 if __name__ == '__main__':
