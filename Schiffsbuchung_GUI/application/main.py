@@ -39,6 +39,35 @@ def getCityList(regiontype="all"): # Bsp.: getCityList(getTable(), "Nordsee")
     return cityList
 
 
+
+#
+class OrderWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('second window')
+        self.setFixedWidth(1000)
+        self.setStyleSheet("""
+            QLineEdit{
+                font-size: 14px
+            }
+            QPushButton{
+                font-size: 30px
+            }
+            """)
+        mainLayout = QVBoxLayout()
+
+        self.input1 = QLineEdit()
+        mainLayout.addWidget(self.input1)
+
+
+        self.closeButton = QPushButton('Close')
+        self.closeButton.clicked.connect(self.close)
+        mainLayout.addWidget(self.closeButton)
+
+        self.setLayout(mainLayout)
+
+    def displayInfo(self):
+        self.show()
 """
 Klasse zum Anzeigen von Schiffstyp Bildern mit pixmap
 https://www.geeksforgeeks.org/pyqt5-how-to-add-image-in-window/
@@ -185,13 +214,19 @@ class TableView(QTableWidget):
         QTableWidget.__init__(self, *args)
         self.data = data
         self.setData()
-        self.setStyleSheet("font-size: 12pt; background-color: rgba(255, 255, 255, 0.6)")
+        self.setStyleSheet("font-size: 12pt; background-color: rgba(255, 255, 255, 0.6); selection-background-color: rgba(156,222,255, 0.8); selection-color: black;")
+        self.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
 
 
-    def setData(self):  #
-        horHeaders = ["Reisenummer", "Meeresart", "Anzahl\nÜbernachtungen", "Besuchte Städte", "Schiffstyp", "Preis\nInnenkabine", "Preis\nAußenkabine", "Preis\nBalkonkabine", "Auswahl"]  #Headerliste. Vielleicht aus Excel lesen?
+
+
+    def setData(self):
+        horHeaders = ["Reisenummer", "Meeresart", "Anzahl\nÜbernachtungen", "Besuchte Städte", "Schiffstyp", "Preis\nInnenkabine", "Preis\nAußenkabine", "Preis\nBalkonkabine"]  #Headerliste. Vielleicht aus Excel lesen?
 
         for row_number, row_data in enumerate(self.data):   #Schleife, die alle Tabellenelemente durchgeht
             for column_number, column_data in enumerate(row_data):
@@ -221,13 +256,17 @@ class TableView(QTableWidget):
                 self.show()
 
 
-
+        """
         for row_number, row_data in enumerate(self.data):
-            selectionButton = QPushButton("Bestellen")
-            self.setCellWidget(row_number, 8, selectionButton)
-            self.show()
+            self.selectionButton = QPushButton("Bestellen")
+            self.setCellWidget(row_number, 8, self.selectionButton)
 
+            self.selectionButton.pressed.connect(lambda: self.sendData(self.sender().parent().row()))
+            self.show()
+        """
         self.setHorizontalHeaderLabels(horHeaders)  #Header setzen
+
+
 
     def getImageLabel(self, image):
         imageLabel = ImageCruiseShip(image)
@@ -238,7 +277,7 @@ class TableView(QTableWidget):
 class Window(QMainWindow):
     def __init__(self):
         super(QMainWindow, self).__init__()
-
+        self.orderWindow = OrderWindow()
         # Stylesheet
         self.setStyleSheet("QMainWindow{background-image: url(data/images/background/Cruise Background 3.jpg) 0 0 0 0 stretch stretch;}")
 
@@ -252,11 +291,14 @@ class Window(QMainWindow):
         FilterGridLayout = QGridLayout()
         ApplicationVerticalLayout.addLayout(FilterGridLayout)
 
-        self.table_view = TableView(getTable(), len(getTable()), 9)
+        self.table_view = TableView(getTable(), len(getTable()), 8)
         tableLayout = QVBoxLayout()  # Tabellen Layout
         tableLayout.addWidget(self.table_view)
         tableLayout.minimumSize()
         ApplicationVerticalLayout.addLayout(tableLayout)
+
+        self.sendSelectionButton = QPushButton("Auswahl bestellen", self)
+        ApplicationVerticalLayout.addWidget(self.sendSelectionButton)
 
 
         """
@@ -426,6 +468,7 @@ class Window(QMainWindow):
         # adding action to button
         #self.RegionComboBox = QComboBox(self)
         self.SearchButton.pressed.connect(self.Search)
+        self.sendSelectionButton.pressed.connect(self.sendData)
         #self.RegionLabelErgebnis = QLabel(self)
         #self.RegionComboBox.setGeometry(100, 100, 200, 50)
 
@@ -435,6 +478,17 @@ class Window(QMainWindow):
             self.table_view.setRowHeight(x, 128)
 
         self.table_view.setColumnWidth(4, 256)  # Schiffstypen größer machen für Bilder
+
+    def sendData(self):
+        currRow = self.table_view.currentRow()
+        data = []
+
+        for x in range(1,8):
+            #data.append(self.table_view.horizontalHeaderItem(x).text())
+            data.append(self.table_view.item(currRow,x).text())
+        print(str(data))
+        self.orderWindow.input1.setText(str(data))
+        self.orderWindow.displayInfo()
 
 
     # define button action
@@ -457,6 +511,7 @@ class Window(QMainWindow):
         #self.dialog = SearchWindow()
         # Neues Fenster bei anklicken anzeigen
         #self.dialog.show()
+
 
 
 
