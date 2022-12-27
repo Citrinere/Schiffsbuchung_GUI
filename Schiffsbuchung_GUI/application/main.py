@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QStandardItemModel, QIcon
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
+from os.path import exists as file_exists
 import sys
 import pandas
 
@@ -34,7 +35,7 @@ def getCityList(regiontype="all"): # Bsp.: getCityList(getTable(), "Nordsee")
                         cityBuff[city_num] = city_data.replace(",","")
                         if cityBuff[city_num] not in cityList:
                             cityList.append(cityBuff[city_num])
-    print(cityList)
+    cityList.sort()
     return cityList
 
 
@@ -184,22 +185,38 @@ class TableView(QTableWidget):
         QTableWidget.__init__(self, *args)
         self.data = data
         self.setData()
-        self.setStyleSheet("font-size: 18pt; background-color: rgba(255, 255, 255, 0.6)")
+        self.setStyleSheet("font-size: 12pt; background-color: rgba(255, 255, 255, 0.6)")
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
 
 
     def setData(self):  #
-        horHeaders = ["Reisenummer", "Meeresart", "Anzahl\nÜbernachtungen", "Besuchte Städte", "Schiffstyp", "Preis\nInnenkabine", "Preis\nAußenkabine", "Preis\nBalkonkabine"]  #Headerliste. Vielleicht aus Excel lesen?
+        horHeaders = ["Reisenummer", "Meeresart", "Anzahl\nÜbernachtungen", "Besuchte Städte", "Schiffstyp", "Preis\nInnenkabine", "Preis\nAußenkabine", "Preis\nBalkonkabine", "Auswahl"]  #Headerliste. Vielleicht aus Excel lesen?
 
         for row_number, row_data in enumerate(self.data):   #Schleife, die alle Tabellenelemente durchgeht
             for column_number, column_data in enumerate(row_data):
+                if column_number == 3:
+                    count = 0
+                    for char_count, char in enumerate(column_data):
+                        if char == ",":
+                            count += 1
+                        if count >= 4:
+                            column_data = column_data[:char_count+2] + '\n' + column_data[char_count+2:]
+                            count = 0
+
                 if column_number == 4:  #In Column 4 (Schiffstyp) Text durch Bilder ersetzen
                     imagePath = IMGPATH + "\Schiffstyp " + str(column_data) + ".jpg"
                     item = self.getImageLabel(imagePath)
                     self.setCellWidget(row_number, column_number, item)
 
-                newItem = QTableWidgetItem(str(column_data))
+                if 5 <= column_number <= 7:
+                    if column_data != "nicht vorhanden":
+                        newItem = QTableWidgetItem(str(column_data) + " €")
+                    else:
+                        newItem = QTableWidgetItem(str(column_data))
+                else:
+                    newItem = QTableWidgetItem(str(column_data))
+                newItem.setTextAlignment(Qt.AlignCenter)
                 self.setItem(row_number, column_number, newItem)
                 self.show()
 
@@ -228,6 +245,21 @@ class Window(QMainWindow):
         # creating a widget object
         myQWidget = QWidget()
 
+        #Layout Creation
+        ApplicationVerticalLayout = QVBoxLayout()
+        myQWidget.setLayout(ApplicationVerticalLayout)
+
+        FilterGridLayout = QGridLayout()
+        ApplicationVerticalLayout.addLayout(FilterGridLayout)
+
+        self.table_view = TableView(getTable(), len(getTable()), 9)
+        tableLayout = QVBoxLayout()  # Tabellen Layout
+        tableLayout.addWidget(self.table_view)
+        tableLayout.minimumSize()
+        ApplicationVerticalLayout.addLayout(tableLayout)
+
+
+        """
         # Layout
         myVLayout = QVBoxLayout()           # Vertikales BoxLayout
         #myHLayout = QHBoxLayout()           # Horizontales BoxLayout
@@ -240,8 +272,9 @@ class Window(QMainWindow):
         self.table_view = TableView(getTable(), len(getTable()), 9)
         tableLayout = QVBoxLayout()  # Tabellen Layout
         tableLayout.addWidget(self.table_view)
+        tableLayout.addStretch(0)
         myVLayout.addLayout(tableLayout)
-
+        """
         # central widget
         self.setCentralWidget(myQWidget)
 
@@ -249,7 +282,7 @@ class Window(QMainWindow):
     # main window
         self.setObjectName("MainWindow>")
         self.setWindowTitle("Kreuzfahrt-Buchung")
-        self.setGeometry(400, 150, 1000, 5000)
+        self.setGeometry(400, 150, 1400, 720)
         self.setWindowIcon(QIcon("data\images\SchiffIcon.png"))
         # Region Auswahl
         self.RegionLabel = QLabel()
@@ -290,25 +323,25 @@ class Window(QMainWindow):
         self.SearchButton.setStyleSheet("background-color: rgb(0, 130, 0); color: white;")
 
         # adding Widgets to the Grid-layout   (widget, row, column, alignment)
-        myGridLayout.addWidget(self.RegionLabel, 1, 1)
-        myGridLayout.addWidget(self.RegionComboBox, 2, 1)
-        myGridLayout.addWidget(self.RegionLabelErgebnis, 3, 1)
+        FilterGridLayout.addWidget(self.RegionLabel, 1, 1)
+        FilterGridLayout.addWidget(self.RegionComboBox, 2, 1)
+        FilterGridLayout.addWidget(self.RegionLabelErgebnis, 3, 1)
 
-        myGridLayout.addWidget(self.NachtLabel, 1, 2)
-        myGridLayout.addWidget(self.NachtSpinBox, 2, 2)
-        myGridLayout.addWidget(self.NachtLabelErgebnis, 3, 2)
+        FilterGridLayout.addWidget(self.NachtLabel, 1, 2)
+        FilterGridLayout.addWidget(self.NachtSpinBox, 2, 2)
+        FilterGridLayout.addWidget(self.NachtLabelErgebnis, 3, 2)
 
-        myGridLayout.addWidget(self.StadtLabel, 1, 3)
-        myGridLayout.addWidget(self.StadtComboBox, 2, 3)
-        myGridLayout.addWidget(self.StadtLabelErgebnis, 3, 3)
+        FilterGridLayout.addWidget(self.StadtLabel, 1, 3)
+        FilterGridLayout.addWidget(self.StadtComboBox, 2, 3)
+        FilterGridLayout.addWidget(self.StadtLabelErgebnis, 3, 3)
 
-        myGridLayout.addWidget(self.SchiffsTypLabel, 1, 4)
-        myGridLayout.addWidget(self.CBSchiffsTyp, 2, 4)
-        myGridLayout.addWidget(self.SchiffsTypLabelErgebnis, 3, 4)
+        FilterGridLayout.addWidget(self.SchiffsTypLabel, 1, 4)
+        FilterGridLayout.addWidget(self.CBSchiffsTyp, 2, 4)
+        FilterGridLayout.addWidget(self.SchiffsTypLabelErgebnis, 3, 4)
 
-        myGridLayout.addWidget(self.SearchButton, 2, 5)
+        FilterGridLayout.addWidget(self.SearchButton, 2, 5)
         #myLayout.addStretch()
-        myVLayout.addStretch()
+
 
         # add items to Schiffstyp
         self.CBSchiffsTyp.addItem("A")
@@ -321,10 +354,15 @@ class Window(QMainWindow):
         # traversing items
         #for i in range(1):         # setzt leere checkboxen vor die items (Fehler: for i in range(i) ist die anzahl
                                     # wie viele items eine box bekommen aber auch wie oft die items ge-added werden
-        # add items to StadtComboBox
-        for city in getCityList():
+        # add items to StadtComboBox with Image Tooltip
+        for city_num, city in enumerate(getCityList()):
             self.StadtComboBox.addItem(city)
-
+            if file_exists('./data/images/Hafenstädte/' + city + '.jpg'):
+                self.StadtComboBox.setItemData(city_num,
+                                               '<img src="./data/images/Hafenstädte/' + city + '.jpg" width="500" height="350" />',
+                                               QtCore.Qt.ToolTipRole)
+            else:
+                self.StadtComboBox.setItemData(city_num,"Kein Vorschaubild vorhanden", QtCore.Qt.ToolTipRole)
         """
         self.StadtComboBox.addItem("Aberdeen", "Nordsee")
         self.StadtComboBox.addItem("Algier")
@@ -416,9 +454,10 @@ class Window(QMainWindow):
 
         # Neues Fenster
         # Fenster zuweisen
-        self.dialog = SearchWindow()
+        #self.dialog = SearchWindow()
         # Neues Fenster bei anklicken anzeigen
-        self.dialog.show()
+        #self.dialog.show()
+
 
 
 # drivers code
@@ -426,5 +465,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = Window()
     window.show()
-    window.resize(802, 606)
     sys.exit(app.exec_())
