@@ -39,13 +39,51 @@ def getCityList(regiontype="all"): # Bsp.: getCityList("Nordsee")
     cityList.sort()
     return cityList
 
-
-
+# class OrderWindow(QWidget):
+#     def __init__(self):
+#         super().__init__()
+#         self.setWindowTitle('Bestellung')
+#         self.setFixedHeight(760)
+#         self.setFixedWidth(560)
 #
+#         # creating a widget object
+#         myQWidget = QWidget()
+#
+#         # Create Base layout
+#         BestellGridLayout = QGridLayout()
+#         myQWidget.setLayout(BestellGridLayout)
+#
+#         # Create Child Layouts and Widgets
+#             # Layout fuer Schiffstyp(Vorschau), Region, Uebernachtungen, Buchungsnummer
+#         VerticalLayoutLO = QVBoxLayout()
+#         vSchiffstypVorschauLayout = QVBoxLayout()
+#         LaRegion = QLabel()
+#         LaUebernachtungen = QLabel()
+#         LaBuchungsnummer = QLabel()
+#             # KabinenLayouts and Widgets
+#         hKabinenLayout = QHBoxLayout()
+#         vKabinenPreisLayout = QVBoxLayout()
+#         LaInnenPreis = QLabel()
+#         LaAussenPreis = QLabel()
+#         LaBalkonPreis = QLabel()
+#         vKabinenVorschauLayout = QVBoxLayout()
+#             # PreisbestaetigungLayout and Widgets
+#         vPreisbestaetigungLayout = QVBoxLayout()
+#         LaGesamtpreis = QLabel()
+#         Bestellung_Bestaetigen = QPushButton()
+#
+#         # Add layouts and Widgets
+#         BestellGridLayout.addLayout(VerticalLayoutLO)
+#         VerticalLayoutLO.addLayout(vSchiffstypVorschauLayout)
+#
+#         StaedteAufzaehlung = QLabel()
+
+
+
 class OrderWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('second window')
+        self.setWindowTitle('Bestellung')
         self.setFixedWidth(1000)
         self.setStyleSheet("""
             QLineEdit{
