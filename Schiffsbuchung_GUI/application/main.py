@@ -1,3 +1,5 @@
+import random
+
 from PyQt5 import QtCore
 #from PyQt5.QtWidgets import QApplication, QComboBox, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSpinBox, QLabel
 from PyQt5.QtWidgets import *
@@ -39,74 +41,118 @@ def getCityList(regiontype="all"): # Bsp.: getCityList("Nordsee")
     cityList.sort()
     return cityList
 
-# class OrderWindow(QWidget):
-#     def __init__(self):
-#         super().__init__()
-#         self.setWindowTitle('Bestellung')
-#         self.setFixedHeight(760)
-#         self.setFixedWidth(560)
-#
-#         # creating a widget object
-#         myQWidget = QWidget()
-#
-#         # Create Base layout
-#         BestellGridLayout = QGridLayout()
-#         myQWidget.setLayout(BestellGridLayout)
-#
-#         # Create Child Layouts and Widgets
-#             # Layout fuer Schiffstyp(Vorschau), Region, Uebernachtungen, Buchungsnummer
-#         VerticalLayoutLO = QVBoxLayout()
-#         vSchiffstypVorschauLayout = QVBoxLayout()
-#         LaRegion = QLabel()
-#         LaUebernachtungen = QLabel()
-#         LaBuchungsnummer = QLabel()
-#             # KabinenLayouts and Widgets
-#         hKabinenLayout = QHBoxLayout()
-#         vKabinenPreisLayout = QVBoxLayout()
-#         LaInnenPreis = QLabel()
-#         LaAussenPreis = QLabel()
-#         LaBalkonPreis = QLabel()
-#         vKabinenVorschauLayout = QVBoxLayout()
-#             # PreisbestaetigungLayout and Widgets
-#         vPreisbestaetigungLayout = QVBoxLayout()
-#         LaGesamtpreis = QLabel()
-#         Bestellung_Bestaetigen = QPushButton()
-#
-#         # Add layouts and Widgets
-#         BestellGridLayout.addLayout(VerticalLayoutLO)
-#         VerticalLayoutLO.addLayout(vSchiffstypVorschauLayout)
-#
-#         StaedteAufzaehlung = QLabel()
-
-
 
 class OrderWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Bestellung')
-        self.setFixedWidth(1000)
+        self.setWindowIcon(QIcon("data\images\SchiffIcon.png"))
+        self.setGeometry(150, 150, 560, 760)
+        self.setFixedWidth(760)
+        self.setFixedHeight(560)
         self.setStyleSheet("""
-            QLineEdit{
+            QLabel{
+                font-size: 14px
+            }
+            QRadioButton{
                 font-size: 14px
             }
             QPushButton{
-                font-size: 30px
+                font-size: 17px
             }
             """)
-        mainLayout = QVBoxLayout()
 
-        self.input1 = QLineEdit()
-        mainLayout.addWidget(self.input1)
+        # Create Base Layout
+        BestellGridLayout = QGridLayout()
 
+        # Create Child Layouts and Widgets
+            # Layout fuer Schiffstyp(Vorschau), Region, Uebernachtungen, Buchungsnummer
+        self.VerticalLayoutLO = QVBoxLayout()
+        self.SchiffstypLayout = QVBoxLayout()
+        self.SchiffsTypVorschau = QGraphicsView()
+        self.SchiffsTyp = QLabel("Schiffstyp: ")
+        self.SchiffsTyp.setAlignment(QtCore.Qt.AlignCenter)
+        self.SchiffstypLayout.addWidget(self.SchiffsTypVorschau)
+        self.SchiffstypLayout.addWidget(self.SchiffsTyp)
+        self.VerticalLayoutLO.addLayout(self.SchiffstypLayout)
+        self.VerticalLayoutLO.addStretch()
+        self.LaRegion = QLabel("Region: ")
+        self.VerticalLayoutLO.addWidget(self.LaRegion)
+        self.LaUebernachtungen = QLabel("Uebernachtungen: ")
+        self.VerticalLayoutLO.addWidget(self.LaUebernachtungen)
+        self.LaBuchungsnummer = QLabel()
+        self.VerticalLayoutLO.addWidget(self.LaBuchungsnummer)
+        self.VerticalLayoutLO.addStretch()
+        BestellGridLayout.addLayout(self.VerticalLayoutLO, 0, 0)       # (self.layout, reihe, spalte)
 
-        self.closeButton = QPushButton('Close')
-        self.closeButton.clicked.connect(self.close)
-        mainLayout.addWidget(self.closeButton)
+            # Layout fuer Kabinen-Preise und Vorschau
+        self.hKabinenLayout = QHBoxLayout()
+        BestellGridLayout.addLayout(self.hKabinenLayout, 0, 1)
+        self.vKabinenPreisLayout = QVBoxLayout()
+        self.InnenPreis = QRadioButton("Innenkabine\nPreis: ")
+        self.vKabinenPreisLayout.addWidget(self.InnenPreis)
+        self.AussenPreis = QRadioButton("Aussenkabine\nPreis: ")
+        self.vKabinenPreisLayout.addWidget(self.AussenPreis)
+        self.BalkonPreis = QRadioButton("Balkonkabine\nPreis: ")
+        self.vKabinenPreisLayout.addWidget(self.BalkonPreis)
+        self.hKabinenLayout.addLayout(self.vKabinenPreisLayout)
+        self.vKabinenVorschauLayout = QVBoxLayout()
+        self.InnenVorschau = QGraphicsView()
+        self.vKabinenVorschauLayout.addWidget(self.InnenVorschau)
+        self.AussenVorschau = QGraphicsView()
+        self.vKabinenVorschauLayout.addWidget(self.AussenVorschau)
+        self.BalkonVorschau = QGraphicsView()
+        self.vKabinenVorschauLayout.addWidget(self.BalkonVorschau)
+        self.hKabinenLayout.addLayout(self.vKabinenVorschauLayout)
 
-        self.setLayout(mainLayout)
+        self.input1 = QLabel()
+        BestellGridLayout.addWidget(self.input1, 1, 0)      # (self.widget, reihe, spalte)
+        # self.LaStadt = QLabel()
+        # BestellGridLayout.addWidget(self.LaStadt, 1, 0)     # (self.widget, reihe, spalte)
+
+        self.vBestaetigungsLayout = QVBoxLayout()
+        self.LaGesamtpreis = QLabel("Summe: ...€")
+        self.LaGesamtpreis.setAlignment(QtCore.Qt.AlignCenter)
+        self.vBestaetigungsLayout.addWidget(self.LaGesamtpreis)
+        self.ConfirmButton = QPushButton('Buchen')
+        self.ConfirmButton.clicked.connect(self.close)
+        self.vBestaetigungsLayout.addWidget(self.ConfirmButton)
+        #BestellGridLayout.addWidget(self.ConfirmButton, 1, 1)
+        BestellGridLayout.addLayout(self.vBestaetigungsLayout, 1, 1)
+
+        self.setLayout(BestellGridLayout)
 
     def displayInfo(self):
         self.show()
+
+
+# class OrderWindow(QWidget):
+#     def __init__(self):
+#         super().__init__()
+#         self.setWindowTitle('Bestellung')
+#         self.setFixedWidth(1000)
+#         self.setStyleSheet("""
+#             QLineEdit{
+#                 font-size: 14px
+#             }
+#             QPushButton{
+#                 font-size: 30px
+#             }
+#             """)
+#         mainLayout = QVBoxLayout()
+#
+#         self.input1 = QLineEdit()
+#         mainLayout.addWidget(self.input1)
+#
+#
+#         self.closeButton = QPushButton('Close')
+#         self.closeButton.clicked.connect(self.close)
+#         mainLayout.addWidget(self.closeButton)
+#
+#         self.setLayout(mainLayout)
+#
+#     def displayInfo(self):
+#         self.show()
 """
 Klasse zum Anzeigen von Schiffstyp Bildern mit pixmap
 https://www.geeksforgeeks.org/pyqt5-how-to-add-image-in-window/
@@ -507,6 +553,8 @@ class Window(QMainWindow):
 
     def sendData(self):
         currRow = self.table_view.currentRow()
+        #naechte = self.table_view.currentRow(2)
+        #staedte = self.table_view.item(currRow, x).text()
         data = []
 
         for x in range(1,8):
@@ -514,6 +562,15 @@ class Window(QMainWindow):
             data.append(self.table_view.item(currRow,x).text())
         print(str(data))
         self.orderWindow.input1.setText(str(data))
+        # self.orderWindow.LaRegion.setText("Region: " + str())
+        # self.orderWindow.LaUebernachtungen("Uebernachtungen: " + str(naechte))
+        # self.orderWindow.LaStadt.setText("Staedte: " + str())
+        # self.orderWindow.LaBuchungsnummer.setText("Buchungsnummer: " + str(random.randrange(2, 999999, 2)))
+        # self.orderWindow.InnenPreis.setText("Innenkabine\nPreis: " + str())
+        # self.orderWindow.AussenPreis.setText("Aussenkabine\nPreis: " + str())
+        # self.orderWindow.BalkonPreis.setText("Balkonkabine \nPreis: " + str())
+        # self.orderWindow.LaGestamtpreis.setText("Summe: " + str())
+
         self.orderWindow.displayInfo()
 
 
