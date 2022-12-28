@@ -9,6 +9,7 @@ from os.path import exists as file_exists
 import sys
 import pandas
 
+
 IMGPATH = r'data\images\Schiffstypen' #Schiffstypen Bilder
 TABLEPATH = r'data\Schiffreisen.xlsx' #Excel Tabelle
 
@@ -21,7 +22,7 @@ def getTable():
 
 
 #Funktion zur Abfrage der Städte an einer bestimmten Meeresart
-def getCityList(regiontype="all"): # Bsp.: getCityList(getTable(), "Nordsee")
+def getCityList(regiontype="all"): # Bsp.: getCityList("Nordsee")
 
     FullList = getTable()
     cityList = []
@@ -394,6 +395,7 @@ class Window(QMainWindow):
         self.RegionComboBox.addItem("Ostsee")
         self.RegionComboBox.addItem("Nordsee")
         self.RegionComboBox.addItem("Mittelmeer")
+        self.RegionComboBox.activated.connect(self.updateCityFilter)
 
         # traversing items
         #for i in range(1):         # setzt leere checkboxen vor die items (Fehler: for i in range(i) ist die anzahl
@@ -408,50 +410,7 @@ class Window(QMainWindow):
                                                QtCore.Qt.ToolTipRole)
             else:
                 self.StadtComboBox.setItemData(city_num,"Kein Vorschaubild vorhanden", QtCore.Qt.ToolTipRole)
-        """
-        self.StadtComboBox.addItem("Aberdeen", "Nordsee")
-        self.StadtComboBox.addItem("Algier")
-        self.StadtComboBox.addItem("Amsterdam")
-        self.StadtComboBox.addItem("Athen")
-        self.StadtComboBox.addItem("Barcelona")
-        self.StadtComboBox.addItem("Bari")
-        self.StadtComboBox.addItem("Bergen")
-        self.StadtComboBox.addItem("Cagliari")
-        self.StadtComboBox.addItem("Catania")
-        self.StadtComboBox.addItem("Danzig")
-        self.StadtComboBox.addItem("Den Haag")
-        self.StadtComboBox.addItem("Edinburg")
-        self.StadtComboBox.addItem("Genua")
-        self.StadtComboBox.addItem("Gibraltar")
-        self.StadtComboBox.addItem("Göteborg")
-        self.StadtComboBox.addItem("Haugesund")
-        self.StadtComboBox.addItem("Helsinki")
-        self.StadtComboBox.addItem("Kaliningrad")
-        self.StadtComboBox.addItem("Kleipeda")
-        self.StadtComboBox.addItem("Kopenhagen")
-        self.StadtComboBox.addItem("Kristiansand")
-        self.StadtComboBox.addItem("Malaga")
-        self.StadtComboBox.addItem("Marseille")
-        self.StadtComboBox.addItem("Neapel")
-        self.StadtComboBox.addItem("Palermo")
-        self.StadtComboBox.addItem("Riga")
-        self.StadtComboBox.addItem("Reykjavik")
-        self.StadtComboBox.addItem("Sankt Petersburg")
-        self.StadtComboBox.addItem("Split")
-        self.StadtComboBox.addItem("Stockholm")
-        self.StadtComboBox.addItem("Stralsund")
-        self.StadtComboBox.addItem("Tallin")
-        self.StadtComboBox.addItem("Tanger")
-        self.StadtComboBox.addItem("Torshavn")
-        self.StadtComboBox.addItem("Tromsö")
-        self.StadtComboBox.addItem("Trondheim")
-        self.StadtComboBox.addItem("Tunis")
-        self.StadtComboBox.addItem("Valencia")
-        self.StadtComboBox.addItem("Valetta")
-        self.StadtComboBox.addItem("Venedig")
-        self.StadtComboBox.addItem("Visby")
-        self.StadtComboBox.addItem("Ystad")
-        """
+
             #item = self.StadtComboBox.model().item(i, 0)
 
             # setting item unchecked
@@ -484,6 +443,35 @@ class Window(QMainWindow):
             self.table_view.setRowHeight(x, 128)
 
         self.table_view.setColumnWidth(4, 256)  # Schiffstypen größer machen für Bilder
+
+
+    def updateCityFilter(self):
+        selectedRegion = []
+        filteredCitys = []
+
+        #Clear Filter before refreshing
+        for i in range(self.StadtComboBox.count()):
+            self.StadtComboBox.clear()
+
+        #Get selected Regions
+        for i in range(self.RegionComboBox.count()):
+            if self.RegionComboBox.itemChecked(i) == True:
+                selectedRegion.append(self.RegionComboBox.itemText(i))
+
+        #Fill City Filter
+        for i in range(len(selectedRegion)):
+            for city in getCityList(selectedRegion[i]):
+                filteredCitys.append(city)
+
+        filteredCitys.sort()
+        for cityNum, cityElement in enumerate(filteredCitys):
+            self.StadtComboBox.addItem(cityElement)
+            if file_exists('./data/images/Hafenstädte/' + city + '.jpg'):
+                self.StadtComboBox.setItemData(cityNum,
+                                               '<img src="./data/images/Hafenstädte/' + city + '.jpg" width="500" height="350" />',
+                                               QtCore.Qt.ToolTipRole)
+            else:
+                self.StadtComboBox.setItemData(cityNum, "Kein Vorschaubild vorhanden", QtCore.Qt.ToolTipRole)
 
     def sendData(self):
         currRow = self.table_view.currentRow()
@@ -521,7 +509,6 @@ class Window(QMainWindow):
                 typ.append(self.SchiffsTypComboBox.itemText(i))
 
         FilterErgebnis = [region, naechte, staedte, typ]
-        print(FilterErgebnis)
 
         # showing content on the screen though label
         self.RegionLabelErgebnis.setText("Region: " + str(region))
@@ -535,13 +522,44 @@ class Window(QMainWindow):
         # Neues Fenster bei anklicken anzeigen
         #self.dialog.show()
 
+        #Reset Filter
+        for row_count in range(self.table_view.rowCount()):
+            self.table_view.showRow(row_count)
 
         for row_count in range(self.table_view.rowCount()):
-            for column_count in range(1,4):
-                checkItem = self.table_view.item(row_count, column_count)
-                if column_count == 1:
-                    if checkItem.text() == "Mittelmeer":
-                        self.table_view.hideRow(x)
+
+            #Check Region
+            if len(FilterErgebnis[0]) != 0: # Wenn keine Auswahl, dann zeige alle
+                if self.table_view.item(row_count, 1).text() not in FilterErgebnis[0]:
+                    self.table_view.hideRow(row_count)
+
+            #Check Übernachtung
+            if len(FilterErgebnis[1]) != 0:
+                if int(self.table_view.item(row_count, 2).text()) not in FilterErgebnis[1]:
+                    self.table_view.hideRow(row_count)
+
+            #Check City
+            if len(FilterErgebnis[2]) != 0:
+                for cityElement in FilterErgebnis[2]:
+                    # Ändern, dass alle ausgewählten Städte enthalten sein MÜSSEN
+                    if cityElement in self.table_view.item(row_count, 3).text():
+                        break
+                    elif cityElement not in self.table_view.item(row_count, 3).text():
+                        self.table_view.hideRow(row_count)
+
+            #Check Schiffstyp
+            if len(FilterErgebnis[3]) != 0:
+                if self.table_view.item(row_count, 4).text() not in FilterErgebnis[3]:
+                    self.table_view.hideRow(row_count)
+
+
+
+
+
+
+
+                        #self.table_view.hideRow(row_count)
+
         """
                 for x in range(25):  # Test um spezifische Reihen anhand von Keywords auszublenden
                     #print("Ausgabe table.item(): " + str(self.table_view.item(x, 1)))  # Debug/Testprint
