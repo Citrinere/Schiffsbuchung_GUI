@@ -88,12 +88,6 @@ class ImageCruiseShip(QWidget):
 
         self.label.setPixmap(self.pixmap)
 
-class SearchWindow(QMainWindow):
-    def __init__(self):
-        super(SearchWindow, self).__init__()
-
-        self.setGeometry(400, 200, 800, 600)
-
 # creating checkable combo box class
 # class CheckableComboBox(QComboBox):
 #     def __init__(self):
@@ -280,7 +274,7 @@ class Window(QMainWindow):
         super(QMainWindow, self).__init__()
         self.orderWindow = OrderWindow()
         # Stylesheet
-        self.setStyleSheet("QMainWindow{background-image: url(data/images/background/Cruise Background 3.jpg) 0 0 0 0 stretch stretch;}")
+        self.setStyleSheet("QMainWindow{background-image: url(data/images/background/Cruise Background 3_4.jpg) no-repeat center center fixed; background-size: cover;}")
 
         # creating a widget object
         myQWidget = QWidget()
@@ -325,7 +319,7 @@ class Window(QMainWindow):
         # main window
         self.setObjectName("MainWindow>")
         self.setWindowTitle("Kreuzfahrt-Buchung")
-        self.setGeometry(400, 150, 1400, 720)
+        self.setGeometry(100, 50, 1400, 720)       # x, y, width, height
         self.setWindowIcon(QIcon("data\images\SchiffIcon.png"))
 
         # Region Auswahl
@@ -516,11 +510,6 @@ class Window(QMainWindow):
         self.StadtLabelErgebnis.setText("Staedte: " + str(staedte))
         self.SchiffsTypLabelErgebnis.setText("Schiffstyp: " + str(typ))
 
-        # Neues Fenster
-        # Fenster zuweisen
-        #self.dialog = SearchWindow()
-        # Neues Fenster bei anklicken anzeigen
-        #self.dialog.show()
 
         #Reset Filter
         for row_count in range(self.table_view.rowCount()):
