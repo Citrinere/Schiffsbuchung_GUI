@@ -41,10 +41,91 @@ def getCityList(regiontype="all"): # Bsp.: getCityList("Nordsee")
     cityList.sort()
     return cityList
 
+class PersonalDataDialog(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Persönliche Daten")
+        self.setWindowIcon(QIcon("data\images\SchiffIcon.png"))
+        #self.setGeometry(150, 150, 300, 600)
+        self.setFixedWidth(300)
+        self.setFixedHeight(440)
+
+        self.PersonalDataLayout = QGridLayout()
+        self.PersonalDataLayout.addWidget(self.createDialog("Name",["Nachname", "Vorname"]), 0, 0)
+        self.PersonalDataLayout.addWidget(self.createDialog("Adresse", ["Postleitzahl", "Ort", "Straße, Hausnummer"]), 1, 0)
+        self.PersonalDataLayout.addWidget(self.createDialog("Bankdaten", ["IBAN"]), 2, 0)
+
+        self.saveButton = QPushButton("Abspeichern", self)
+        self.PersonalDataLayout.addWidget(self.saveButton)
+        self.saveButton.clicked.connect(self.saveData)
+
+        self.setLayout(self.PersonalDataLayout)
+
+        """
+        self.VLabelLayout = QVBoxLayout()
+
+        self.labelSurname = QLabel("Familienname:")
+        self.VLabelLayout.addWidget(self.labelSurname)
+        self.labelFirstName = QLabel("Vorname:")
+        self.VLabelLayout.addWidget(self.labelFirstName)
+
+        self.labelZipCode = QLabel("Postleitzahl:")
+        self.VLabelLayout.addWidget(self.labelZipCode)
+        self.labelCity = QLabel("Ort:")
+        self.VLabelLayout.addWidget(self.labelCity)
+        self.labelStreet = QLabel("Straße:")
+        self.VLabelLayout.addWidget(self.labelStreet)
+        self.labelHouseNumber = QLabel("Hausnummer:")
+        self.VLabelLayout.addWidget(self.labelHouseNumber)
+
+        self.labelIBAN = QLabel("IBAN:")
+        self.VLabelLayout.addWidget(self.labelIBAN)
+
+        PersonalDataLayout.addLayout(self.VLabelLayout, 0, 0)
+
+        self.setLayout(PersonalDataLayout)
+        """
+    def createDialog(self, groupType, groupElements):
+        groupBox = QGroupBox(groupType)
+        groupBox.setStyleSheet('QGroupBox {'
+                               '    font-size: 11pt;'
+                               '    padding: 10 10px;}')
+        vLayout = QVBoxLayout()
+
+        for element_num, element in enumerate(groupElements):
+            self.labelElement = QLabel(element)
+            self.editElement = QLineEdit(self)
+            self.editElement.resize(280,20)
+
+            vLayout.addWidget(self.labelElement)
+            vLayout.addWidget(self.editElement)
+        #vLayout.addStretch(1)
+        groupBox.setLayout(vLayout)
+
+        return groupBox
+
+    def saveData(self):
+        print("...")
+        textboxValue = []
+        for i in range(0,3):
+            groupWidget = self.PersonalDataLayout.itemAtPosition(i, 0)
+            print(str(groupWidget.widget()))
+            for textWidget in groupWidget.widget().children():
+                if isinstance(textWidget, QLineEdit):
+                    print("     " + textWidget.text())
+                    textboxValue.append(textWidget.text())
+
+        print("_______________________________")
+        print(textboxValue)
+
+    def displayDialog(self):
+        self.show()
 
 class OrderWindow(QWidget):
     def __init__(self):
         super().__init__()
+        self.personalDataDialog = PersonalDataDialog()
+        self.cruiseData = []
         self.setWindowTitle('Bestellung')
         self.setWindowIcon(QIcon("data\images\SchiffIcon.png"))
         self.setGeometry(150, 150, 560, 760)
@@ -115,14 +196,27 @@ class OrderWindow(QWidget):
         self.LaGesamtpreis.setAlignment(QtCore.Qt.AlignCenter)
         self.vBestaetigungsLayout.addWidget(self.LaGesamtpreis)
         self.ConfirmButton = QPushButton('Buchen')
-        self.ConfirmButton.clicked.connect(self.close)
+        self.ConfirmButton.clicked.connect(self.confirmOrder)
         self.vBestaetigungsLayout.addWidget(self.ConfirmButton)
         #BestellGridLayout.addWidget(self.ConfirmButton, 1, 1)
         BestellGridLayout.addLayout(self.vBestaetigungsLayout, 1, 1)
 
         self.setLayout(BestellGridLayout)
 
-    def displayInfo(self):
+    def confirmOrder(self):
+        self.personalDataDialog.displayDialog()
+        self.close()
+
+    def displayWindow(self):
+
+        self.LaRegion.setText("Region: " + self.cruiseData[0])
+        self.LaUebernachtungen.setText("Uebernachtungen: " + self.cruiseData[1])
+        #self.orderWindow.LaStadt.setText("Staedte: " + data[2])
+        self.LaBuchungsnummer.setText("Buchungsnummer: " + str(random.randrange(2, 999999, 2)))
+        self.InnenPreis.setText("Innenkabine\nPreis: " + self.cruiseData[4])
+        self.AussenPreis.setText("Aussenkabine\nPreis: " + self.cruiseData[5])
+        self.BalkonPreis.setText("Balkonkabine \nPreis: " + self.cruiseData[6])
+
         self.show()
 
 
@@ -560,18 +654,29 @@ class Window(QMainWindow):
         for x in range(1,8):
             #data.append(self.table_view.horizontalHeaderItem(x).text())
             data.append(self.table_view.item(currRow,x).text())
-        print(str(data))
-        self.orderWindow.input1.setText(str(data))
-        # self.orderWindow.LaRegion.setText("Region: " + str())
-        # self.orderWindow.LaUebernachtungen("Uebernachtungen: " + str(naechte))
-        # self.orderWindow.LaStadt.setText("Staedte: " + str())
-        # self.orderWindow.LaBuchungsnummer.setText("Buchungsnummer: " + str(random.randrange(2, 999999, 2)))
-        # self.orderWindow.InnenPreis.setText("Innenkabine\nPreis: " + str())
-        # self.orderWindow.AussenPreis.setText("Aussenkabine\nPreis: " + str())
-        # self.orderWindow.BalkonPreis.setText("Balkonkabine \nPreis: " + str())
+
+        #self.orderWindow.input1.setText(str(data))
+
+        # Übergabe des Datensatzes der ausgewählten Reise
+        self.orderWindow.cruiseData = data
+
+        """
+        self.orderWindow.LaRegion.setText("Region: " + data[0])
+        self.orderWindow.LaUebernachtungen.setText("Uebernachtungen: " + data[1])
+        #self.orderWindow.LaStadt.setText("Staedte: " + data[2])
+        self.orderWindow.LaBuchungsnummer.setText("Buchungsnummer: " + str(random.randrange(2, 999999, 2)))
+        self.orderWindow.InnenPreis.setText("Innenkabine\nPreis: " + data[4])
+        self.orderWindow.AussenPreis.setText("Aussenkabine\nPreis: " + data[5])
+        self.orderWindow.BalkonPreis.setText("Balkonkabine \nPreis: " + data[6])
+        """
+
+
+        # Gesamtpreis notwendig, wenn es keine Personenauswahl gibt?
+        #
         # self.orderWindow.LaGestamtpreis.setText("Summe: " + str())
 
-        self.orderWindow.displayInfo()
+        # Funktion ausführen zum Anzeigen des Fensters
+        self.orderWindow.displayWindow()
 
 
     # define button action
