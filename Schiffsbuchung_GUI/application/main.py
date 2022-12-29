@@ -143,7 +143,7 @@ class OrderWindow(QWidget):
         # Layout fuer Schiffstyp(Vorschau), Region, Uebernachtungen, Buchungsnummer
         self.VerticalLayoutLO = QVBoxLayout()
         self.SchiffstypLayout = QVBoxLayout()
-        self.SchiffsTypVorschau = QGraphicsView()
+        self.SchiffsTypVorschau = QLabel(self)
         self.SchiffsTyp = QLabel()
         self.SchiffsTyp.setAlignment(QtCore.Qt.AlignCenter)
         self.SchiffstypLayout.addWidget(self.SchiffsTypVorschau)
@@ -171,18 +171,22 @@ class OrderWindow(QWidget):
         self.vKabinenPreisLayout.addWidget(self.BalkonPreis)
         self.hKabinenLayout.addLayout(self.vKabinenPreisLayout)
         self.vKabinenVorschauLayout = QVBoxLayout()
-        self.InnenVorschau = QGraphicsView()
+        self.InnenVorschau = QLabel(self)
         self.vKabinenVorschauLayout.addWidget(self.InnenVorschau)
-        self.AussenVorschau = QGraphicsView()
+        self.AussenVorschau = QLabel(self)
         self.vKabinenVorschauLayout.addWidget(self.AussenVorschau)
-        self.BalkonVorschau = QGraphicsView()
+        self.BalkonVorschau = QLabel(self)
         self.vKabinenVorschauLayout.addWidget(self.BalkonVorschau)
         self.hKabinenLayout.addLayout(self.vKabinenVorschauLayout)
 
         #self.input1 = QLabel()
         #BestellGridLayout.addWidget(self.input1, 1, 0)  # (self.widget, reihe, spalte)
         self.LaStadt = QLabel()
+        self.LaStadt.setWordWrap(True)
+        #self.SWStadt = QStackedWidget()
         BestellGridLayout.addWidget(self.LaStadt, 1, 0)     # (self.widget, reihe, spalte)
+        #BestellGridLayout.addWidget(self.SWStadt, 1, 0)     # (self.widget, reihe, spalte)
+
 
         self.vBestaetigungsLayout = QVBoxLayout()
         self.LaGesamtpreis = QLabel("Summe: ...€")
@@ -201,6 +205,8 @@ class OrderWindow(QWidget):
         self.personalDataDialog.displayDialog()
         self.close()
 
+    # imagePath = IMGPATH + "\Schiffstyp " + str(column_data) + ".jpg"
+
     # Open Order Window at put selected cruise data in Labels
     def displayWindow(self):
         self.LaRegion.setText("Region: " + self.cruiseData[0])
@@ -208,9 +214,37 @@ class OrderWindow(QWidget):
         self.LaBuchungsnummer.setText("Buchungsnummer: " + str(random.randrange(2, 999999, 2)))
         self.LaStadt.setText("Staedte: \n" + self.cruiseData[2])
         self.SchiffsTyp.setText("Schiffstyp: " + self.cruiseData[3])
+        self.SchiffsTypPixmap = QPixmap('data/images/Schiffstypen/Schiffstyp ' + str(self.cruiseData[3]))
+        SchiffsTypPixmap = self.SchiffsTypPixmap.scaled(
+            QtCore.QSize(300, 172),
+            Qt.KeepAspectRatioByExpanding,
+            Qt.SmoothTransformation
+        )
+        self.SchiffsTypVorschau.setPixmap(SchiffsTypPixmap)
         self.InnenPreis.setText("Innenkabine\nPreis: " + self.cruiseData[4])
+        self.InnenKabinePixmap = QPixmap('data/images/Kabinentypen/Innenkabine.jpg')
+        InnenKabinePixmap = self.InnenKabinePixmap.scaled(
+            QtCore.QSize(300, 172),
+            Qt.KeepAspectRatioByExpanding,
+            Qt.SmoothTransformation
+        )
+        self.InnenVorschau.setPixmap(InnenKabinePixmap)
         self.AussenPreis.setText("Aussenkabine\nPreis: " + self.cruiseData[5])
+        self.AussenKabinePixmap = QPixmap('data/images/Kabinentypen/Aussenkabine.jpg')
+        AussenKabinePixmap = self.AussenKabinePixmap.scaled(
+            QtCore.QSize(300, 172),
+            Qt.KeepAspectRatioByExpanding,
+            Qt.SmoothTransformation
+        )
+        self.AussenVorschau.setPixmap(AussenKabinePixmap)
         self.BalkonPreis.setText("Balkonkabine \nPreis: " + self.cruiseData[6])
+        self.BalkonKabinePixmap = QPixmap('data/images/Kabinentypen/Balkonkabine.jpg')
+        BalkonKabinePixmap = self.BalkonKabinePixmap.scaled(
+            QtCore.QSize(300, 172),
+            Qt.KeepAspectRatioByExpanding,
+            Qt.SmoothTransformation
+        )
+        self.BalkonVorschau.setPixmap(BalkonKabinePixmap)
 
         print(self.cruiseData)
         self.show()
@@ -525,8 +559,6 @@ class Window(QMainWindow):
     # Send selected trip information to order window
     def sendData(self):
         currRow = self.table_view.currentRow()
-        # naechte = self.table_view.currentRow(2)
-        # staedte = self.table_view.item(currRow, x).text()
         data = []
 
         for x in range(1, 8):
