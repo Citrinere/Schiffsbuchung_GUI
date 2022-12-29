@@ -179,10 +179,10 @@ class OrderWindow(QWidget):
         self.vKabinenVorschauLayout.addWidget(self.BalkonVorschau)
         self.hKabinenLayout.addLayout(self.vKabinenVorschauLayout)
 
-        self.input1 = QLabel()
-        BestellGridLayout.addWidget(self.input1, 1, 0)  # (self.widget, reihe, spalte)
-        # self.LaStadt = QLabel()
-        # BestellGridLayout.addWidget(self.LaStadt, 1, 0)     # (self.widget, reihe, spalte)
+        #self.input1 = QLabel()
+        #BestellGridLayout.addWidget(self.input1, 1, 0)  # (self.widget, reihe, spalte)
+        self.LaStadt = QLabel()
+        BestellGridLayout.addWidget(self.LaStadt, 1, 0)     # (self.widget, reihe, spalte)
 
         self.vBestaetigungsLayout = QVBoxLayout()
         self.LaGesamtpreis = QLabel("Summe: ...€")
@@ -205,8 +205,8 @@ class OrderWindow(QWidget):
     def displayWindow(self):
         self.LaRegion.setText("Region: " + self.cruiseData[0])
         self.LaUebernachtungen.setText("Uebernachtungen: " + self.cruiseData[1])
-        # self.orderWindow.LaStadt.setText("Staedte: " + data[2])
         self.LaBuchungsnummer.setText("Buchungsnummer: " + str(random.randrange(2, 999999, 2)))
+        self.LaStadt.setText("Staedte: " + self.cruiseData[2])
         self.InnenPreis.setText("Innenkabine\nPreis: " + self.cruiseData[4])
         self.AussenPreis.setText("Aussenkabine\nPreis: " + self.cruiseData[5])
         self.BalkonPreis.setText("Balkonkabine \nPreis: " + self.cruiseData[6])
@@ -234,7 +234,7 @@ class ImageCruiseShip(QWidget):
 
         self.labelImage.setPixmap(pixmap)
         # Vertically align Label
-        self.labelImage.move(0, -128 * ((2 - image_aspect) / 2))
+        #self.labelImage.move(0, -128 * ((2 - image_aspect) / 2))
 
 
 # creating checkable combo box class which will stay open after a selection
