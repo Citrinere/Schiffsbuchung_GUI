@@ -211,6 +211,7 @@ class OrderWindow(QWidget):
         self.AussenPreis.setText("Aussenkabine\nPreis: " + self.cruiseData[5])
         self.BalkonPreis.setText("Balkonkabine \nPreis: " + self.cruiseData[6])
 
+        print(self.cruiseData)
         self.show()
 
 
@@ -286,8 +287,13 @@ class TableView(QTableWidget):
         self.setSelectionBehavior(QAbstractItemView.SelectRows)  # Whole Row will be marked on click
         self.setSelectionMode(QAbstractItemView.SingleSelection)  # Only one Row can be selected at any time
         self.setEditTriggers(QAbstractItemView.NoEditTriggers)  # Data cant be edited
-        self.resizeColumnsToContents()
+        #self.resizeColumnsToContents()
         self.resizeRowsToContents()
+        # Column Spacing
+        self.setColumnWidth(3, 400)
+        for i in range(0,7):
+            if i != 3:
+                self.resizeColumnToContents(i)
 
     # Put data from Excel file in table
     def setData(self):
@@ -295,18 +301,12 @@ class TableView(QTableWidget):
         horHeaders = ["Reisenummer", "Meeresart", "Anzahl\nÜbernachtungen", "Besuchte Städte", "Schiffstyp",
                       "Preis\nInnenkabine", "Preis\nAußenkabine", "Preis\nBalkonkabine"]
 
+
+
         # Schleife, die alle Tabellenelemente durchgeht
         for row_number, row_data in enumerate(self.data):
             for column_number, column_data in enumerate(row_data):
-                # Split City names for better spacing
-                if column_number == 3:
-                    count = 0
-                    for char_count, char in enumerate(column_data):
-                        if char == ",":
-                            count += 1
-                        if count >= 4:
-                            column_data = column_data[:char_count + 2] + '\n' + column_data[char_count + 2:]
-                            count = 0
+
 
                 # Put image instead of text for cruisship kind
                 if column_number == 4:
