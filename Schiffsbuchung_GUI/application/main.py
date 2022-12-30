@@ -164,22 +164,10 @@ class OrderWindow(QWidget):
         BestellGridLayout.addLayout(self.hKabinenLayout, 0, 1)
         self.vKabinenPreisLayout = QVBoxLayout()
         self.InnenPreis = QRadioButton()
-        # if self.cruiseData[4] != "nicht vorhanden":
-        #     self.InnenPreis.setCheckable(True)
-        # else:
-        #     self.InnenPreis.setCheckable(False)
         self.vKabinenPreisLayout.addWidget(self.InnenPreis)
         self.AussenPreis = QRadioButton()
-        # if self.cruiseData[4] != "nicht vorhanden":
-        #     self.InnenPreis.setCheckable(True)
-        # else:
-        #     self.InnenPreis.setCheckable(False)
         self.vKabinenPreisLayout.addWidget(self.AussenPreis)
         self.BalkonPreis = QRadioButton()
-        # if self.cruiseData[4] != "nicht vorhanden":
-        #     self.InnenPreis.setCheckable(True)
-        # else:
-        #     self.InnenPreis.setCheckable(False)
         self.vKabinenPreisLayout.addWidget(self.BalkonPreis)
         self.hKabinenLayout.addLayout(self.vKabinenPreisLayout)
         self.vKabinenVorschauLayout = QVBoxLayout()
@@ -249,7 +237,15 @@ class OrderWindow(QWidget):
         self.LaRegion.setText("Region: " + self.cruiseData[0])
         self.LaUebernachtungen.setText("Uebernachtungen: " + self.cruiseData[1])
         self.LaBuchungsnummer.setText("Buchungsnummer: " + str(random.randrange(2, 999999, 2)))
-        self.LaStadt.setText("Staedte: \n" + self.cruiseData[2])
+
+        # print("Sauhund")
+        # cityviewlist = []
+        # cityviewlist.extend(self.cruiseDate[2])
+        # print(cityviewlist)
+
+        self.LaStadt.setText("Stadt: \n" + self.cruiseData[2])
+        #self.LaStadt.setText(cityviewlist[1])
+
         self.SchiffsTyp.setText("Schiffstyp: " + self.cruiseData[3])
         self.SchiffsTypPixmap = QPixmap('data/images/Schiffstypen/Schiffstyp ' + str(self.cruiseData[3]))
         SchiffsTypPixmap = self.SchiffsTypPixmap.scaled(
@@ -282,10 +278,22 @@ class OrderWindow(QWidget):
             Qt.SmoothTransformation
         )
         self.BalkonVorschau.setPixmap(BalkonKabinePixmap)
-        #for i in range(self.cruiseData[2].count()):
-        #cityviewlist = [self.cruiseData[2]]
-        #self.StadtViewPixmap = QPixmap('data/images/Hafenstädte' + str(cityviewlist) + '.jpg')
-        #self.StadtViewPixmap = QPixmap('data/images/Hafenstädte' + str(self.cruiseData[2]) + '.jpg') # geht warhscheinlich nicht da er mit cruiseData[2] alle staedte nimmt
+
+        # for i in range(self.cruiseData[2].count()):
+        # cityviewlist = [self.cruiseData[2]]
+        # self.StadtViewPixmap = QPixmap('data/images/Hafenstädte' + str(cityviewlist) + '.jpg')
+        # self.StadtViewPixmap = QPixmap('data/images/Hafenstädte' + str(self.cruiseData[2]) + '.jpg') # geht warhscheinlich nicht da er mit cruiseData[2] alle staedte nimmt
+        #
+        # self.cruiseData[2] = koblenz, wormms, bobenheim, mannheim
+        #
+        # QPixmap('data/images/Hafenstädte/' + self.cruiseData[2][i+1] + '.jpg')
+        # i = 1
+        #
+        # while i > 0
+        #     prevpushbutton = i-1;
+        # while i < self.cruiseData[2].count()
+        #     nextbutton = i+1
+
         self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/Aberdeen.jpg')
         StadtViewPixmap = self.StadtViewPixmap.scaled(
             QtCore.QSize(350, 222),
@@ -624,10 +632,19 @@ class Window(QMainWindow):
             # data.append(self.table_view.horizontalHeaderItem(x).text())
             data.append(self.table_view.item(currRow, x).text())
 
+
+
         # self.orderWindow.input1.setText(str(data))
 
         # Übergabe des Datensatzes der ausgewählten Reise
         self.orderWindow.cruiseData = data
+
+        if self.orderWindow.cruiseData[4] == 'nicht vorhanden':
+            self.orderWindow.InnenPreis.setCheckable(False)
+        if self.orderWindow.cruiseData[5] == 'nicht vorhanden':
+            self.orderWindow.AussenPreis.setCheckable(False)
+        if self.orderWindow.cruiseData[6] == 'nicht vorhanden':
+            self.orderWindow.BalkonPreis.setCheckable(False)
 
         """
         self.orderWindow.LaRegion.setText("Region: " + data[0])
