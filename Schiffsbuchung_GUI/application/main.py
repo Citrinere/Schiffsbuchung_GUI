@@ -164,10 +164,22 @@ class OrderWindow(QWidget):
         BestellGridLayout.addLayout(self.hKabinenLayout, 0, 1)
         self.vKabinenPreisLayout = QVBoxLayout()
         self.InnenPreis = QRadioButton()
+        # if self.cruiseData[4] != "nicht vorhanden":
+        #     self.InnenPreis.setCheckable(True)
+        # else:
+        #     self.InnenPreis.setCheckable(False)
         self.vKabinenPreisLayout.addWidget(self.InnenPreis)
         self.AussenPreis = QRadioButton()
+        # if self.cruiseData[4] != "nicht vorhanden":
+        #     self.InnenPreis.setCheckable(True)
+        # else:
+        #     self.InnenPreis.setCheckable(False)
         self.vKabinenPreisLayout.addWidget(self.AussenPreis)
         self.BalkonPreis = QRadioButton()
+        # if self.cruiseData[4] != "nicht vorhanden":
+        #     self.InnenPreis.setCheckable(True)
+        # else:
+        #     self.InnenPreis.setCheckable(False)
         self.vKabinenPreisLayout.addWidget(self.BalkonPreis)
         self.hKabinenLayout.addLayout(self.vKabinenPreisLayout)
         self.vKabinenVorschauLayout = QVBoxLayout()
@@ -232,8 +244,6 @@ class OrderWindow(QWidget):
         self.personalDataDialog.displayDialog()
         self.close()
 
-    # imagePath = IMGPATH + "\Schiffstyp " + str(column_data) + ".jpg"
-
     # Open Order Window at put selected cruise data in Labels
     def displayWindow(self):
         self.LaRegion.setText("Region: " + self.cruiseData[0])
@@ -273,25 +283,25 @@ class OrderWindow(QWidget):
         )
         self.BalkonVorschau.setPixmap(BalkonKabinePixmap)
         #for i in range(self.cruiseData[2].count()):
-        cityviewlist = self.cruiseData[2]
+        #cityviewlist = [self.cruiseData[2]]
         #self.StadtViewPixmap = QPixmap('data/images/Hafenstädte' + str(cityviewlist) + '.jpg')
         #self.StadtViewPixmap = QPixmap('data/images/Hafenstädte' + str(self.cruiseData[2]) + '.jpg') # geht warhscheinlich nicht da er mit cruiseData[2] alle staedte nimmt
-        # self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/Aberdeen.jpg')
-        # StadtViewPixmap = self.StadtViewPixmap.scaled(
-        #     QtCore.QSize(256, 128),
-        #     Qt.KeepAspectRatioByExpanding,
-        #     Qt.SmoothTransformation
-        # )
-        # self.StadtView.setPixmap(StadtViewPixmap)
-
-
-        self.StadtViewPixmap = QPixmap('./data/images/Hafenstädte/Aberdeen.jpg')
+        self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/Aberdeen.jpg')
         StadtViewPixmap = self.StadtViewPixmap.scaled(
             QtCore.QSize(350, 222),
             Qt.KeepAspectRatioByExpanding,
             Qt.SmoothTransformation
         )
         self.StadtView.setPixmap(StadtViewPixmap)
+
+
+        # self.StadtViewPixmap = QPixmap('./data/images/Hafenstädte/Aberdeen.jpg')
+        # StadtViewPixmap = self.StadtViewPixmap.scaled(
+        #     QtCore.QSize(350, 222),
+        #     Qt.KeepAspectRatioByExpanding,
+        #     Qt.SmoothTransformation
+        # )
+        # self.StadtView.setPixmap(StadtViewPixmap)
 
 
 
