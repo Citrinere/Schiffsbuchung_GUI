@@ -216,8 +216,8 @@ class OrderWindow(QWidget):
 
 
         self.vBestaetigungsLayout = QVBoxLayout()
-        self.LaGesamtpreis = QLabel("Summe: ...€")
-        self.LaGesamtpreis.setAlignment(QtCore.Qt.AlignCenter)
+        self.LaGesamtpreis = QLabel("Summe: ......€")
+        self.LaGesamtpreis.setAlignment(QtCore.Qt.AlignCenter)  # Text in die mitte setzen
         self.vBestaetigungsLayout.addWidget(self.LaGesamtpreis)
         self.ConfirmButton = QPushButton('Buchen')
         self.ConfirmButton.clicked.connect(self.confirmOrder)
@@ -279,8 +279,12 @@ class OrderWindow(QWidget):
         )
         self.BalkonVorschau.setPixmap(BalkonKabinePixmap)
 
+
+
+
         # for i in range(self.cruiseData[2].count()):
-        # cityviewlist = [self.cruiseData[2]]
+        cityviewlist = list()
+        #cityviewlist.add(self.cruiseData[2])
         # self.StadtViewPixmap = QPixmap('data/images/Hafenstädte' + str(cityviewlist) + '.jpg')
         # self.StadtViewPixmap = QPixmap('data/images/Hafenstädte' + str(self.cruiseData[2]) + '.jpg') # geht warhscheinlich nicht da er mit cruiseData[2] alle staedte nimmt
         #
@@ -311,10 +315,51 @@ class OrderWindow(QWidget):
         # )
         # self.StadtView.setPixmap(StadtViewPixmap)
 
-
-
         print(self.cruiseData)
         self.show()
+
+        # print(self.cruiseData[2])
+        # self.cityviewlist = list()
+        # self.tempcruiseData = self.cruiseData[2]
+        # for i in range self.tempcruiseData:
+        #     while i != ("," & " "):
+        #         i+1
+        #         self.templist = list()
+        #     self.templist.extned(i)
+        #     self.cityviewlist.append(self.templist)
+        #     self.templist.remove()
+        #
+        #     self.cityviewlist.extend(self.cruiseData[2])
+        # print(self.cityviewlist)
+        # for c in range(self.cityviewlist.count()):
+        #     min = 0
+        #     max =
+
+        self.PrevStadtButton.clicked.connect(self.stadtbuttons)
+        self.NextStadtButton.clicked.connect(self.stadtbuttons)
+
+        # radiobutton mit funktion verbinden
+        self.InnenPreis.clicked.connect(self.summecheck)
+        self.AussenPreis.clicked.connect(self.summecheck)
+        self.BalkonPreis.clicked.connect(self.summecheck)
+    # Funktion um SUmme passend zur Auswahl zu setzen
+    def summecheck(self):
+        if self.InnenPreis.isChecked():
+            self.LaGesamtpreis.setText("Summe: " + self.cruiseData[4])
+        elif self.AussenPreis.isChecked():
+            self.LaGesamtpreis.setText("Summe: " + self.cruiseData[5])
+        elif self.BalkonPreis.isChecked():
+            self.LaGesamtpreis.setText("Summe: " + self.cruiseData[6])
+        else:
+            self.LaGesamtpreis.setText("Summe: ......€")
+
+
+    def stadtbuttons(self):
+        if self.PrevStadtButton.clicked():
+            c-1
+        elif self.NextStadtButton.clicked():
+            c+1
+
 
 
 # Class to show Cruisship image
