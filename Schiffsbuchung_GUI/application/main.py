@@ -179,13 +179,40 @@ class OrderWindow(QWidget):
         self.vKabinenVorschauLayout.addWidget(self.BalkonVorschau)
         self.hKabinenLayout.addLayout(self.vKabinenVorschauLayout)
 
+        """
         #self.input1 = QLabel()
         #BestellGridLayout.addWidget(self.input1, 1, 0)  # (self.widget, reihe, spalte)
-        self.LaStadt = QLabel()
-        self.LaStadt.setWordWrap(True)
-        #self.SWStadt = QStackedWidget()
-        BestellGridLayout.addWidget(self.LaStadt, 1, 0)     # (self.widget, reihe, spalte)
-        #BestellGridLayout.addWidget(self.SWStadt, 1, 0)     # (self.widget, reihe, spalte)
+        self.StadtView = QLabel(self)           # Label zum anzeigen des Bildes der Stadt
+        self.VerticalLayoutLO.addWidget(self.StadtView)
+        self.vStaedteViewLayout = QVBoxLayout()  # Layout fuer Stadnamen-Label und dessen Buttons
+        self.LaStadt = QLabel()                 # Label zum anzeigen des Namen der in "StadtView" angezeigten Stadt
+        self.vStaedteViewLayout.addWidget(self.LaStadt)
+        #self.LaStadt.setWordWrap(True)
+        #BestellGridLayout.addWidget(self.LaStadt, 1, 0)     # (self.widget, reihe, spalte)
+        self.hPrevNextButtonLayout = QHBoxLayout()
+        self.PrevStadtButton = QPushButton("Vorherige Stadt")
+        self.NextStadtButton = QPushButton("Naechste Stadt")
+        self.hPrevNextButtonLayout.addWidget(self.PrevStadtButton)
+        self.hPrevNextButtonLayout.addWidget(self.NextStadtButton)
+        self.vStaedteViewLayout.addLayout(self.hPrevNextButtonLayout)
+        #BestellGridLayout.addLayout(self.PrevNextButtonLayout, 1, 0)    # (self.widget, reihe, spalte)
+        BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0)
+        """
+
+        self.StadtView = QLabel(self)                           # Label zum anzeigen des Bildes der Stadt
+        self.VerticalLayoutLO.addWidget(self.StadtView)
+        self.vStaedteViewLayout = QVBoxLayout()                 # Layout fuer Stadtnamen-Label und darunter dessen Buttons
+        self.LaStadt = QLabel()                                 # Label zum anzeigen des Namen der in "StadtView" angezeigten Stadt
+        self.vStaedteViewLayout.addWidget(self.LaStadt)         # Hinzufuegen des Widgets in das QVBoxlayout
+        self.hPrevNextButtonLayout = QHBoxLayout()              # Horizontales Box Layout um die Buttons nebeneinander zu haben
+        self.PrevStadtButton = QPushButton("Vorherige Stadt")
+        self.NextStadtButton = QPushButton("Naechste Stadt")
+        self.hPrevNextButtonLayout.addWidget(self.PrevStadtButton)
+        self.hPrevNextButtonLayout.addWidget(self.NextStadtButton)
+        self.vStaedteViewLayout.addLayout(self.hPrevNextButtonLayout)
+        BestellGridLayout.addLayout(self.VerticalLayoutLO, 0, 0)
+        BestellGridLayout.addLayout(self.vStaedteViewLayout, 1, 0)
+
 
 
         self.vBestaetigungsLayout = QVBoxLayout()
@@ -245,6 +272,28 @@ class OrderWindow(QWidget):
             Qt.SmoothTransformation
         )
         self.BalkonVorschau.setPixmap(BalkonKabinePixmap)
+        #for i in range(self.cruiseData[2].count()):
+        cityviewlist = self.cruiseData[2]
+        #self.StadtViewPixmap = QPixmap('data/images/Hafenstädte' + str(cityviewlist) + '.jpg')
+        #self.StadtViewPixmap = QPixmap('data/images/Hafenstädte' + str(self.cruiseData[2]) + '.jpg') # geht warhscheinlich nicht da er mit cruiseData[2] alle staedte nimmt
+        # self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/Aberdeen.jpg')
+        # StadtViewPixmap = self.StadtViewPixmap.scaled(
+        #     QtCore.QSize(256, 128),
+        #     Qt.KeepAspectRatioByExpanding,
+        #     Qt.SmoothTransformation
+        # )
+        # self.StadtView.setPixmap(StadtViewPixmap)
+
+
+        self.StadtViewPixmap = QPixmap('./data/images/Hafenstädte/Aberdeen.jpg')
+        StadtViewPixmap = self.StadtViewPixmap.scaled(
+            QtCore.QSize(350, 222),
+            Qt.KeepAspectRatioByExpanding,
+            Qt.SmoothTransformation
+        )
+        self.StadtView.setPixmap(StadtViewPixmap)
+
+
 
         print(self.cruiseData)
         self.show()
