@@ -306,7 +306,12 @@ class OrderWindow(QWidget):
         # while i < self.cruiseData[2].count()
         #     nextbutton = i+1
 
-        i = 1
+        #stadtstelle = 0
+        i = 0
+        #self.PrevStadtButton.clicked.connect(self.PrevStadt)
+        #self.NextStadtButton.clicked.connect(self.NextStadt)
+        self.PrevStadtButton.clicked.connect(self.stadtbuttons)
+        self.NextStadtButton.clicked.connect(self.stadtbuttons)
         #self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/Aberdeen.jpg')
         self.LaStadt.setText("Stadt: " + cityviewlist[i])
         self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + cityviewlist[i] + '.jpg')
@@ -317,8 +322,13 @@ class OrderWindow(QWidget):
         )
         self.StadtView.setPixmap(StadtViewPixmap)
 
-        self.PrevStadtButton.clicked.connect(self.stadtbuttons)
-        self.NextStadtButton.clicked.connect(self.stadtbuttons)
+        # self.PrevStadtButton.clicked.connect(self.stadtbuttons)
+        # self.NextStadtButton.clicked.connect(self.stadtbuttons)
+        # self.PrevStadtButton.clicked.connect(self.PrevStadt)
+        # self.NextStadtButton.clicked.connect(self.NextStadt)
+        # if self.PrevStadtButton.clicked():
+        #     i = i + 1
+        # self.NextStadtButton.clicked.connect(self.NextStadt)
 
 
         print(self.cruiseData)
@@ -357,32 +367,61 @@ class OrderWindow(QWidget):
             self.LaGesamtpreis.setText("Summe: ......€")
 
 
-    def stadtbuttons(self):
-        c = self.cruiseData[2]
-        cityviewlist = c.split(", ")
-        # s = 0  # anzahl splits
-        # for cityviewlist in enumerate:
-        #     print(s)
-        #     print(cityviewlist)
-        stadtanzahl = c.count(",")
+    # def PrevStadt(self, i):
+    #     # c = self.cruiseData[2]
+    #     # cityviewlist = c.split(", ")
+    #     # #stadtanzahl = c.count(",") + 1
+    #     # # y = stadtanzahl + 1
+    #     # # max = y+1
+    #
+    #     #self.i = i
+    #     i = i + 1
+    #     print(i)
+    #     #return self.displayWindow.stadtstelle
+    #     return i
+    #
+    #
+    #
+    #
+    # def NextStadt(self, i):
+    #     # c = self.cruiseData[2]
+    #     # cityviewlist = c.split(", ")
+    #     # stadtanzahl = c.count(",") + 1
+    #     # x = cityviewlist
+    #     # # y = stadtanzahl
+    #     # # max = y+1
+    #
+    #     #self.displayWindow.stadtstelle += 1
+    #     #i = 0
+    #     i = i + 1
+    #     print(i)
+    #     #return self.displayWindow.stadtstelle
+    #     return i
 
-        x = cityviewlist
-        y = stadtanzahl
-        max = y+1
-        i = 0
 
-        if i == 0:
-            self.PrevStadtButton.isEnabled() == False
-        elif i == max:
-            self.NextStadtButton.isEnabled() == False
-        else:
-            self.PrevStadtButton.isEnabled() == True
-            self.NextStadtButton.isEnabled() == True
+
+    def stadtbuttons(self, i):
+        # c = self.cruiseData[2]
+        # cityviewlist = c.split(", ")
+        # stadtanzahl = c.count(",") + 1
+        # x = cityviewlist
+        # # y = stadtanzahl
+        # # max = y+1
+        # i = 0
+
+        # if i == 0:
+        #     self.PrevStadtButton.isEnabled() == False
+        # elif i == max:
+        #     self.NextStadtButton.isEnabled() == False
+        # else:
+        #     self.PrevStadtButton.isEnabled() == True
+        #     self.NextStadtButton.isEnabled() == True
 
         if self.PrevStadtButton.clicked():
             i = i - i
         elif self.NextStadtButton.clicked():
             i = i + 1
+        return i
         # while i > 0:
         #     if self.PrevStadtButton.clicked():
         #         i-1
@@ -391,14 +430,16 @@ class OrderWindow(QWidget):
         #     if self.NextStadtButton.clicked():
         #         i+1
                   #self.LaStadt.setText("Stadt: " + './data/images/Hafenstädte' + x[i] + '.jpg')
-        self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + cityviewlist[i] + '.jpg')
-        StadtViewPixmap = self.displayWindow.StadtViewPixmap.scaled(
-            QtCore.QSize(350, 222),
-            Qt.KeepAspectRatioByExpanding,
-            Qt.SmoothTransformation
-        )
-        self.orderWindow.StadtView.setPixmap(StadtViewPixmap)
-        self.LaStadt.setText("Stadt: " + './data/images/Hafenstädte' + cityviewlist[i] + '.jpg')
+
+        # self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + cityviewlist[i] + '.jpg')
+        # StadtViewPixmap = self.displayWindow.StadtViewPixmap.scaled(
+        #     QtCore.QSize(350, 222),
+        #     Qt.KeepAspectRatioByExpanding,
+        #     Qt.SmoothTransformation
+        # )
+        # self.orderWindow.StadtView.setPixmap(StadtViewPixmap)
+        # self.LaStadt.setText("Stadt: " + './data/images/Hafenstädte' + cityviewlist[i] + '.jpg')
+
 
 
 
