@@ -513,20 +513,29 @@ class ImageCruiseShip(QWidget):
     def __init__(self, image):
         super(ImageCruiseShip, self).__init__()
 
-        self.labelImage = QLabel(self)
-        self.pixmap = QPixmap(image)
-        image_aspect = self.pixmap.size().width() / self.pixmap.size().height()
+        if file_exists(image):
+            self.labelImage = QLabel(self)
+            self.pixmap = QPixmap(image)
+            img_width = self.pixmap.size().width()
+            img_height = self.pixmap.size().height()
+            # Scale image
+            pixmap = self.pixmap.scaled(
+                QtCore.QSize(256, 128),
+                Qt.KeepAspectRatioByExpanding,
+                Qt.SmoothTransformation
+            )
 
-        # Scale image
-        pixmap = self.pixmap.scaled(
-            QtCore.QSize(256, 128),
-            Qt.KeepAspectRatioByExpanding,
-            Qt.SmoothTransformation
-        )
+            self.labelImage.setPixmap(pixmap)
 
-        self.labelImage.setPixmap(pixmap)
-        # Vertically align Label
-        #self.labelImage.move(0, -128 * ((2 - image_aspect) / 2))
+            # Align Image to Center
+            if (img_width / img_height) < 2:  # If Aspect Ratio < Frame Aspect Ratio: center vertical
+                y = abs((img_height / (img_width / 256) - 128) / 2)  # Get Pixel Difference between scaled Image and original Image (Cut section)
+                self.labelImage.move(0, int(-y))
+
+            elif (img_width / img_height) > 2:  # If Aspect Ratio > Frame Aspect Ratio: center horizontal
+                x = abs((img_width / (img_height / 128) - 256) / 2) # Get Pixel Difference between scaled Image and original Image (Cut section)
+                self.labelImage.move(int(-x), 0)
+
 
 
 # creating checkable combo box class which will stay open after a selection
