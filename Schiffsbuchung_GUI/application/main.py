@@ -119,6 +119,7 @@ class OrderWindow(QWidget):
         super().__init__()
         self.personalDataDialog = PersonalDataDialog()
         self.cruiseData = []
+        self.currCityIndex = 0
         self.setWindowTitle('Bestellung')
         self.setWindowIcon(QIcon("data\images\SchiffIcon.png"))
         self.setGeometry(150, 150, 560, 760)
@@ -234,6 +235,21 @@ class OrderWindow(QWidget):
 
     # Open Order Window and put selected cruise data in Labels
     def displayWindow(self):
+        self.currCityIndex = 0
+
+        # Create List of Citys out of String
+        cityString = self.cruiseData[2]
+        self.cityData = cityString.split(", ")
+        # s = 0  # anzahl splits
+        # for cityviewlist in enumerate:
+        #     print(s)
+        #     print(cityviewlist)
+        print("-----create City Info-----------")
+        print(self.currCityIndex)
+        print(cityString)
+        print(self.cityData)
+
+
         self.LaRegion.setText("Region: " + self.cruiseData[0])
         self.LaUebernachtungen.setText("Uebernachtungen: " + self.cruiseData[1])
         self.LaBuchungsnummer.setText("Buchungsnummer: " + str(random.randrange(2, 999999, 2)))
@@ -271,16 +287,6 @@ class OrderWindow(QWidget):
         self.BalkonVorschau.setPixmap(BalkonKabinePixmap)
 
 
-        x = self.cruiseData[2]
-        cityviewlist = x.split(", ")
-        # s = 0  # anzahl splits
-        # for cityviewlist in enumerate:
-        #     print(s)
-        #     print(cityviewlist)
-        stadtanzahl = x.count(",") + 1
-        print(stadtanzahl)
-        print(cityviewlist)
-        print(cityviewlist[1])
 
         #print(cityviewlist[i])
 
@@ -299,10 +305,10 @@ class OrderWindow(QWidget):
 
         # Reset City-Pointer after calling bestellwindow
         # if self.displayWindow.isVisible() == False:
-        self.stadtstelle = 0
-        print(self.stadtstelle)
-        self.PrevStadtButton.clicked.connect(lambda: self.PrevStadt(self.stadtstelle))
-        self.NextStadtButton.clicked.connect(lambda: self.NextStadt(self.stadtstelle))
+
+        print(self.currCityIndex)
+        self.PrevStadtButton.clicked.connect(lambda: self.updateCityLabel(-1))
+        self.NextStadtButton.clicked.connect(lambda: self.updateCityLabel(1))
 
         #self.PrevStadtButton.clicked.connect(lambda: self.stadtbuttons(self.stadtstelle))
         #self.NextStadtButton.clicked.connect(lambda: self.stadtbuttons(self.stadtstelle))
@@ -317,7 +323,8 @@ class OrderWindow(QWidget):
         # else:
         #     self.PrevStadtButton.show()
         #     self.NextStadtButton.show()
-
+        self.updateCityLabel(0)
+        """
         self.LaStadt.setText("Stadt: " + cityviewlist[self.stadtstelle])
         self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + cityviewlist[self.stadtstelle] + '.jpg')
         StadtViewPixmap = self.StadtViewPixmap.scaled(
@@ -326,7 +333,7 @@ class OrderWindow(QWidget):
             Qt.SmoothTransformation
         )
         self.StadtView.setPixmap(StadtViewPixmap)
-
+        """
         print(self.cruiseData)
         self.show()
 
@@ -362,6 +369,32 @@ class OrderWindow(QWidget):
         else:
             self.LaGesamtpreis.setText("Summe: ......€")
 
+    def updateCityLabel(self, counter):
+        self.currCityIndex = self.currCityIndex + counter
+
+        print("CItyData------------------------")
+        print(self.cityData[self.currCityIndex])
+        print(self.currCityIndex)
+
+        if 0 <= self.currCityIndex < len(self.cityData):
+            self.PrevStadtButton.show()
+            self.NextStadtButton.show()
+
+            self.LaStadt.setText("Stadt: " + self.cityData[self.currCityIndex])
+
+            self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + self.cityData[self.currCityIndex] + '.jpg')
+            StadtViewPixmap = self.StadtViewPixmap.scaled(
+                QtCore.QSize(350, 222),
+                Qt.KeepAspectRatioByExpanding,
+                Qt.SmoothTransformation
+            )
+            self.StadtView.setPixmap(StadtViewPixmap)
+
+        if self.currCityIndex == 0:
+            self.PrevStadtButton.hide()
+        elif self.currCityIndex == len(self.cityData) - 1:
+            self.NextStadtButton.hide()
+
 
     def PrevStadt(self, stadtstelle):
         # c = self.cruiseData[2]
@@ -370,15 +403,15 @@ class OrderWindow(QWidget):
         # # y = stadtanzahl + 1
         # # max = y+1
 
-        self.stadtstelle -= 1
-        print(self.stadtstelle)
+        self.currCityIndex -= 1
+        print(self.currCityIndex)
 
-        if self.stadtstelle == 0:
+        if self.currCityIndex == 0:
             self.PrevStadtButton.hide()
         else:
             self.PrevStadtButton.show()
             self.NextStadtButton.show()
-        return self.stadtstelle
+        return self.currCityIndex
 
     def NextStadt(self, stadtstelle):
         c = self.cruiseData[2]
@@ -388,16 +421,16 @@ class OrderWindow(QWidget):
         # # y = stadtanzahl
         # # max = y+1
 
-        self.stadtstelle += 1
-        print(self.stadtstelle)
+        self.currCityIndex += 1
+        print(self.currCityIndex)
         #print(stadtcount)
 
-        if self.stadtstelle + 1 == stadtcount:
+        if self.currCityIndex + 1 == stadtcount:
             self.NextStadtButton.hide()
         else:
             self.PrevStadtButton.show()
             self.NextStadtButton.show()
-        return self.stadtstelle
+        return self.currCityIndex
 
 
 
