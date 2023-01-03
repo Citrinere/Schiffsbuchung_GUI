@@ -119,6 +119,7 @@ class OrderWindow(QWidget):
         super().__init__()
         self.personalDataDialog = PersonalDataDialog()
         self.cruiseData = []
+        self.cityData = []
         self.currCityIndex = 0
         self.setWindowTitle('Bestellung')
         self.setWindowIcon(QIcon("data\images\SchiffIcon.png"))
@@ -206,10 +207,14 @@ class OrderWindow(QWidget):
         self.LaStadt = QLabel()                                 # Label zum anzeigen des Namen der in "StadtView" angezeigten Stadt
         self.vStaedteViewLayout.addWidget(self.LaStadt)         # Hinzufuegen des Widgets in das QVBoxlayout
         self.hPrevNextButtonLayout = QHBoxLayout()              # Horizontales Box Layout um die Buttons nebeneinander zu haben
+
         self.PrevStadtButton = QPushButton("Vorherige Stadt")
         self.NextStadtButton = QPushButton("Naechste Stadt")
         self.hPrevNextButtonLayout.addWidget(self.PrevStadtButton)
         self.hPrevNextButtonLayout.addWidget(self.NextStadtButton)
+        self.PrevStadtButton.clicked.connect(lambda: self.updateCityLabel(-1))
+        self.NextStadtButton.clicked.connect(lambda: self.updateCityLabel(1))
+
         self.vStaedteViewLayout.addLayout(self.hPrevNextButtonLayout)
         BestellGridLayout.addLayout(self.VerticalLayoutLO, 0, 0)
         BestellGridLayout.addLayout(self.vStaedteViewLayout, 1, 0)
@@ -244,11 +249,13 @@ class OrderWindow(QWidget):
         # for cityviewlist in enumerate:
         #     print(s)
         #     print(cityviewlist)
+        print(self.cruiseData)
         print("-----create City Info-----------")
         print(self.currCityIndex)
         print(cityString)
         print(self.cityData)
 
+        self.updateCityLabel(0)
 
         self.LaRegion.setText("Region: " + self.cruiseData[0])
         self.LaUebernachtungen.setText("Uebernachtungen: " + self.cruiseData[1])
@@ -307,8 +314,7 @@ class OrderWindow(QWidget):
         # if self.displayWindow.isVisible() == False:
 
         print(self.currCityIndex)
-        self.PrevStadtButton.clicked.connect(lambda: self.updateCityLabel(-1))
-        self.NextStadtButton.clicked.connect(lambda: self.updateCityLabel(1))
+
 
         #self.PrevStadtButton.clicked.connect(lambda: self.stadtbuttons(self.stadtstelle))
         #self.NextStadtButton.clicked.connect(lambda: self.stadtbuttons(self.stadtstelle))
@@ -323,7 +329,7 @@ class OrderWindow(QWidget):
         # else:
         #     self.PrevStadtButton.show()
         #     self.NextStadtButton.show()
-        self.updateCityLabel(0)
+
         """
         self.LaStadt.setText("Stadt: " + cityviewlist[self.stadtstelle])
         self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + cityviewlist[self.stadtstelle] + '.jpg')
@@ -334,7 +340,7 @@ class OrderWindow(QWidget):
         )
         self.StadtView.setPixmap(StadtViewPixmap)
         """
-        print(self.cruiseData)
+
         self.show()
 
         # print(self.cruiseData[2])
@@ -372,11 +378,12 @@ class OrderWindow(QWidget):
     def updateCityLabel(self, counter):
         self.currCityIndex = self.currCityIndex + counter
 
-        print("CItyData------------------------")
-        print(self.cityData[self.currCityIndex])
-        print(self.currCityIndex)
-
         if 0 <= self.currCityIndex < len(self.cityData):
+            print("-----------------CityData getting updated------------------------")
+            print(len(self.cityData))
+            print(self.cityData[self.currCityIndex])
+            print(self.currCityIndex)
+
             self.PrevStadtButton.show()
             self.NextStadtButton.show()
 
@@ -392,10 +399,10 @@ class OrderWindow(QWidget):
 
         if self.currCityIndex == 0:
             self.PrevStadtButton.hide()
-        elif self.currCityIndex == len(self.cityData) - 1:
+        elif self.currCityIndex == len(self.cityData) - 1: # elif self.currCityIndex + 1 == len(self.cityData):
             self.NextStadtButton.hide()
 
-
+    """
     def PrevStadt(self, stadtstelle):
         # c = self.cruiseData[2]
         # cityviewlist = c.split(", ")
@@ -432,7 +439,7 @@ class OrderWindow(QWidget):
             self.NextStadtButton.show()
         return self.currCityIndex
 
-
+    """
 
     # def stadtbuttons(self, stadtstelle):
     #     # if i == 0:
