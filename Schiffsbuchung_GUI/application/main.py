@@ -150,6 +150,7 @@ class OrderWindow(QWidget):
         self.VerticalLayoutLO = QVBoxLayout()
         self.SchiffstypLayout = QVBoxLayout()
         self.SchiffsTypVorschau = QLabel(self)
+        self.SchiffsTypVorschau.resize(330, 202)
         self.SchiffsTyp = QLabel()
         self.SchiffsTyp.setAlignment(QtCore.Qt.AlignCenter)
         self.SchiffstypLayout.addWidget(self.SchiffsTypVorschau)
@@ -206,6 +207,7 @@ class OrderWindow(QWidget):
         """
 
         self.StadtView = QLabel(self)                           # Label zum anzeigen des Bildes der Stadt
+        self.StadtView.resize(330, 202)
         self.VerticalLayoutLO.addWidget(self.StadtView)
         self.vStaedteViewLayout = QVBoxLayout()                 # Layout fuer Stadtnamen-Label und darunter dessen Buttons
         self.LaStadt = QLabel()                                 # Label zum anzeigen des Namen der in "StadtView" angezeigten Stadt
@@ -266,12 +268,27 @@ class OrderWindow(QWidget):
         self.LaBuchungsnummer.setText("Buchungsnummer: " + str(random.randrange(2, 999999, 2)))
         self.SchiffsTyp.setText("Schiffstyp: " + self.cruiseData[3])
         self.SchiffsTypPixmap = QPixmap('data/images/Schiffstypen/Schiffstyp ' + str(self.cruiseData[3]))
+
+        img_width = self.SchiffsTypPixmap.size().width()
+        img_height = self.SchiffsTypPixmap.size().height()
+
         SchiffsTypPixmap = self.SchiffsTypPixmap.scaled(
             QtCore.QSize(330, 202),     # width, height
             Qt.KeepAspectRatioByExpanding,
             Qt.SmoothTransformation
         )
         self.SchiffsTypVorschau.setPixmap(SchiffsTypPixmap)
+
+        if (img_width / img_height) < 1.63:  # If Aspect Ratio < Frame Aspect Ratio: center vertical
+            y = abs((img_height / (
+                        img_width / 330) - 202) / 2)  # Get Pixel Difference between scaled Image and original Image (Cut section)
+            self.SchiffsTypVorschau.move(0, int(-y))
+
+        elif (img_width / img_height) > 1.63:  # If Aspect Ratio > Frame Aspect Ratio: center horizontal
+            x = abs((img_width / (
+                        img_height / 202) - 330) / 2)  # Get Pixel Difference between scaled Image and original Image (Cut section)
+            self.SchiffsTypVorschau.move(int(-x), 0)
+
         self.InnenPreis.setText("Innenkabine\nPreis: " + self.cruiseData[4])
         self.InnenKabinePixmap = QPixmap('data/images/Kabinentypen/Innenkabine.jpg')
         InnenKabinePixmap = self.InnenKabinePixmap.scaled(
@@ -317,7 +334,6 @@ class OrderWindow(QWidget):
         # Reset City-Pointer after calling bestellwindow
         # if self.displayWindow.isVisible() == False:
 
-        print(self.currCityIndex)
 
 
         #self.PrevStadtButton.clicked.connect(lambda: self.stadtbuttons(self.stadtstelle))
@@ -395,7 +411,7 @@ class OrderWindow(QWidget):
 
             self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + self.cityData[self.currCityIndex] + '.jpg')
             StadtViewPixmap = self.StadtViewPixmap.scaled(
-                QtCore.QSize(350, 222),
+                QtCore.QSize(330, 202),
                 Qt.KeepAspectRatioByExpanding,
                 Qt.SmoothTransformation
             )
@@ -403,7 +419,7 @@ class OrderWindow(QWidget):
 
         if self.currCityIndex == 0:
             self.PrevStadtButton.hide()
-        elif self.currCityIndex == len(self.cityData) - 1: # elif self.currCityIndex + 1 == len(self.cityData):
+        elif self.currCityIndex == len(self.cityData) - 1:
             self.NextStadtButton.hide()
 
     """
