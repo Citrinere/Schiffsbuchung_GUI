@@ -143,6 +143,10 @@ class OrderWindow(QWidget):
 
         # Create Child Layouts and Widgets
         # Layout fuer Schiffstyp(Vorschau), Region, Uebernachtungen, Buchungsnummer
+        self.LaInform = QLabel("Hier sehen Sie die Zusammenfassung Ihrer ausgewählten Reise.\nWählen Sie bitte noch Ihre gewünschte Kabinenart aus:")
+        self.LaInform.setStyleSheet("font-size: 18px")
+        #self.LaInform.setWordWrap(True)
+        BestellGridLayout.addWidget(self.LaInform, 0, 0, 1, 0)
         self.VerticalLayoutLO = QVBoxLayout()
         self.SchiffstypLayout = QVBoxLayout()
         self.SchiffsTypVorschau = QLabel(self)
@@ -159,11 +163,11 @@ class OrderWindow(QWidget):
         self.LaBuchungsnummer = QLabel()
         self.VerticalLayoutLO.addWidget(self.LaBuchungsnummer)
         self.VerticalLayoutLO.addStretch()
-        BestellGridLayout.addLayout(self.VerticalLayoutLO, 0, 0)  # (self.layout, reihe, spalte)
+        BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0)  # (self.layout, reihe, spalte)
 
         # Layout fuer Kabinen-Preise und Vorschau
         self.hKabinenLayout = QHBoxLayout()
-        BestellGridLayout.addLayout(self.hKabinenLayout, 0, 1)
+        BestellGridLayout.addLayout(self.hKabinenLayout, 1, 1)
         self.vKabinenPreisLayout = QVBoxLayout()
         self.InnenPreis = QRadioButton()
         self.vKabinenPreisLayout.addWidget(self.InnenPreis)
@@ -216,8 +220,8 @@ class OrderWindow(QWidget):
         self.NextStadtButton.clicked.connect(lambda: self.updateCityLabel(1))
 
         self.vStaedteViewLayout.addLayout(self.hPrevNextButtonLayout)
-        BestellGridLayout.addLayout(self.VerticalLayoutLO, 0, 0)
-        BestellGridLayout.addLayout(self.vStaedteViewLayout, 1, 0)
+        BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0)
+        BestellGridLayout.addLayout(self.vStaedteViewLayout, 2, 0)
 
 
 
@@ -229,7 +233,7 @@ class OrderWindow(QWidget):
         self.ConfirmButton.clicked.connect(self.confirmOrder)
         self.vBestaetigungsLayout.addWidget(self.ConfirmButton)
         # BestellGridLayout.addWidget(self.ConfirmButton, 1, 1)
-        BestellGridLayout.addLayout(self.vBestaetigungsLayout, 1, 1)
+        BestellGridLayout.addLayout(self.vBestaetigungsLayout, 2, 1)
 
         self.setLayout(BestellGridLayout)
 
@@ -263,7 +267,7 @@ class OrderWindow(QWidget):
         self.SchiffsTyp.setText("Schiffstyp: " + self.cruiseData[3])
         self.SchiffsTypPixmap = QPixmap('data/images/Schiffstypen/Schiffstyp ' + str(self.cruiseData[3]))
         SchiffsTypPixmap = self.SchiffsTypPixmap.scaled(
-            QtCore.QSize(300, 172),
+            QtCore.QSize(330, 202),     # width, height
             Qt.KeepAspectRatioByExpanding,
             Qt.SmoothTransformation
         )
@@ -879,6 +883,7 @@ class Window(QMainWindow):
         self.NachtLabelErgebnis.setText("Uebernachtungen: " + str(naechte))
         self.StadtLabelErgebnis.setText("Staedte: " + str(staedte))
         self.SchiffsTypLabelErgebnis.setText("Schiffstyp: " + str(typ))
+
 
         # Reset Filter
         for row_count in range(self.table_view.rowCount()):
