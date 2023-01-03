@@ -696,7 +696,7 @@ class Window(QMainWindow):
         self.SchiffsTypLabelErgebnis = QLabel()  # Label zum Anzeigen der Auswahl
         # self.SchiffsTypLabelErgebnis.setStyleSheet("background-color: white;")
         self.SchiffsTypLabel.setText("Schiffstyp")
-        self.SchiffsTypLabel.setStyleSheet("background-color: white;")
+        self.SchiffsTypLabel.setStyleSheet("background-color: white; padding-left: 5px")
         self.SchiffsTypComboBox = CheckableComboBox()
 
         # Such Knopf
