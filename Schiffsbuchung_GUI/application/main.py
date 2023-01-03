@@ -538,6 +538,7 @@ class CheckableComboBox(QComboBox):
 
     def handleItemPressed(self, index):
         item = self.model().itemFromIndex(index)
+
         if item.checkState() == QtCore.Qt.Checked:
             item.setCheckState(QtCore.Qt.Unchecked)
         else:
@@ -560,13 +561,13 @@ class CheckableComboBox(QComboBox):
         else:
             item.setCheckState(QtCore.Qt.Unchecked)
 
+    def resetItemChecked(self, index):
+        item = self.model().item(index, self.modelColumn())
+        if item.checkState() == QtCore.Qt.Checked:
+            item.setCheckState(QtCore.Qt.Unchecked)
+
 
 # Tabelle
-def getImageLabel(image):
-    imageLabel = ImageCruiseShip(image)
-    return imageLabel
-
-
 class TableView(QTableWidget):
     def __init__(self, data, *args):
         QTableWidget.__init__(self, *args)
@@ -587,6 +588,10 @@ class TableView(QTableWidget):
             if i != 3:
                 self.resizeColumnToContents(i)
 
+    def getImageLabel(self, image):
+        imageLabel = ImageCruiseShip(image)
+        return imageLabel
+
     # Put data from Excel file in table
     def setData(self):
         # Create Header
@@ -599,11 +604,10 @@ class TableView(QTableWidget):
         for row_number, row_data in enumerate(self.data):
             for column_number, column_data in enumerate(row_data):
 
-
                 # Put image instead of text for cruisship kind
                 if column_number == 4:
                     imagePath = IMGPATH + "\Schiffstyp " + str(column_data) + ".jpg"
-                    item = getImageLabel(imagePath)
+                    item = self.getImageLabel(imagePath)
                     self.setCellWidget(row_number, column_number, item)
 
                 # Format pricing
@@ -616,6 +620,7 @@ class TableView(QTableWidget):
                     newItem = QTableWidgetItem(str(column_data))
 
                 newItem.setTextAlignment(Qt.AlignCenter)
+                # Put Item in Table
                 self.setItem(row_number, column_number, newItem)
                 self.show()
 
@@ -637,93 +642,132 @@ class Window(QMainWindow):
 
         # creating a widget object
         myQWidget = QWidget()
-
-        # Layout Creation
-        ApplicationVerticalLayout = QVBoxLayout()
-        myQWidget.setLayout(ApplicationVerticalLayout)
-
-        FilterGridLayout = QGridLayout()
-        ApplicationVerticalLayout.addLayout(FilterGridLayout)
-
-        self.table_view = TableView(getTable(), len(getTable()), 8)
-        tableLayout = QVBoxLayout()  # Tabellen Layout
-        tableLayout.addWidget(self.table_view)
-        tableLayout.minimumSize()
-        ApplicationVerticalLayout.addLayout(tableLayout)
-
-        self.sendSelectionButton = QPushButton("Auswahl bestellen", self)
-        ApplicationVerticalLayout.addWidget(self.sendSelectionButton)
-
-        # central widget
-        self.setCentralWidget(myQWidget)
-
-        # creating widgets and their details
         # main window
         self.setObjectName("MainWindow>")
         self.setWindowTitle("Kreuzfahrt-Buchung")
         self.setGeometry(100, 50, 1400, 720)  # x, y, width, height
         self.setWindowIcon(QIcon("data\images\SchiffIcon.png"))
 
+        # Overall Layout Creation
+        ApplicationVerticalLayout = QVBoxLayout()
+        ApplicationVerticalLayout.setSpacing(20)
+        myQWidget.setLayout(ApplicationVerticalLayout)
+
+        #Infotext for Filter
+        self.FilterInfoLabel = QLabel()
+        self.FilterInfoLabel.setText(
+            "Sie können den Filter nutzen, um Ihre Auswahl einzugrenzen\n(Auswahl der Städte wird durch die ausgewählten Regionen begrenzt)\n(Anzahl der Übernachtungen werden +- 2 Tage angezeigt)")
+        self.FilterInfoLabel.setStyleSheet("font-size: 12pt; background-color: rgba(255, 255, 255, 0.6);")
+        self.FilterInfoLabel.setAlignment(QtCore.Qt.AlignCenter)
+        ApplicationVerticalLayout.addWidget(self.FilterInfoLabel)
+
+        # Grid Layout for fILTER
+        FilterGridLayout = QGridLayout()
+        FilterGridLayout.setSpacing(5)
+        ApplicationVerticalLayout.addLayout(FilterGridLayout)
+
+        # Infotext for Tabelle
+        self.FilterInfoLabel = QLabel()
+        self.FilterInfoLabel.setText(
+            "Klicken Sie die Reise an, welche Sie auswählen wollen")
+        self.FilterInfoLabel.setStyleSheet("font-size: 12pt; background-color: rgba(255, 255, 255, 0.6);")
+        self.FilterInfoLabel.setAlignment(QtCore.Qt.AlignCenter)
+        ApplicationVerticalLayout.addWidget(self.FilterInfoLabel)
+
+        # Table Creation
+        self.table_view = TableView(getTable(), len(getTable()), 8)
+        tableLayout = QVBoxLayout()  # Tabellen Layout
+        tableLayout.addWidget(self.table_view)
+        tableLayout.minimumSize()
+        ApplicationVerticalLayout.addLayout(tableLayout)
+        # Tabellenkonfiguration
+        for x in range(len(getTable())):  # Row-Höhe festlegen
+            self.table_view.setRowHeight(x, 128)
+
+        self.table_view.setColumnWidth(4, 256)  # Schiffstypen größer machen für Bilder
+
+        # Order Button
+        self.sendSelectionButton = QPushButton("Auswahl bestellen", self)
+        self.sendSelectionButton.setAutoFillBackground(True)
+        self.sendSelectionButton.resize(150, 70)
+        self.sendSelectionButton.setStyleSheet("background-color: rgb(0, 130, 0); color: white;")
+        ApplicationVerticalLayout.addWidget(self.sendSelectionButton)
+
+        # central widget
+        self.setCentralWidget(myQWidget)
+
+        # creating widgets and their details
         # Region Auswahl
         self.RegionLabel = QLabel()
-        self.RegionLabelErgebnis = QLabel()  # Label zum Anzeigen der Auswahl
+        #self.RegionLabelErgebnis = QLabel()  # Label zum Anzeigen der Auswahl
         # self.RegionLabelErgebnis.setStyleSheet("background-color: white;")
         self.RegionLabel.setText("Region")
-        self.RegionLabel.setStyleSheet("background-color: white;")
+        self.RegionLabel.setStyleSheet("font-size: 12pt;font-weight: bold; background-color: rgba(255, 255, 255, 0.6);")
+        self.RegionLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.RegionComboBox = CheckableComboBox()
 
         # Uebernachtungen Anzahl
         self.NachtLabel = QLabel()
-        self.NachtLabelErgebnis = QLabel()  # Label zum Anzeigen der Auswahl
+        #self.NachtLabelErgebnis = QLabel()  # Label zum Anzeigen der Auswahl
         # self.NachtLabelErgebnis.setStyleSheet("background-color: white; border-color: black;")
-        self.NachtLabel.setText("Uebernachtungen")
-        self.NachtLabel.setStyleSheet("background-color: white; border-color: black;")
+        self.NachtLabel.setText("Übernachtungen")
+        self.NachtLabel.setStyleSheet("font-size: 12pt;font-weight: bold; background-color: rgba(255, 255, 255, 0.6);")
+        self.NachtLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.NachtSpinBox = QSpinBox()
         self.NachtSpinBox.setMinimum(7)
         self.NachtSpinBox.setMaximum(21)
 
         # Zu besuchende Staedte
         self.StadtLabel = QLabel()
-        self.StadtLabelErgebnis = QLabel()  # Label zum Anzeigen der Auswahl
+        #self.StadtLabelErgebnis = QLabel()  # Label zum Anzeigen der Auswahl
         # self.StadtLabelErgebnis.setStyleSheet("background-color: white;")
-        self.StadtLabel.setText("Staedte")
-        self.StadtLabel.setStyleSheet("background-color: white;")
+        self.StadtLabel.setText("Städte")
+        self.StadtLabel.setStyleSheet("font-size: 12pt;font-weight: bold; background-color: rgba(255, 255, 255, 0.6);")
+        self.StadtLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.StadtComboBox = CheckableComboBox()
         # self.StadtComboBox.setGeometry(QtCore.QRect(310, 70, 200, 41))
 
         # Schiffstyp Auswahl
         self.SchiffsTypLabel = QLabel()
-        self.SchiffsTypLabelErgebnis = QLabel()  # Label zum Anzeigen der Auswahl
+        #self.SchiffsTypLabelErgebnis = QLabel()  # Label zum Anzeigen der Auswahl
         # self.SchiffsTypLabelErgebnis.setStyleSheet("background-color: white;")
         self.SchiffsTypLabel.setText("Schiffstyp")
-        self.SchiffsTypLabel.setStyleSheet("background-color: white;")
+        self.SchiffsTypLabel.setStyleSheet("font-size: 12pt;font-weight: bold; background-color: rgba(255, 255, 255, 0.6);")
+        self.SchiffsTypLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.SchiffsTypComboBox = CheckableComboBox()
 
         # Such Knopf
         self.SearchButton = QPushButton()
-        self.SearchButton.setText("Search")
+        self.SearchButton.setText("Suchen")
         # self.SearchButton.setGeometry(730, 20, 61, 41)
         self.SearchButton.setAutoFillBackground(True)
         self.SearchButton.setStyleSheet("background-color: rgb(0, 130, 0); color: white;")
 
+        # Reset Knopf
+        self.ResetButton = QPushButton()
+        self.ResetButton.setText("Filter zurücksetzen")
+        self.ResetButton.setAutoFillBackground(True)
+        self.ResetButton.setStyleSheet("background-color: rgb(130, 0, 0); color: white;")
+
         # adding Widgets to the Grid-layout   (widget, row, column, alignment)
         FilterGridLayout.addWidget(self.RegionLabel, 1, 1)
         FilterGridLayout.addWidget(self.RegionComboBox, 2, 1)
-        FilterGridLayout.addWidget(self.RegionLabelErgebnis, 3, 1)
+        #FilterGridLayout.addWidget(self.RegionLabelErgebnis, 3, 1)
 
         FilterGridLayout.addWidget(self.NachtLabel, 1, 2)
         FilterGridLayout.addWidget(self.NachtSpinBox, 2, 2)
-        FilterGridLayout.addWidget(self.NachtLabelErgebnis, 3, 2)
+        #FilterGridLayout.addWidget(self.NachtLabelErgebnis, 3, 2)
 
         FilterGridLayout.addWidget(self.StadtLabel, 1, 3)
         FilterGridLayout.addWidget(self.StadtComboBox, 2, 3)
-        FilterGridLayout.addWidget(self.StadtLabelErgebnis, 3, 3)
+        #FilterGridLayout.addWidget(self.StadtLabelErgebnis, 3, 3)
 
         FilterGridLayout.addWidget(self.SchiffsTypLabel, 1, 4)
         FilterGridLayout.addWidget(self.SchiffsTypComboBox, 2, 4)
-        FilterGridLayout.addWidget(self.SchiffsTypLabelErgebnis, 3, 4)
+        #FilterGridLayout.addWidget(self.SchiffsTypLabelErgebnis, 3, 4)
 
         FilterGridLayout.addWidget(self.SearchButton, 2, 5)
+        FilterGridLayout.addWidget(self.ResetButton, 1, 5)
         # myLayout.addStretch()
 
         # add items to Region CB
@@ -753,12 +797,8 @@ class Window(QMainWindow):
             # item.setCheckState(Qt.Unchecked)
 
         # add items to Schiffstyp
-        self.SchiffsTypComboBox.addItem("A")
-        self.SchiffsTypComboBox.addItem("B")
-        self.SchiffsTypComboBox.addItem("C")
-        self.SchiffsTypComboBox.addItem("D")
-        self.SchiffsTypComboBox.addItem("E")
-        self.SchiffsTypComboBox.addItem("F")
+        for i in ["A", "B", "C", "D", "E", "F"]:
+            self.SchiffsTypComboBox.addItem(i)
 
         # self.SearchComponents() # calling method
         self.show()
@@ -766,15 +806,12 @@ class Window(QMainWindow):
         # adding action to button
         # self.RegionComboBox = QComboBox(self)
         self.SearchButton.pressed.connect(self.Search)
+        self.ResetButton.pressed.connect(self.Reset)
         self.sendSelectionButton.pressed.connect(self.sendData)
         # self.RegionLabelErgebnis = QLabel(self)
         # self.RegionComboBox.setGeometry(100, 100, 200, 50)
 
-        # Tabellenkonfiguration
-        for x in range(len(getTable())):  # Row-Höhe festlegen
-            self.table_view.setRowHeight(x, 128)
 
-        self.table_view.setColumnWidth(4, 256)  # Schiffstypen größer machen für Bilder
 
     def updateCityFilter(self):
         selectedRegion = []
@@ -853,6 +890,22 @@ class Window(QMainWindow):
         # Funktion ausführen zum Anzeigen des Fensters
         self.orderWindow.displayWindow()
 
+    # Reset Filter with nothing selected and Übernachtungen = 7
+    def Reset(self):
+
+        for i in range(self.RegionComboBox.count()):
+            self.RegionComboBox.resetItemChecked(i)
+        self.NachtSpinBox.setValue(7)
+        for i in range(self.StadtComboBox.count()):
+            self.StadtComboBox.resetItemChecked(i)
+        for i in range(self.SchiffsTypComboBox.count()):
+            self.SchiffsTypComboBox.resetItemChecked(i)
+
+        # Show all Table elements
+        for row_count in range(self.table_view.rowCount()):
+            self.table_view.showRow(row_count)
+
+
     # define button action
     def Search(self):
 
@@ -879,41 +932,54 @@ class Window(QMainWindow):
         FilterErgebnis = [region, naechte, staedte, typ]
 
         # showing content on the screen though label
-        self.RegionLabelErgebnis.setText("Region: " + str(region))
-        self.NachtLabelErgebnis.setText("Uebernachtungen: " + str(naechte))
-        self.StadtLabelErgebnis.setText("Staedte: " + str(staedte))
-        self.SchiffsTypLabelErgebnis.setText("Schiffstyp: " + str(typ))
+        #self.RegionLabelErgebnis.setText("Region: " + str(region))
+        #self.NachtLabelErgebnis.setText("Uebernachtungen: " + str(naechte))
+        #self.StadtLabelErgebnis.setText("Staedte: " + str(staedte))
+        #self.SchiffsTypLabelErgebnis.setText("Schiffstyp: " + str(typ))
 
 
-        # Reset Filter
+        # Reset old Filter before applying new one
         for row_count in range(self.table_view.rowCount()):
             self.table_view.showRow(row_count)
 
         for row_count in range(self.table_view.rowCount()):
-
             # Check Region
             if len(FilterErgebnis[0]) != 0:  # Wenn keine Auswahl, dann zeige alle
                 if self.table_view.item(row_count, 1).text() not in FilterErgebnis[0]:
                     self.table_view.hideRow(row_count)
-
             # Check Übernachtung
             if len(FilterErgebnis[1]) != 0:
                 if int(self.table_view.item(row_count, 2).text()) not in FilterErgebnis[1]:
                     self.table_view.hideRow(row_count)
-
             # Check City
+            cityElementTable = self.table_view.item(row_count, 3).text().split(", ")    # Get List of Citys in current Table Row
             if len(FilterErgebnis[2]) != 0:
-                for cityElement in FilterErgebnis[2]:
+                # Check if all Citys from Filter are in CityList of Table
+                check = all(item in cityElementTable for item in FilterErgebnis[2])
+                if check is False:
+                    self.table_view.hideRow(row_count)
+
+                """
+                for cityNum, cityElement in enumerate(FilterErgebnis[2]):
                     # Ändern, dass alle ausgewählten Städte enthalten sein MÜSSEN
+
                     if cityElement in self.table_view.item(row_count, 3).text():
                         break
                     elif cityElement not in self.table_view.item(row_count, 3).text():
                         self.table_view.hideRow(row_count)
-
+                """
             # Check Schiffstyp
             if len(FilterErgebnis[3]) != 0:
                 if self.table_view.item(row_count, 4).text() not in FilterErgebnis[3]:
                     self.table_view.hideRow(row_count)
+
+        if self.table_view.rowAt(0) == -1:
+            emptyTableDialog = QMessageBox(self)
+            emptyTableDialog.setWindowTitle("Kein Suchergebnis gefunden")
+            emptyTableDialog.setText(
+                "Für Ihre Auswahl wurde kein Suchergebnis gefunden.")
+            emptyTableDialog.exec()
+
 
 
 # drivers code
