@@ -232,20 +232,11 @@ class OrderWindow(QWidget):
         self.personalDataDialog.displayDialog()
         self.close()
 
-    # Open Order Window at put selected cruise data in Labels
+    # Open Order Window and put selected cruise data in Labels
     def displayWindow(self):
         self.LaRegion.setText("Region: " + self.cruiseData[0])
         self.LaUebernachtungen.setText("Uebernachtungen: " + self.cruiseData[1])
         self.LaBuchungsnummer.setText("Buchungsnummer: " + str(random.randrange(2, 999999, 2)))
-
-        # print("Sauhund")
-        # cityviewlist = []
-        # cityviewlist.extend(self.cruiseDate[2])
-        # print(cityviewlist)
-
-        #self.LaStadt.setText("Stadt: \n" + self.cruiseData[2])
-        #self.LaStadt.setText(cityviewlist[1])
-
         self.SchiffsTyp.setText("Schiffstyp: " + self.cruiseData[3])
         self.SchiffsTypPixmap = QPixmap('data/images/Schiffstypen/Schiffstyp ' + str(self.cruiseData[3]))
         SchiffsTypPixmap = self.SchiffsTypPixmap.scaled(
@@ -286,8 +277,8 @@ class OrderWindow(QWidget):
         # for cityviewlist in enumerate:
         #     print(s)
         #     print(cityviewlist)
-        stadtanzahl = x.count(",")
-        print(stadtanzahl+1)
+        stadtanzahl = x.count(",") + 1
+        print(stadtanzahl)
         print(cityviewlist)
         print(cityviewlist[1])
 
@@ -306,30 +297,35 @@ class OrderWindow(QWidget):
         # while i < self.cruiseData[2].count()
         #     nextbutton = i+1
 
-        #stadtstelle = 0
-        i = 0
-        #self.PrevStadtButton.clicked.connect(self.PrevStadt)
-        #self.NextStadtButton.clicked.connect(self.NextStadt)
-        self.PrevStadtButton.clicked.connect(self.stadtbuttons)
-        self.NextStadtButton.clicked.connect(self.stadtbuttons)
-        #self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/Aberdeen.jpg')
-        self.LaStadt.setText("Stadt: " + cityviewlist[i])
-        self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + cityviewlist[i] + '.jpg')
+        # Reset City-Pointer after calling bestellwindow
+        # if self.displayWindow.isVisible() == False:
+        self.stadtstelle = 0
+        print(self.stadtstelle)
+        self.PrevStadtButton.clicked.connect(lambda: self.PrevStadt(self.stadtstelle))
+        self.NextStadtButton.clicked.connect(lambda: self.NextStadt(self.stadtstelle))
+
+        #self.PrevStadtButton.clicked.connect(lambda: self.stadtbuttons(self.stadtstelle))
+        #self.NextStadtButton.clicked.connect(lambda: self.stadtbuttons(self.stadtstelle))
+
+        #if self.PrevStadtButton.clicked()
+        # if self.stadtstelle == 0:
+        #     #self.PrevStadtButton.setText(" ")
+        #     self.PrevStadtButton.hide()
+        # elif self.stadtstelle + 1 == stadtanzahl:
+        #     #self.NextStadtButton.setText(" ")
+        #     self.NextStadtButton.hide()
+        # else:
+        #     self.PrevStadtButton.show()
+        #     self.NextStadtButton.show()
+
+        self.LaStadt.setText("Stadt: " + cityviewlist[self.stadtstelle])
+        self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + cityviewlist[self.stadtstelle] + '.jpg')
         StadtViewPixmap = self.StadtViewPixmap.scaled(
             QtCore.QSize(350, 222),
             Qt.KeepAspectRatioByExpanding,
             Qt.SmoothTransformation
         )
         self.StadtView.setPixmap(StadtViewPixmap)
-
-        # self.PrevStadtButton.clicked.connect(self.stadtbuttons)
-        # self.NextStadtButton.clicked.connect(self.stadtbuttons)
-        # self.PrevStadtButton.clicked.connect(self.PrevStadt)
-        # self.NextStadtButton.clicked.connect(self.NextStadt)
-        # if self.PrevStadtButton.clicked():
-        #     i = i + 1
-        # self.NextStadtButton.clicked.connect(self.NextStadt)
-
 
         print(self.cruiseData)
         self.show()
@@ -367,61 +363,85 @@ class OrderWindow(QWidget):
             self.LaGesamtpreis.setText("Summe: ......€")
 
 
-    # def PrevStadt(self, i):
-    #     # c = self.cruiseData[2]
-    #     # cityviewlist = c.split(", ")
-    #     # #stadtanzahl = c.count(",") + 1
-    #     # # y = stadtanzahl + 1
-    #     # # max = y+1
-    #
-    #     #self.i = i
-    #     i = i + 1
-    #     print(i)
-    #     #return self.displayWindow.stadtstelle
-    #     return i
-    #
-    #
-    #
-    #
-    # def NextStadt(self, i):
-    #     # c = self.cruiseData[2]
-    #     # cityviewlist = c.split(", ")
-    #     # stadtanzahl = c.count(",") + 1
-    #     # x = cityviewlist
-    #     # # y = stadtanzahl
-    #     # # max = y+1
-    #
-    #     #self.displayWindow.stadtstelle += 1
-    #     #i = 0
-    #     i = i + 1
-    #     print(i)
-    #     #return self.displayWindow.stadtstelle
-    #     return i
-
-
-
-    def stadtbuttons(self, i):
+    def PrevStadt(self, stadtstelle):
         # c = self.cruiseData[2]
         # cityviewlist = c.split(", ")
-        # stadtanzahl = c.count(",") + 1
+        # #stadtanzahl = c.count(",") + 1
+        # # y = stadtanzahl + 1
+        # # max = y+1
+
+        self.stadtstelle -= 1
+        print(self.stadtstelle)
+
+        if self.stadtstelle == 0:
+            self.PrevStadtButton.hide()
+        else:
+            self.PrevStadtButton.show()
+            self.NextStadtButton.show()
+        return self.stadtstelle
+
+    def NextStadt(self, stadtstelle):
+        c = self.cruiseData[2]
+        # cityviewlist = c.split(", ")
+        stadtcount = c.count(",") + 1
         # x = cityviewlist
         # # y = stadtanzahl
         # # max = y+1
-        # i = 0
 
-        # if i == 0:
-        #     self.PrevStadtButton.isEnabled() == False
-        # elif i == max:
-        #     self.NextStadtButton.isEnabled() == False
-        # else:
-        #     self.PrevStadtButton.isEnabled() == True
-        #     self.NextStadtButton.isEnabled() == True
+        self.stadtstelle += 1
+        print(self.stadtstelle)
+        #print(stadtcount)
 
-        if self.PrevStadtButton.clicked():
-            i = i - i
-        elif self.NextStadtButton.clicked():
-            i = i + 1
-        return i
+        if self.stadtstelle + 1 == stadtcount:
+            self.NextStadtButton.hide()
+        else:
+            self.PrevStadtButton.show()
+            self.NextStadtButton.show()
+        return self.stadtstelle
+
+
+
+    # def stadtbuttons(self, stadtstelle):
+    #     # if i == 0:
+    #     #     self.PrevStadtButton.isEnabled() == False
+    #     # elif i == max:
+    #     #     self.NextStadtButton.isEnabled() == False
+    #     # else:
+    #     #     self.PrevStadtButton.isEnabled() == True
+    #     #     self.NextStadtButton.isEnabled() == True
+    #
+    #     if self.PrevStadtButton.clicked():
+    #         #i = i - i
+    #         self.stadtstelle -= 1
+    #         #return self.stadtstelle
+    #     elif self.NextStadtButton.clicked():
+    #         #i = i + 1
+    #         self.stadtstelle += 1
+    #         #return self.stadtstelle
+    #
+    #     c = self.cruiseData[2]
+    #     # cityviewlist = c.split(", ")
+    #     stadtcount = c.count(",") + 1
+    #     # = cityviewlist
+    #     # y = stadtanzahl
+    #     # max = y+1
+    #
+    #     if self.stadtstelle == 0:
+    #         self.PrevStadtButton.hide()
+    #     else:
+    #         self.PrevStadtButton.show()
+    #
+    #     if self.stadtstelle + 1 == stadtcount:
+    #         self.NextStadtButton.hide()
+    #     else:
+    #         self.NextStadtButton.show()
+    #
+    #
+    #     return self.stadtstelle
+
+
+
+
         # while i > 0:
         #     if self.PrevStadtButton.clicked():
         #         i-1
