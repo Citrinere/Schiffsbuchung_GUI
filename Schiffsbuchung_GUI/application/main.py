@@ -127,13 +127,14 @@ class OrderWindow(QWidget):
         self.setFixedWidth(760)
         self.setFixedHeight(560)
         self.setStyleSheet("""
+            background-color: rgb(252, 237, 217);
             QLabel{
                 font-size: 14px
             }
             QRadioButton{
                 font-size: 14px
             }
-            QPushButton{
+            QPushButton{                
                 font-size: 17px
             }
             """)
@@ -215,7 +216,9 @@ class OrderWindow(QWidget):
         self.hPrevNextButtonLayout = QHBoxLayout()              # Horizontales Box Layout um die Buttons nebeneinander zu haben
 
         self.PrevStadtButton = QPushButton("Vorherige Stadt")
+        self.PrevStadtButton.setStyleSheet("background-color: rgb(208, 255, 163);")
         self.NextStadtButton = QPushButton("Naechste Stadt")
+        self.NextStadtButton.setStyleSheet("background-color: rgb(208, 255, 163);")
         self.hPrevNextButtonLayout.addWidget(self.PrevStadtButton)
         self.hPrevNextButtonLayout.addWidget(self.NextStadtButton)
         self.PrevStadtButton.clicked.connect(lambda: self.updateCityLabel(-1))
@@ -232,6 +235,7 @@ class OrderWindow(QWidget):
         self.LaGesamtpreis.setAlignment(QtCore.Qt.AlignCenter)  # Text in die mitte setzen
         self.vBestaetigungsLayout.addWidget(self.LaGesamtpreis)
         self.ConfirmButton = QPushButton('Buchen')
+        self.ConfirmButton.setStyleSheet("background-color: rgb(208, 255, 163);")
         self.ConfirmButton.clicked.connect(self.confirmOrder)
         self.vBestaetigungsLayout.addWidget(self.ConfirmButton)
         # BestellGridLayout.addWidget(self.ConfirmButton, 1, 1)
@@ -308,7 +312,7 @@ class OrderWindow(QWidget):
         self.BalkonPreis.setText("Balkonkabine \nPreis: " + self.cruiseData[6])
         self.BalkonKabinePixmap = QPixmap('data/images/Kabinentypen/Balkonkabine.jpg')
         BalkonKabinePixmap = self.BalkonKabinePixmap.scaled(
-            QtCore.QSize(300, 172),
+            QtCore.QSize(300, 172), # old values 300, 172
             Qt.KeepAspectRatioByExpanding,
             Qt.SmoothTransformation
         )
@@ -411,9 +415,9 @@ class OrderWindow(QWidget):
 
             self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + self.cityData[self.currCityIndex] + '.jpg')
             StadtViewPixmap = self.StadtViewPixmap.scaled(
-                QtCore.QSize(330, 202),
+                QtCore.QSize(330, 202),     # (old values: 330, 202  # new values 370, 242
                 Qt.KeepAspectRatioByExpanding,
-                Qt.SmoothTransformation
+                Qt.SmoothTransformation,
             )
             self.StadtView.setPixmap(StadtViewPixmap)
 
