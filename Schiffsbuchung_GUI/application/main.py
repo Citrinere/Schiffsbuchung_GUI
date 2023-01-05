@@ -207,28 +207,75 @@ class OrderWindow(QWidget):
         BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0)
         """
 
+        # Create Menu to switch City View
+        self.changeCityViewButton = QPushButton("Städte-Ansicht wechseln", self)
+        changeCityViewMenu = QMenu(self)
+        singleAction = QAction("Einzelansicht", self)
+        singleAction.triggered.connect(lambda: self.changeCityView("single"))
+        listAction = QAction("Ansicht als Liste", self)
+        listAction.triggered.connect(lambda: self.changeCityView("list"))
+        changeCityViewMenu.addAction(singleAction)
+        changeCityViewMenu.addAction(listAction)
+        self.changeCityViewButton.setMenu(changeCityViewMenu)
+        self.VerticalLayoutLO.addWidget(self.changeCityViewButton)
+        self.changeCityViewButton.resize(self.changeCityViewButton.sizeHint())
+
+
+        # Single City Image Layout
+        self.SingleCityView = QWidget()                         # Pack Preview-Layout in a Widget, to allow hiding it
+        self.VerticalLayoutLO.addWidget(self.SingleCityView)
+        self.SingleCityViewLayout = QVBoxLayout()
+        self.SingleCityView.setLayout(self.SingleCityViewLayout)
         self.StadtView = QLabel(self)                           # Label zum anzeigen des Bildes der Stadt
-        self.StadtView.resize(330, 202)
-        self.VerticalLayoutLO.addWidget(self.StadtView)
+        #self.StadtView.resize(330, 202)
+        self.SingleCityViewLayout.addWidget(self.StadtView)
         self.vStaedteViewLayout = QVBoxLayout()                 # Layout fuer Stadtnamen-Label und darunter dessen Buttons
         self.LaStadt = QLabel()                                 # Label zum anzeigen des Namen der in "StadtView" angezeigten Stadt
-        self.vStaedteViewLayout.addWidget(self.LaStadt)         # Hinzufuegen des Widgets in das QVBoxlayout
+        self.SingleCityViewLayout.addWidget(self.LaStadt)         # Hinzufuegen des Widgets in das QVBoxlayout
         self.hPrevNextButtonLayout = QHBoxLayout()              # Horizontales Box Layout um die Buttons nebeneinander zu haben
 
         self.PrevStadtButton = QPushButton("Vorherige Stadt")
         self.PrevStadtButton.setStyleSheet("background-color: rgb(208, 255, 163);")
         self.NextStadtButton = QPushButton("Naechste Stadt")
         self.NextStadtButton.setStyleSheet("background-color: rgb(208, 255, 163);")
+
         self.hPrevNextButtonLayout.addWidget(self.PrevStadtButton)
         self.hPrevNextButtonLayout.addWidget(self.NextStadtButton)
         self.PrevStadtButton.clicked.connect(lambda: self.updateCityLabel(-1))
         self.NextStadtButton.clicked.connect(lambda: self.updateCityLabel(1))
 
-        self.vStaedteViewLayout.addLayout(self.hPrevNextButtonLayout)
+        self.SingleCityViewLayout.addLayout(self.hPrevNextButtonLayout)
         BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0)
         BestellGridLayout.addLayout(self.vStaedteViewLayout, 2, 0)
 
+        """
+        # List of Citys Layout
+        # Dieses Widget muss an die gleiche Stelle, wie das Widget obendrüber
+        # 
+        self.MultiCityView = QWidget()
+        self.VerticalLayoutLO.addWidget(self.SingleCityView)
+        self.MultiCityViewLayout = QVBoxLayout()
 
+        MultiCityScroll = QScrollArea(self)
+        self.MultiCityViewLayout.addWidget(MultiCityScroll)
+        MultiCityScroll.setWidgetResizable(True)
+        ScrollContent = QWidget(MultiCityScroll)
+
+        ScrollLayout = QVBoxLayout(ScrollContent)
+        ScrollContent.setLayout(ScrollLayout)
+        
+        # Die for-Schleife muss in displayWindow() ODER changeCityView(), in __init__ ist self.cruiseData[2] noch leer
+        for city in ["test", "test","test","test","test","test","test"]:  # self.cruiseData[2]
+            # Stadtname
+            CityName = QLabel(city)
+            ScrollLayout.addWidget(CityName)
+            
+            # Bild erstellen
+            CityImage = QLabel()
+            ScrollLayout.addWidget(CityImage)
+            # Spacer nach jeder Vorschau?
+        MultiCityScroll.setWidget(ScrollContent)
+        """
 
         self.vBestaetigungsLayout = QVBoxLayout()
         self.LaGesamtpreis = QLabel("Summe: ......€")
@@ -403,10 +450,6 @@ class OrderWindow(QWidget):
         self.currCityIndex = self.currCityIndex + counter
 
         if 0 <= self.currCityIndex < len(self.cityData):
-            print("-----------------CityData getting updated------------------------")
-            print(len(self.cityData))
-            print(self.cityData[self.currCityIndex])
-            print(self.currCityIndex)
 
             self.PrevStadtButton.show()
             self.NextStadtButton.show()
@@ -436,6 +479,11 @@ class OrderWindow(QWidget):
         elif self.currCityIndex == len(self.cityData) - 1:
             self.NextStadtButton.hide()
 
+    def changeCityView(self, keyword):
+        if keyword == "single":
+            self.SingleCityView.show()
+        elif keyword == "list":
+            self.SingleCityView.hide()
     """
     def PrevStadt(self, stadtstelle):
         # c = self.cruiseData[2]
