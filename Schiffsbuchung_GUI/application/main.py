@@ -148,7 +148,11 @@ class OrderWindow(QWidget):
         self.LaInform.setStyleSheet("font-size: 18px")
         #self.LaInform.setWordWrap(True)
         BestellGridLayout.addWidget(self.LaInform, 0, 0, 1, 0)      # row, column, row-span, column-span
+
+        # ===== VerticalLayout ===== LayoutBox für Schiffstyp- & Staedtebilder Widget
         self.VerticalLayoutLO = QVBoxLayout()
+
+        # ===== Schiffstyp Layout ===== LayoutBox für Schiffstyp-Widget
         self.SchiffstypLayout = QVBoxLayout()
         self.SchiffsTypVorschau = QLabel(self)
         self.SchiffsTypVorschau.resize(330, 202)
@@ -158,6 +162,8 @@ class OrderWindow(QWidget):
         self.SchiffstypLayout.addWidget(self.SchiffsTyp)
         self.VerticalLayoutLO.addLayout(self.SchiffstypLayout)
         #self.VerticalLayoutLO.addStretch()
+
+        # ===== Reise Informationen ===== Anzeige der Informationen zur ausgewaehlten Reise
         self.LaRegion = QLabel("Region: ")
         self.VerticalLayoutLO.addWidget(self.LaRegion)
         self.LaUebernachtungen = QLabel("Uebernachtungen: ")
@@ -167,46 +173,30 @@ class OrderWindow(QWidget):
         #self.VerticalLayoutLO.addStretch()
         #BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0)  # (self.layout, reihe, spalte)
 
-        # Layout fuer Kabinen-Preise und Vorschau
-        self.hKabinenLayout = QHBoxLayout()
-        BestellGridLayout.addLayout(self.hKabinenLayout, 1, 1,)
-        self.vKabinenPreisLayout = QVBoxLayout()
-        self.InnenPreis = QRadioButton()
-        self.vKabinenPreisLayout.addWidget(self.InnenPreis)
-        self.AussenPreis = QRadioButton()
-        self.vKabinenPreisLayout.addWidget(self.AussenPreis)
-        self.BalkonPreis = QRadioButton()
-        self.vKabinenPreisLayout.addWidget(self.BalkonPreis)
-        self.hKabinenLayout.addLayout(self.vKabinenPreisLayout)
-        self.vKabinenVorschauLayout = QVBoxLayout()
-        self.InnenVorschau = QLabel(self)
-        self.vKabinenVorschauLayout.addWidget(self.InnenVorschau)
-        self.AussenVorschau = QLabel(self)
-        self.vKabinenVorschauLayout.addWidget(self.AussenVorschau)
-        self.BalkonVorschau = QLabel(self)
-        self.vKabinenVorschauLayout.addWidget(self.BalkonVorschau)
-        self.hKabinenLayout.addLayout(self.vKabinenVorschauLayout)
-
+        # =========================================================
+        # Alte Staedte View Ansicht
         """
-        #self.input1 = QLabel()
-        #BestellGridLayout.addWidget(self.input1, 1, 0)  # (self.widget, reihe, spalte)
-        self.StadtView = QLabel(self)           # Label zum anzeigen des Bildes der Stadt
-        self.VerticalLayoutLO.addWidget(self.StadtView)
-        self.vStaedteViewLayout = QVBoxLayout()  # Layout fuer Stadnamen-Label und dessen Buttons
-        self.LaStadt = QLabel()                 # Label zum anzeigen des Namen der in "StadtView" angezeigten Stadt
-        self.vStaedteViewLayout.addWidget(self.LaStadt)
-        #self.LaStadt.setWordWrap(True)
-        #BestellGridLayout.addWidget(self.LaStadt, 1, 0)     # (self.widget, reihe, spalte)
-        self.hPrevNextButtonLayout = QHBoxLayout()
-        self.PrevStadtButton = QPushButton("Vorherige Stadt")
-        self.NextStadtButton = QPushButton("Naechste Stadt")
-        self.hPrevNextButtonLayout.addWidget(self.PrevStadtButton)
-        self.hPrevNextButtonLayout.addWidget(self.NextStadtButton)
-        self.vStaedteViewLayout.addLayout(self.hPrevNextButtonLayout)
-        #BestellGridLayout.addLayout(self.PrevNextButtonLayout, 1, 0)    # (self.widget, reihe, spalte)
-        BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0)
+            #self.input1 = QLabel()
+            #BestellGridLayout.addWidget(self.input1, 1, 0)  # (self.widget, reihe, spalte)
+            self.StadtView = QLabel(self)           # Label zum anzeigen des Bildes der Stadt
+            self.VerticalLayoutLO.addWidget(self.StadtView)
+            self.vStaedteViewLayout = QVBoxLayout()  # Layout fuer Stadnamen-Label und dessen Buttons
+            self.LaStadt = QLabel()                 # Label zum anzeigen des Namen der in "StadtView" angezeigten Stadt
+            self.vStaedteViewLayout.addWidget(self.LaStadt)
+            #self.LaStadt.setWordWrap(True)
+            #BestellGridLayout.addWidget(self.LaStadt, 1, 0)     # (self.widget, reihe, spalte)
+            self.hPrevNextButtonLayout = QHBoxLayout()
+            self.PrevStadtButton = QPushButton("Vorherige Stadt")
+            self.NextStadtButton = QPushButton("Naechste Stadt")
+            self.hPrevNextButtonLayout.addWidget(self.PrevStadtButton)
+            self.hPrevNextButtonLayout.addWidget(self.NextStadtButton)
+            self.vStaedteViewLayout.addLayout(self.hPrevNextButtonLayout)
+            #BestellGridLayout.addLayout(self.PrevNextButtonLayout, 1, 0)    # (self.widget, reihe, spalte)
+            BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0)
         """
+        # ======================================================
 
+        # ===== StaedteViewChangeButton ===== Button zum Wechseln der Bilderansicht von Einzelnen Bilder zu einer Bilderliste
         # Create Menu to switch City View
         self.changeCityViewButton = QPushButton("Städte-Ansicht wechseln", self)
         changeCityViewMenu = QMenu(self)
@@ -220,14 +210,12 @@ class OrderWindow(QWidget):
         self.VerticalLayoutLO.addWidget(self.changeCityViewButton)
         self.changeCityViewButton.resize(self.changeCityViewButton.sizeHint())
 
-
-        # Single City Image Layout
-        self.SingleCityView = QWidget()                         # Pack Preview-Layout in a Widget, to allow hiding it
+        # ===== Single City Image Layout ===== Layout Information für einzelne Bilderanzeige
+        self.SingleCityView = QWidget()  # Pack Preview-Layout in a Widget, to allow hiding it
         self.VerticalLayoutLO.addWidget(self.SingleCityView)
         self.SingleCityViewLayout = QVBoxLayout()
         self.SingleCityView.setLayout(self.SingleCityViewLayout)
-        self.StadtView = QLabel(self)                           # Label zum anzeigen des Bildes der Stadt
-
+        self.StadtView = QLabel(self)  # Label zum anzeigen des Bildes der Stadt
 
         # #========================================
         # # List of Citys Layout
@@ -256,15 +244,16 @@ class OrderWindow(QWidget):
         #     ScrollLayout.addWidget(CityImage)
         #     # Spacer nach jeder Vorschau?
         # MultiCityScroll.setWidget(ScrollContent)
+        # ======================================================
 
-        #======================================================
-        #self.StadtView.resize(330, 202)
+        # self.StadtView.resize(330, 202)
         self.SingleCityViewLayout.addWidget(self.StadtView)
-        self.vStaedteViewLayout = QVBoxLayout()                 # Layout fuer Stadtnamen-Label und darunter dessen Buttons
-        self.LaStadt = QLabel()                                 # Label zum anzeigen des Namen der in "StadtView" angezeigten Stadt
-        self.SingleCityViewLayout.addWidget(self.LaStadt)         # Hinzufuegen des Widgets in das QVBoxlayout
-        self.hPrevNextButtonLayout = QHBoxLayout()              # Horizontales Box Layout um die Buttons nebeneinander zu haben
+        self.vStaedteViewLayout = QVBoxLayout()  # Layout fuer Stadtnamen-Label und darunter dessen Buttons
+        self.LaStadt = QLabel()  # Label zum anzeigen des Namen der in "StadtView" angezeigten Stadt
+        self.SingleCityViewLayout.addWidget(self.LaStadt)  # Hinzufuegen des Widgets in das QVBoxlayout
+        self.hPrevNextButtonLayout = QHBoxLayout()  # Horizontales Box Layout um die Buttons nebeneinander zu haben
 
+        # ===== Bilder Vor- & Zurueckbuttons =====
         self.PrevStadtButton = QPushButton("Vorherige Stadt")
         self.PrevStadtButton.setStyleSheet("background-color: rgb(208, 255, 163);")
         self.NextStadtButton = QPushButton("Naechste Stadt")
@@ -276,9 +265,8 @@ class OrderWindow(QWidget):
         self.NextStadtButton.clicked.connect(lambda: self.updateCityLabel(1))
 
         self.SingleCityViewLayout.addLayout(self.hPrevNextButtonLayout)
-        BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0, 3, 1,)  # row, column, r-span, c-span
+        BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0, 3, 1, )  # row, column, r-span, c-span
         BestellGridLayout.addLayout(self.vStaedteViewLayout, 2, 0)
-
 
         """
         # List of Citys Layout
@@ -295,13 +283,13 @@ class OrderWindow(QWidget):
 
         ScrollLayout = QVBoxLayout(ScrollContent)
         ScrollContent.setLayout(ScrollLayout)
-        
+
         # Die for-Schleife muss in displayWindow() ODER changeCityView(), in __init__ ist self.cruiseData[2] noch leer
         for city in ["test", "test","test","test","test","test","test"]:  # self.cruiseData[2]
             # Stadtname
             CityName = QLabel(city)
             ScrollLayout.addWidget(CityName)
-            
+
             # Bild erstellen
             CityImage = QLabel()
             ScrollLayout.addWidget(CityImage)
@@ -309,6 +297,28 @@ class OrderWindow(QWidget):
         MultiCityScroll.setWidget(ScrollContent)
         """
 
+        # Layout fuer Kabinen-Preise und Vorschau
+        # ===== KabinenLayout ===== LayoutBox zur Auswahl der zu Buchbaren Kabine
+        self.hKabinenLayout = QHBoxLayout()
+        BestellGridLayout.addLayout(self.hKabinenLayout, 1, 1,)
+        self.vKabinenPreisLayout = QVBoxLayout()
+        self.InnenPreis = QRadioButton()
+        self.vKabinenPreisLayout.addWidget(self.InnenPreis)
+        self.AussenPreis = QRadioButton()
+        self.vKabinenPreisLayout.addWidget(self.AussenPreis)
+        self.BalkonPreis = QRadioButton()
+        self.vKabinenPreisLayout.addWidget(self.BalkonPreis)
+        self.hKabinenLayout.addLayout(self.vKabinenPreisLayout)
+        self.vKabinenVorschauLayout = QVBoxLayout()
+        self.InnenVorschau = QLabel(self)
+        self.vKabinenVorschauLayout.addWidget(self.InnenVorschau)
+        self.AussenVorschau = QLabel(self)
+        self.vKabinenVorschauLayout.addWidget(self.AussenVorschau)
+        self.BalkonVorschau = QLabel(self)
+        self.vKabinenVorschauLayout.addWidget(self.BalkonVorschau)
+        self.hKabinenLayout.addLayout(self.vKabinenVorschauLayout)
+
+        # ===== BestaetigungsLayout ===== LayoutBox welche den Summenpreis & Buchungsbutton beinhaltet
         self.vBestaetigungsLayout = QVBoxLayout()
         self.LaGesamtpreis = QLabel("Summe: ......€")
         self.LaGesamtpreis.setAlignment(QtCore.Qt.AlignCenter)  # Text in die mitte setzen
@@ -320,6 +330,7 @@ class OrderWindow(QWidget):
         # BestellGridLayout.addWidget(self.ConfirmButton, 1, 1)
         BestellGridLayout.addLayout(self.vBestaetigungsLayout, 2, 1)
 
+        # ===== Festlegung & Bestätigung des Layouts =====
         self.setLayout(BestellGridLayout)
 
     # Confirm Order, open personalDataDialog
