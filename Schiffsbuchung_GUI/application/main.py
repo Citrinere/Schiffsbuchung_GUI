@@ -248,6 +248,7 @@ class OrderWindow(QWidget):
         BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0)
         BestellGridLayout.addLayout(self.vStaedteViewLayout, 2, 0)
 
+
         """
         # List of Citys Layout
         # Dieses Widget muss an die gleiche Stelle, wie das Widget obendrüber
