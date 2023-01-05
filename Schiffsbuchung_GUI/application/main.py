@@ -147,7 +147,7 @@ class OrderWindow(QWidget):
         self.LaInform = QLabel("Hier sehen Sie die Zusammenfassung Ihrer ausgewählten Reise.\nWählen Sie bitte noch Ihre gewünschte Kabinenart aus:")
         self.LaInform.setStyleSheet("font-size: 18px")
         #self.LaInform.setWordWrap(True)
-        BestellGridLayout.addWidget(self.LaInform, 0, 0, 1, 0)
+        BestellGridLayout.addWidget(self.LaInform, 0, 0, 1, 0)      # row, column, row-span, column-span
         self.VerticalLayoutLO = QVBoxLayout()
         self.SchiffstypLayout = QVBoxLayout()
         self.SchiffsTypVorschau = QLabel(self)
@@ -157,19 +157,19 @@ class OrderWindow(QWidget):
         self.SchiffstypLayout.addWidget(self.SchiffsTypVorschau)
         self.SchiffstypLayout.addWidget(self.SchiffsTyp)
         self.VerticalLayoutLO.addLayout(self.SchiffstypLayout)
-        self.VerticalLayoutLO.addStretch()
+        #self.VerticalLayoutLO.addStretch()
         self.LaRegion = QLabel("Region: ")
         self.VerticalLayoutLO.addWidget(self.LaRegion)
         self.LaUebernachtungen = QLabel("Uebernachtungen: ")
         self.VerticalLayoutLO.addWidget(self.LaUebernachtungen)
         self.LaBuchungsnummer = QLabel()
         self.VerticalLayoutLO.addWidget(self.LaBuchungsnummer)
-        self.VerticalLayoutLO.addStretch()
-        BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0)  # (self.layout, reihe, spalte)
+        #self.VerticalLayoutLO.addStretch()
+        #BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0)  # (self.layout, reihe, spalte)
 
         # Layout fuer Kabinen-Preise und Vorschau
         self.hKabinenLayout = QHBoxLayout()
-        BestellGridLayout.addLayout(self.hKabinenLayout, 1, 1)
+        BestellGridLayout.addLayout(self.hKabinenLayout, 1, 1,)
         self.vKabinenPreisLayout = QVBoxLayout()
         self.InnenPreis = QRadioButton()
         self.vKabinenPreisLayout.addWidget(self.InnenPreis)
@@ -227,6 +227,37 @@ class OrderWindow(QWidget):
         self.SingleCityViewLayout = QVBoxLayout()
         self.SingleCityView.setLayout(self.SingleCityViewLayout)
         self.StadtView = QLabel(self)                           # Label zum anzeigen des Bildes der Stadt
+
+
+        # #========================================
+        # # List of Citys Layout
+        # # Dieses Widget muss an die gleiche Stelle, wie das Widget obendrüber
+        # #
+        # self.MultiCityView = QWidget()
+        # self.VerticalLayoutLO.addWidget(self.SingleCityView)
+        # self.MultiCityViewLayout = QVBoxLayout()
+        #
+        # MultiCityScroll = QScrollArea(self)
+        # self.MultiCityViewLayout.addWidget(MultiCityScroll)
+        # MultiCityScroll.setWidgetResizable(True)
+        # ScrollContent = QWidget(MultiCityScroll)
+        #
+        # ScrollLayout = QVBoxLayout(ScrollContent)
+        # ScrollContent.setLayout(ScrollLayout)
+        #
+        # # Die for-Schleife muss in displayWindow() ODER changeCityView(), in __init__ ist self.cruiseData[2] noch leer
+        # for city in ["test", "test", "test", "test", "test", "test", "test"]:  # self.cruiseData[2]
+        #     # Stadtname
+        #     CityName = QLabel(city)
+        #     ScrollLayout.addWidget(CityName)
+        #
+        #     # Bild erstellen
+        #     CityImage = QLabel()
+        #     ScrollLayout.addWidget(CityImage)
+        #     # Spacer nach jeder Vorschau?
+        # MultiCityScroll.setWidget(ScrollContent)
+
+        #======================================================
         #self.StadtView.resize(330, 202)
         self.SingleCityViewLayout.addWidget(self.StadtView)
         self.vStaedteViewLayout = QVBoxLayout()                 # Layout fuer Stadtnamen-Label und darunter dessen Buttons
@@ -245,7 +276,7 @@ class OrderWindow(QWidget):
         self.NextStadtButton.clicked.connect(lambda: self.updateCityLabel(1))
 
         self.SingleCityViewLayout.addLayout(self.hPrevNextButtonLayout)
-        BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0)
+        BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0, 3, 1,)  # row, column, r-span, c-span
         BestellGridLayout.addLayout(self.vStaedteViewLayout, 2, 0)
 
 
