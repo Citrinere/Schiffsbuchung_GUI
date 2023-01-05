@@ -218,21 +218,19 @@ class OrderWindow(QWidget):
         self.StadtView = QLabel(self)  # Label zum anzeigen des Bildes der Stadt
 
         # #========================================
-        # # List of Citys Layout
-        # # Dieses Widget muss an die gleiche Stelle, wie das Widget obendrüber
-        # #
-        # self.MultiCityView = QWidget()
-        # self.VerticalLayoutLO.addWidget(self.SingleCityView)
-        # self.MultiCityViewLayout = QVBoxLayout()
+        # List of Citys Layout
+        # Dieses Widget muss an die gleiche Stelle, wie das Widget obendrüber
         #
-        # MultiCityScroll = QScrollArea(self)
-        # self.MultiCityViewLayout.addWidget(MultiCityScroll)
-        # MultiCityScroll.setWidgetResizable(True)
-        # ScrollContent = QWidget(MultiCityScroll)
-        #
-        # ScrollLayout = QVBoxLayout(ScrollContent)
-        # ScrollContent.setLayout(ScrollLayout)
-        #
+        self.MultiCityView = QWidget()
+        #self.VerticalLayoutLO.addWidget(self.SingleCityView)
+        self.MultiCityViewLayout = QVBoxLayout()
+        MultiCityScroll = QScrollArea(self)
+        self.MultiCityViewLayout.addWidget(MultiCityScroll)
+        MultiCityScroll.setWidgetResizable(True)
+        ScrollContent = QWidget(MultiCityScroll)
+        ScrollLayout = QVBoxLayout(ScrollContent)
+        ScrollContent.setLayout(ScrollLayout)
+
         # # Die for-Schleife muss in displayWindow() ODER changeCityView(), in __init__ ist self.cruiseData[2] noch leer
         # for city in ["test", "test", "test", "test", "test", "test", "test"]:  # self.cruiseData[2]
         #     # Stadtname
@@ -243,12 +241,13 @@ class OrderWindow(QWidget):
         #     CityImage = QLabel()
         #     ScrollLayout.addWidget(CityImage)
         #     # Spacer nach jeder Vorschau?
-        # MultiCityScroll.setWidget(ScrollContent)
+        MultiCityScroll.setWidget(ScrollContent)
+        #self.MultiCityViewLayout.addWidget(MultiCityScroll)
         # ======================================================
 
         # self.StadtView.resize(330, 202)
         self.SingleCityViewLayout.addWidget(self.StadtView)
-        self.vStaedteViewLayout = QVBoxLayout()  # Layout fuer Stadtnamen-Label und darunter dessen Buttons
+        #self.vStaedteViewLayout = QVBoxLayout()  # Layout fuer Stadtnamen-Label und darunter dessen Buttons
         self.LaStadt = QLabel()  # Label zum anzeigen des Namen der in "StadtView" angezeigten Stadt
         self.SingleCityViewLayout.addWidget(self.LaStadt)  # Hinzufuegen des Widgets in das QVBoxlayout
         self.hPrevNextButtonLayout = QHBoxLayout()  # Horizontales Box Layout um die Buttons nebeneinander zu haben
@@ -266,7 +265,7 @@ class OrderWindow(QWidget):
 
         self.SingleCityViewLayout.addLayout(self.hPrevNextButtonLayout)
         BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0, 3, 1, )  # row, column, r-span, c-span
-        BestellGridLayout.addLayout(self.vStaedteViewLayout, 2, 0)
+        #BestellGridLayout.addLayout(self.vStaedteViewLayout, 0, 0)
 
         """
         # List of Citys Layout
@@ -409,6 +408,18 @@ class OrderWindow(QWidget):
         self.BalkonVorschau.setPixmap(BalkonKabinePixmap)
 
 
+        # # Die for-Schleife muss in displayWindow() ODER changeCityView(), in __init__ ist self.cruiseData[2] noch leer
+        # for city in ["test", "test", "test", "test", "test", "test", "test"]:  # self.cruiseData[2]
+        #     # Stadtname
+        #     CityName = QLabel(city)
+        #     self.orderWindow.ScrollLayout.addWidget(CityName)
+        #
+        #     # Bild erstellen
+        #     CityImage = QLabel()
+        #     self.orderWindow.ScrollLayout.addWidget(CityImage)
+        #     # Spacer nach jeder Vorschau?
+
+
 
         #print(cityviewlist[i])
 
@@ -527,6 +538,17 @@ class OrderWindow(QWidget):
             self.SingleCityView.show()
         elif keyword == "list":
             self.SingleCityView.hide()
+
+        # Die for-Schleife muss in displayWindow() ODER changeCityView(), in __init__ ist self.cruiseData[2] noch leer
+        for city in self.cruiseData[2]: #["test", "test", "test", "test", "test", "test", "test"]:  # self.cruiseData[2]
+            # Stadtname
+            CityName = QLabel(city)
+            self.orderWindow.ScrollLayout.addWidget(CityName)
+
+            # Bild erstellen
+            CityImage = QLabel()
+            self.orderWindow.ScrollLayout.addWidget(CityImage)
+            # Spacer nach jeder Vorschau?
     """
     def PrevStadt(self, stadtstelle):
         # c = self.cruiseData[2]
