@@ -413,13 +413,23 @@ class OrderWindow(QWidget):
 
             self.LaStadt.setText("Stadt: " + self.cityData[self.currCityIndex])
 
-            self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + self.cityData[self.currCityIndex] + '.jpg')
-            StadtViewPixmap = self.StadtViewPixmap.scaled(
-                QtCore.QSize(330, 202),     # (old values: 330, 202  # new values 370, 242
-                Qt.KeepAspectRatioByExpanding,
-                Qt.SmoothTransformation,
-            )
-            self.StadtView.setPixmap(StadtViewPixmap)
+            # prüfen ob Bild vorhanden ist
+            if file_exists('data/images/Hafenstädte/' + self.cityData[self.currCityIndex] + '.jpg') == True:
+                self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + self.cityData[self.currCityIndex] + '.jpg')
+                StadtViewPixmap = self.StadtViewPixmap.scaled(
+                    QtCore.QSize(330, 202),     # (old values: 330, 202  # new values 370, 242
+                    Qt.KeepAspectRatioByExpanding,
+                    Qt.SmoothTransformation,
+                )
+                self.StadtView.setPixmap(StadtViewPixmap)
+            elif file_exists('data/images/Hafenstädte/' + self.cityData[self.currCityIndex] + '.jpg') == False:
+                self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/keinevorschau2.jpg')
+                StadtViewPixmap = self.StadtViewPixmap.scaled(
+                    QtCore.QSize(330, 202),  # (old values: 330, 202  # new values 370, 242
+                    Qt.KeepAspectRatioByExpanding,
+                    Qt.SmoothTransformation,
+                )
+                self.StadtView.setPixmap(StadtViewPixmap)
 
         if self.currCityIndex == 0:
             self.PrevStadtButton.hide()
