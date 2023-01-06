@@ -222,7 +222,7 @@ class OrderWindow(QWidget):
         # Dieses Widget muss an die gleiche Stelle, wie das Widget obendrüber
         #
         self.MultiCityView = QWidget()
-        #self.VerticalLayoutLO.addWidget(self.SingleCityView)
+        self.VerticalLayoutLO.addWidget(self.MultiCityView)
         self.MultiCityViewLayout = QVBoxLayout()
         MultiCityScroll = QScrollArea(self)
         self.MultiCityViewLayout.addWidget(MultiCityScroll)
@@ -230,7 +230,6 @@ class OrderWindow(QWidget):
         ScrollContent = QWidget(MultiCityScroll)
         ScrollLayout = QVBoxLayout(ScrollContent)
         ScrollContent.setLayout(ScrollLayout)
-
         # # Die for-Schleife muss in displayWindow() ODER changeCityView(), in __init__ ist self.cruiseData[2] noch leer
         # for city in ["test", "test", "test", "test", "test", "test", "test"]:  # self.cruiseData[2]
         #     # Stadtname
@@ -328,7 +327,6 @@ class OrderWindow(QWidget):
         self.vBestaetigungsLayout.addWidget(self.ConfirmButton)
         # BestellGridLayout.addWidget(self.ConfirmButton, 1, 1)
         BestellGridLayout.addLayout(self.vBestaetigungsLayout, 2, 1)
-
         # ===== Festlegung & Bestätigung des Layouts =====
         self.setLayout(BestellGridLayout)
 
@@ -339,6 +337,7 @@ class OrderWindow(QWidget):
 
     # Open Order Window and put selected cruise data in Labels
     def displayWindow(self):
+
         self.currCityIndex = 0
 
         # Create List of Citys out of String
@@ -406,20 +405,6 @@ class OrderWindow(QWidget):
             Qt.SmoothTransformation
         )
         self.BalkonVorschau.setPixmap(BalkonKabinePixmap)
-
-
-        # # Die for-Schleife muss in displayWindow() ODER changeCityView(), in __init__ ist self.cruiseData[2] noch leer
-        # for city in ["test", "test", "test", "test", "test", "test", "test"]:  # self.cruiseData[2]
-        #     # Stadtname
-        #     CityName = QLabel(city)
-        #     self.orderWindow.ScrollLayout.addWidget(CityName)
-        #
-        #     # Bild erstellen
-        #     CityImage = QLabel()
-        #     self.orderWindow.ScrollLayout.addWidget(CityImage)
-        #     # Spacer nach jeder Vorschau?
-
-
 
         #print(cityviewlist[i])
 
@@ -489,6 +474,18 @@ class OrderWindow(QWidget):
         self.InnenPreis.clicked.connect(self.summecheck)
         self.AussenPreis.clicked.connect(self.summecheck)
         self.BalkonPreis.clicked.connect(self.summecheck)
+
+    # # Die for-Schleife muss in displayWindow() ODER changeCityView(), in __init__ ist self.cruiseData[2] noch leer
+    # for city in ["test", "test", "test", "test", "test", "test", "test"]:  # self.cruiseData[2]
+    #     # Stadtname
+    #     CityName = QLabel(city)
+    #     self.orderWindow.ScrollLayout.addWidget(CityName)
+    #
+    #     # Bild erstellen
+    #     CityImage = QLabel()
+    #     self.orderWindow.ScrollLayout.addWidget(CityImage)
+    #     # Spacer nach jeder Vorschau?
+
     # Funktion um SUmme passend zur Auswahl zu setzen
     def summecheck(self):
         if self.InnenPreis.isChecked():
@@ -536,19 +533,58 @@ class OrderWindow(QWidget):
     def changeCityView(self, keyword):
         if keyword == "single":
             self.SingleCityView.show()
+            self.MultiCityView.hide()
         elif keyword == "list":
             self.SingleCityView.hide()
+            #self.MultiCityView.show()
 
+
+        print(self.cruiseData[2] + "   <====== das brauch ich")
+        #print(self.cityData + "   <====== das brauch ich auch")
         # Die for-Schleife muss in displayWindow() ODER changeCityView(), in __init__ ist self.cruiseData[2] noch leer
-        for city in self.cruiseData[2]: #["test", "test", "test", "test", "test", "test", "test"]:  # self.cruiseData[2]
+        for city in self.cityData: #self.cruiseData[2]: # ["test", "test", "test", "test", "test", "test", "test"]:  # self.cruiseData[2]
             # Stadtname
             CityName = QLabel(city)
-            self.orderWindow.ScrollLayout.addWidget(CityName)
+            #self.orderWindow.ScrollLayout.addWidget(CityName)
+            self.MultiCityViewLayout.addWidget(CityName)
+            # self.ScrollLayout.addWidget(CityName)
 
-            # Bild erstellen
+            # self.orderWindow.ScrollLayout.addWidget(CityName)
+            #CityName.show()
+            print(city)
+
+            # # Bild erstellen
             CityImage = QLabel()
-            self.orderWindow.ScrollLayout.addWidget(CityImage)
-            # Spacer nach jeder Vorschau?
+            if file_exists('data/images/Hafenstädte/' + city + '.jpg') == True:
+                self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + city + '.jpg')
+                StadtViewPixmap = self.StadtViewPixmap.scaled(
+                    QtCore.QSize(330, 202),     # (old values: 330, 202  # new values 370, 242
+                    Qt.KeepAspectRatioByExpanding,
+                    Qt.SmoothTransformation,
+                )
+                self.StadtView.setPixmap(StadtViewPixmap)
+            elif file_exists('data/images/Hafenstädte/' + city + '.jpg') == False:
+                self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/keinevorschau2.jpg')
+                StadtViewPixmap = self.StadtViewPixmap.scaled(
+                    QtCore.QSize(330, 202),  # (old values: 330, 202  # new values 370, 242
+                    Qt.KeepAspectRatioByExpanding,
+                    Qt.SmoothTransformation,
+                )
+                self.StadtView.setPixmap(StadtViewPixmap)
+            self.MultiCityViewLayout.addWidget(CityImage)
+            # self.ScrollLayout.addWidget(CityImage)
+
+            #self.MultiCityViewLayout.addSpacing()
+            #self.MultiCityViewLayout.addStretch()
+
+
+
+            # CityImage = QLabel()
+            # self.orderWindow.ScrollLayout.addWidget(CityImage)
+            # # Spacer nach jeder Vorschau?
+            #
+            # # Platz zwischen Staedten lassen
+            # self.orderWindow.ScrollLayout.addStretch()
     """
     def PrevStadt(self, stadtstelle):
         # c = self.cruiseData[2]
