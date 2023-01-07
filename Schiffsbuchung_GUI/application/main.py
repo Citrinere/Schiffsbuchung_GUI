@@ -199,6 +199,7 @@ class OrderWindow(QWidget):
         # ===== StaedteViewChangeButton ===== Button zum Wechseln der Bilderansicht von Einzelnen Bilder zu einer Bilderliste
         # Create Menu to switch City View
         self.changeCityViewButton = QPushButton("Städte-Ansicht wechseln", self)
+        self.changeCityViewButton.setFixedWidth(350)
         changeCityViewMenu = QMenu(self)
         singleAction = QAction("Einzelansicht", self)
         singleAction.triggered.connect(lambda: self.changeCityView("single"))
@@ -365,7 +366,22 @@ class OrderWindow(QWidget):
     # Open Order Window and put selected cruise data in Labels
     def displayWindow(self):
 
-        self.currCityIndex = 0
+
+        # Reset-Section
+        self.currCityIndex = 0                          # zuruecksetzen des Indexes bei aufruf des Fensters
+        self.LaGesamtpreis.setText("Summe: ......€")    # zuruecksetzen des Gesamtpreises bei aufruf des Fensters
+
+
+        self.InnenPreis.setCheckable(False)
+        self.InnenPreis.setCheckable(True)
+        self.AussenPreis.setCheckable(False)
+        self.AussenPreis.setCheckable(True)
+        self.BalkonPreis.setCheckable(False)
+        self.BalkonPreis.setCheckable(True)
+
+
+
+
 
         # Create List of Citys out of String
         cityString = self.cruiseData[2]
@@ -393,7 +409,8 @@ class OrderWindow(QWidget):
 
         SchiffsTypPixmap = self.SchiffsTypPixmap.scaled(
             QtCore.QSize(330, 202),     # width, height
-            Qt.KeepAspectRatioByExpanding,
+            #Qt.KeepAspectRatioByExpanding,
+            Qt.IgnoreAspectRatio,
             Qt.SmoothTransformation
         )
         self.SchiffsTypVorschau.setPixmap(SchiffsTypPixmap)
@@ -411,7 +428,7 @@ class OrderWindow(QWidget):
         self.InnenPreis.setText("Innenkabine\nPreis: " + self.cruiseData[4])
         self.InnenKabinePixmap = QPixmap('data/images/Kabinentypen/Innenkabine.jpg')
         InnenKabinePixmap = self.InnenKabinePixmap.scaled(
-            QtCore.QSize(300, 172),
+            QtCore.QSize(330, 202),             # old value 300, 172
             Qt.KeepAspectRatioByExpanding,
             Qt.SmoothTransformation
         )
@@ -419,7 +436,7 @@ class OrderWindow(QWidget):
         self.AussenPreis.setText("Aussenkabine\nPreis: " + self.cruiseData[5])
         self.AussenKabinePixmap = QPixmap('data/images/Kabinentypen/Aussenkabine.jpg')
         AussenKabinePixmap = self.AussenKabinePixmap.scaled(
-            QtCore.QSize(300, 172),
+            QtCore.QSize(330, 202),
             Qt.KeepAspectRatioByExpanding,
             Qt.SmoothTransformation
         )
@@ -427,7 +444,7 @@ class OrderWindow(QWidget):
         self.BalkonPreis.setText("Balkonkabine \nPreis: " + self.cruiseData[6])
         self.BalkonKabinePixmap = QPixmap('data/images/Kabinentypen/Balkonkabine.jpg')
         BalkonKabinePixmap = self.BalkonKabinePixmap.scaled(
-            QtCore.QSize(300, 172), # old values 300, 172
+            QtCore.QSize(330, 202), # old values 300, 172
             Qt.KeepAspectRatioByExpanding,
             Qt.SmoothTransformation
         )
@@ -502,6 +519,7 @@ class OrderWindow(QWidget):
         self.AussenPreis.clicked.connect(self.summecheck)
         self.BalkonPreis.clicked.connect(self.summecheck)
 
+
     # # Die for-Schleife muss in displayWindow() ODER changeCityView(), in __init__ ist self.cruiseData[2] noch leer
     # for city in ["test", "test", "test", "test", "test", "test", "test"]:  # self.cruiseData[2]
     #     # Stadtname
@@ -512,6 +530,22 @@ class OrderWindow(QWidget):
     #     CityImage = QLabel()
     #     self.orderWindow.ScrollLayout.addWidget(CityImage)
     #     # Spacer nach jeder Vorschau?
+
+
+        # pruefen ob eine kabine nicht vorhanden ist und das anklicken verhindern
+        if self.cruiseData[4] == 'nicht vorhanden':
+            self.InnenPreis.setCheckable(False)
+        else:
+            self.InnenPreis.setCheckable(True)
+        if self.cruiseData[5] == 'nicht vorhanden':
+            self.AussenPreis.setCheckable(False)
+        else:
+            self.AussenPreis.setCheckable(True)
+        if self.cruiseData[6] == 'nicht vorhanden':
+            self.BalkonPreis.setCheckable(False)
+        else:
+            self.BalkonPreis.setCheckable(True)
+
 
     # Funktion um SUmme passend zur Auswahl zu setzen
     def summecheck(self):
@@ -539,7 +573,8 @@ class OrderWindow(QWidget):
                 self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + self.cityData[self.currCityIndex] + '.jpg')
                 StadtViewPixmap = self.StadtViewPixmap.scaled(
                     QtCore.QSize(330, 202),     # (old values: 330, 202  # new values 370, 242
-                    Qt.KeepAspectRatioByExpanding,
+                    #Qt.KeepAspectRatioByExpanding,
+                    Qt.IgnoreAspectRatio,
                     Qt.SmoothTransformation,
                 )
                 self.StadtView.setPixmap(StadtViewPixmap)
@@ -563,6 +598,11 @@ class OrderWindow(QWidget):
             self.ListCityView.hide()
             self.ListCityScrollArea.hide()
 
+            # Leeren des ListCityViewLayouts in der ScrollArea
+            for city in reversed(range(self.ListCityViewLayout.count())):
+                self.ListCityViewLayout.itemAt(city).widget().setParent(None)
+
+
             #self.OrderWindow.ListCityScrollArea.hide()
         elif keyword == "list":
             self.SingleCityView.hide()
@@ -570,43 +610,46 @@ class OrderWindow(QWidget):
             self.ListCityScrollArea.show()
 
 
-        #print(self.cruiseData[2] + "   <====== das brauch ich")
-        #print(self.cityData + "   <====== das brauch ich auch")
-        # Die for-Schleife muss in displayWindow() ODER changeCityView(), in __init__ ist self.cruiseData[2] noch leer
-        for city in self.cityData: #self.cruiseData[2]: # ["test", "test", "test", "test", "test", "test", "test"]:  # self.cruiseData[2]
-            # Stadtname
-            CityName = QLabel(city)
-            #self.orderWindow.ScrollLayout.addWidget(CityName)
-            CityName.setStyleSheet("background-color: rgb(255, 255,255); margin-left: 2px")
-            self.ListCityViewLayout.addWidget(CityName)
-            #self.ListCityViewLayout.addStretch()
-            #ScrollLayout.addLayout(self.ListCityViewLayout)
+            for city in self.cityData:
+                # Stadtname
+                CityName = QLabel(city)
+                #self.orderWindow.ScrollLayout.addWidget(CityName)
+                CityName.setStyleSheet("background-color: rgb(255, 255,255); margin-left: 2px")
+                self.ListCityViewLayout.addWidget(CityName)
+                #self.ListCityViewLayout.addStretch()
+                #ScrollLayout.addLayout(self.ListCityViewLayout)
 
-            #print(city)
+                #print(city)
 
-            # # Bild erstellen
-            CityImage = QLabel()
-            if file_exists('data/images/Hafenstädte/' + city + '.jpg') == True:
-                self.CityImagePixmap = QPixmap('data/images/Hafenstädte/' + city + '.jpg')
-                CityImagePixmap = self.CityImagePixmap.scaled(
-                    QtCore.QSize(300, 400),     # (old values: 330, 202  # new values 370, 242
-                    #Qt.KeepAspectRatioByExpanding,
-                    #Qt.IgnoreAspectRatio,
-                    Qt.KeepAspectRatio,
-                    Qt.SmoothTransformation,
-                )
-                CityImage.setPixmap(CityImagePixmap)
-            elif file_exists('data/images/Hafenstädte/' + city + '.jpg') == False:
-                self.CityImagePixmap = QPixmap('data/images/Hafenstädte/keinevorschau2.jpg')
-                CityImagePixmap = self.CityImagePixmap.scaled(
-                    QtCore.QSize(300, 300),  # (old values: 330, 202 with KeepAspectRatioByExpanding  / 300, 190 with IgnoreAR
-                    #Qt.KeepAspectRatioByExpanding,
-                    #Qt.IgnoreAspectRatio,
-                    Qt.KeepAspectRatio,
-                    Qt.SmoothTransformation,
-                )
-                CityImage.setPixmap(CityImagePixmap)
-            self.ListCityViewLayout.addWidget(CityImage)
+                # # Bild erstellen
+                CityImage = QLabel()
+                if file_exists('data/images/Hafenstädte/' + city + '.jpg') == True:
+                    self.CityImagePixmap = QPixmap('data/images/Hafenstädte/' + city + '.jpg')
+                    CityImagePixmap = self.CityImagePixmap.scaled(
+                        QtCore.QSize(300, 400),     # (old values: 330, 202  # new values 370, 242
+                        #Qt.KeepAspectRatioByExpanding,
+                        #Qt.IgnoreAspectRatio,
+                        Qt.KeepAspectRatio,
+                        Qt.SmoothTransformation,
+                    )
+                    CityImage.setPixmap(CityImagePixmap)
+                elif file_exists('data/images/Hafenstädte/' + city + '.jpg') == False:
+                    self.CityImagePixmap = QPixmap('data/images/Hafenstädte/keinevorschau2.jpg')
+                    CityImagePixmap = self.CityImagePixmap.scaled(
+                        QtCore.QSize(300, 300),  # (old values: 330, 202 with KeepAspectRatioByExpanding  / 300, 190 with IgnoreAR
+                        #Qt.KeepAspectRatioByExpanding,
+                        #Qt.IgnoreAspectRatio,
+                        Qt.KeepAspectRatio,
+                        Qt.SmoothTransformation,
+                    )
+                    CityImage.setPixmap(CityImagePixmap)
+                self.ListCityViewLayout.addWidget(CityImage)
+
+
+
+        # # Das layout vor schleifen begin leeren
+        # for oldcitylabel in self.ListCityViewLayout:
+        #     self.ListCityViewLayout.removeWidget(oldcitylabel)
             #ScrollLayout.addLayout(self.ListCityViewLayout)
 
             #ScrollLayout.addWidget(CityImage)
@@ -1086,17 +1129,25 @@ class Window(QMainWindow):
 
 
 
-        # self.orderWindow.input1.setText(str(data))
-
         # Übergabe des Datensatzes der ausgewählten Reise
         self.orderWindow.cruiseData = data
 
-        if self.orderWindow.cruiseData[4] == 'nicht vorhanden':
-            self.orderWindow.InnenPreis.setCheckable(False)
-        if self.orderWindow.cruiseData[5] == 'nicht vorhanden':
-            self.orderWindow.AussenPreis.setCheckable(False)
-        if self.orderWindow.cruiseData[6] == 'nicht vorhanden':
-            self.orderWindow.BalkonPreis.setCheckable(False)
+
+
+
+        # if self.orderWindow.cruiseData[4] == 'nicht vorhanden':
+        #     self.orderWindow.InnenPreis.setCheckable(False)
+        # else:
+        #     self.orderWindow.InnenPreis.setCheckable(True)
+        # if self.orderWindow.cruiseData[5] == 'nicht vorhanden':
+        #     self.orderWindow.AussenPreis.setCheckable(False)
+        # else:
+        #     self.orderWindow.AussenPreis.setCheckable(True)
+        # if self.orderWindow.cruiseData[6] == 'nicht vorhanden':
+        #     self.orderWindow.BalkonPreis.setCheckable(False)
+        # else:
+        #     self.orderWindow.BalkonPreis.setCheckable(True)
+
 
         """
         self.orderWindow.LaRegion.setText("Region: " + data[0])
