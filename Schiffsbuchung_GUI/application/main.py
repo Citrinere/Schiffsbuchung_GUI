@@ -477,7 +477,7 @@ class OrderWindow(QWidget):
         )
         self.StadtView.setPixmap(StadtViewPixmap)
         """
-
+        self.changeCityView("single")
         self.show()
 
         # print(self.cruiseData[2])
