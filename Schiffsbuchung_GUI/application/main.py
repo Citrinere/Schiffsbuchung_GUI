@@ -211,38 +211,65 @@ class OrderWindow(QWidget):
         self.changeCityViewButton.resize(self.changeCityViewButton.sizeHint())
 
         # ===== Single City Image Layout ===== Layout Information für einzelne Bilderanzeige
-        self.SingleCityView = QWidget()  # Pack Preview-Layout in a Widget, to allow hiding it
-        self.VerticalLayoutLO.addWidget(self.SingleCityView)
+        self.SingleCityView = QWidget()                             # Pack Single-City-Preview-Layout in a Widget, to allow hiding it
         self.SingleCityViewLayout = QVBoxLayout()
         self.SingleCityView.setLayout(self.SingleCityViewLayout)
-        self.StadtView = QLabel(self)  # Label zum anzeigen des Bildes der Stadt
+        self.StadtView = QLabel(self)                               # Label zum anzeigen des Bildes der Stadt
+        self.VerticalLayoutLO.addWidget(self.SingleCityView)
 
         # #========================================
         # List of Citys Layout
         # Dieses Widget muss an die gleiche Stelle, wie das Widget obendrüber
         #
-        self.MultiCityView = QWidget()
-        self.VerticalLayoutLO.addWidget(self.MultiCityView)
-        self.MultiCityViewLayout = QVBoxLayout()
-        MultiCityScroll = QScrollArea(self)
-        self.MultiCityViewLayout.addWidget(MultiCityScroll)
-        MultiCityScroll.setWidgetResizable(True)
-        ScrollContent = QWidget(MultiCityScroll)
-        ScrollLayout = QVBoxLayout(ScrollContent)
-        ScrollContent.setLayout(ScrollLayout)
-        # # Die for-Schleife muss in displayWindow() ODER changeCityView(), in __init__ ist self.cruiseData[2] noch leer
-        # for city in ["test", "test", "test", "test", "test", "test", "test"]:  # self.cruiseData[2]
-        #     # Stadtname
-        #     CityName = QLabel(city)
-        #     ScrollLayout.addWidget(CityName)
+        #1 self.view = QtWidgets.QWidget()                          # view widget erstellen
+        #2 self.layout = QtWidgets.QVBoxLayout(self.view)           # layout erstellen
+        #3 self.scroll = QtWidgets.QScrollArea(self)                # scrollarea erstellen
+        #4 self.scroll.setWidgetResizable(True)                     # scrollarea resizable machen
+        #5 self.scroll.setWidget(self.view)                         # scrollarea
+        #6 self.setCentralWidget(self.scroll)                       # scrollarea als central widget setzen (machen wir ja nicht)
         #
-        #     # Bild erstellen
-        #     CityImage = QLabel()
-        #     ScrollLayout.addWidget(CityImage)
-        #     # Spacer nach jeder Vorschau?
-        MultiCityScroll.setWidget(ScrollContent)
-        #self.MultiCityViewLayout.addWidget(MultiCityScroll)
+
+        # self.ListCityView = QWidget()                                   #1 widget erstellen um es verstecken zu können
+        # self.ListCityViewLayout = QVBoxLayout(self.ListCityView)        #2 layout im widget erstellen
+        # self.ListCityScrollArea = QScrollArea(self)                     #3
+        # self.ListCityScrollArea.setWidgetResizable(True)                #4
+        # self.ListCityScrollArea.setWidget(self.ListCityView)            #5
+        #self.ScrollContent = QWidget()
+
+
+        # Widget mit Layout darin, mit Scroll-Area darin
+        #self.ListCityView = QWidget()                                   # Pack Single-City-Preview-Layout in a Widget, to allow hiding it #1 self.view = QtWidgets.QWidget()                  # view widget erstellen
+        #self.ListCityViewLayout = QVBoxLayout(self.ListCityView)        #2 self.layout = QtWidgets.QVBoxLayout(self.view)   # layout erstellen
+        #self.ListCityView.setLayout(self.ListCityViewLayout)
+        #ListCityScroll = QScrollArea(self)                              #3 self.scroll = QtWidgets.QScrollArea(self)        # scrollarea erstellen
+        #ListCityScroll.setWidgetResizable(True)                         #4 self.scroll.setWidgetResizable(True)             # scrollarea resizable machen
+        #ScrollContent = QWidget(ListCityScroll)
+        #ScrollLayout = QVBoxLayout(ScrollContent)
+        #ScrollContent.setLayout(ScrollLayout)
+        #self.ListCityViewLayout.addWidget(ListCityScroll)               #6 Scroll Area in Layout bringen
+
+        #ListCityScroll.setWidget(ScrollContent)
+        #self.VerticalLayoutLO.addWidget(self.ListCityView)
+
+
+        # Scroll-Area mit Widget darin, mit Layout darin
+        self.ListCityScrollArea = QScrollArea(self)                      # Scrollarea erstellen
+        self.ListCityScrollArea.setWidgetResizable(True)                 # Scroll-Area resizable machen
+        self.ListCityScrollArea.setFixedHeight(202)
+        #ListCityScrollArea.setContentsMargins(, 0, 0, 0, 0)
+        self.ScrollContent = QWidget(self.ListCityScrollArea)                 # Inhalt-Widget mit Scrollarea als parent?
+        self.ScrollLayout = QVBoxLayout(self.ScrollContent)                   # scroll-layout mit scroll-content als parent?
+        self.ScrollContent.setLayout(self.ScrollLayout)                       # Content layout zuweisen zu Content
+        self.ListCityScrollArea.setWidget(self.ScrollContent)                 # der Scroll-Area das inhalt-widget zuweisen
+        self.ListCityView = QWidget()                               # Widget erstellen
+        self.ListCityViewLayout = QVBoxLayout(self.ListCityView)    # Layout für widget erstellen
+        self.ListCityViewLayout.setContentsMargins(0, 0, 0, 0)      # Margin setzen damit inhalt weiter links ist
+
+        self.ScrollLayout.addWidget(self.ListCityView)                   # Widget in Scroll-Layout setzen
+
+        self.VerticalLayoutLO.addWidget(self.ListCityScrollArea)         # ScrollArea in Layout setzen
         # ======================================================
+
 
         # self.StadtView.resize(330, 202)
         self.SingleCityViewLayout.addWidget(self.StadtView)
@@ -533,46 +560,56 @@ class OrderWindow(QWidget):
     def changeCityView(self, keyword):
         if keyword == "single":
             self.SingleCityView.show()
-            self.MultiCityView.hide()
+            self.ListCityView.hide()
+            self.ListCityScrollArea.hide()
+
+            #self.OrderWindow.ListCityScrollArea.hide()
         elif keyword == "list":
             self.SingleCityView.hide()
-            #self.MultiCityView.show()
+            self.ListCityView.show()
+            self.ListCityScrollArea.show()
 
 
-        print(self.cruiseData[2] + "   <====== das brauch ich")
+        #print(self.cruiseData[2] + "   <====== das brauch ich")
         #print(self.cityData + "   <====== das brauch ich auch")
         # Die for-Schleife muss in displayWindow() ODER changeCityView(), in __init__ ist self.cruiseData[2] noch leer
         for city in self.cityData: #self.cruiseData[2]: # ["test", "test", "test", "test", "test", "test", "test"]:  # self.cruiseData[2]
             # Stadtname
             CityName = QLabel(city)
             #self.orderWindow.ScrollLayout.addWidget(CityName)
-            self.MultiCityViewLayout.addWidget(CityName)
-            # self.ScrollLayout.addWidget(CityName)
+            CityName.setStyleSheet("background-color: rgb(255, 255,255); margin-left: 2px")
+            self.ListCityViewLayout.addWidget(CityName)
+            #self.ListCityViewLayout.addStretch()
+            #ScrollLayout.addLayout(self.ListCityViewLayout)
 
-            # self.orderWindow.ScrollLayout.addWidget(CityName)
-            #CityName.show()
-            print(city)
+            #print(city)
 
             # # Bild erstellen
             CityImage = QLabel()
             if file_exists('data/images/Hafenstädte/' + city + '.jpg') == True:
-                self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + city + '.jpg')
-                StadtViewPixmap = self.StadtViewPixmap.scaled(
-                    QtCore.QSize(330, 202),     # (old values: 330, 202  # new values 370, 242
-                    Qt.KeepAspectRatioByExpanding,
+                self.CityImagePixmap = QPixmap('data/images/Hafenstädte/' + city + '.jpg')
+                CityImagePixmap = self.CityImagePixmap.scaled(
+                    QtCore.QSize(300, 400),     # (old values: 330, 202  # new values 370, 242
+                    #Qt.KeepAspectRatioByExpanding,
+                    #Qt.IgnoreAspectRatio,
+                    Qt.KeepAspectRatio,
                     Qt.SmoothTransformation,
                 )
-                self.StadtView.setPixmap(StadtViewPixmap)
+                CityImage.setPixmap(CityImagePixmap)
             elif file_exists('data/images/Hafenstädte/' + city + '.jpg') == False:
-                self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/keinevorschau2.jpg')
-                StadtViewPixmap = self.StadtViewPixmap.scaled(
-                    QtCore.QSize(330, 202),  # (old values: 330, 202  # new values 370, 242
-                    Qt.KeepAspectRatioByExpanding,
+                self.CityImagePixmap = QPixmap('data/images/Hafenstädte/keinevorschau2.jpg')
+                CityImagePixmap = self.CityImagePixmap.scaled(
+                    QtCore.QSize(300, 300),  # (old values: 330, 202 with KeepAspectRatioByExpanding  / 300, 190 with IgnoreAR
+                    #Qt.KeepAspectRatioByExpanding,
+                    #Qt.IgnoreAspectRatio,
+                    Qt.KeepAspectRatio,
                     Qt.SmoothTransformation,
                 )
-                self.StadtView.setPixmap(StadtViewPixmap)
-            self.MultiCityViewLayout.addWidget(CityImage)
-            # self.ScrollLayout.addWidget(CityImage)
+                CityImage.setPixmap(CityImagePixmap)
+            self.ListCityViewLayout.addWidget(CityImage)
+            #ScrollLayout.addLayout(self.ListCityViewLayout)
+
+            #ScrollLayout.addWidget(CityImage)
 
             #self.MultiCityViewLayout.addSpacing()
             #self.MultiCityViewLayout.addStretch()
