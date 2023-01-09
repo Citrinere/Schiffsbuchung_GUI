@@ -49,18 +49,22 @@ class PersonalDataDialog(QWidget):
         self.labelElement = None
         self.setWindowTitle("Persönliche Daten")
         self.setWindowIcon(QIcon("data\images\SchiffIcon.png"))
+        self.buchungsData = []
         self.setFixedWidth(300)
         self.setFixedHeight(440)
+        self.setStyleSheet("font-size: 12px; background-color: rgb(200, 255, 255);") #
+
+
 
         # Add Personal Information Input
         self.PersonalDataLayout = QGridLayout()
         self.PersonalDataLayout.addWidget(self.createDialog("Name", ["Nachname", "Vorname"]), 0, 0)
-        self.PersonalDataLayout.addWidget(self.createDialog("Adresse", ["Postleitzahl", "Ort", "Straße, Hausnummer"]),
-                                          1, 0)
+        self.PersonalDataLayout.addWidget(self.createDialog("Adresse", ["Postleitzahl", "Ort", "Straße, Hausnummer"]), 1, 0)
         self.PersonalDataLayout.addWidget(self.createDialog("Bankdaten", ["IBAN"]), 2, 0)
 
         # Save Button
         self.saveButton = QPushButton("Abspeichern", self)
+        self.saveButton.setStyleSheet("QPushButton{background-color: rgb(208, 255, 163)}")
         self.PersonalDataLayout.addWidget(self.saveButton)
         self.saveButton.clicked.connect(self.saveData)
 
@@ -88,7 +92,12 @@ class PersonalDataDialog(QWidget):
     # Save Input Data and close Window
     def saveData(self):
 
+        #Test Print
+        print("Uebertragungs Test")
+        print(self.buchungsData)
+
         textboxValue = []
+        textboxValue.append(self.buchungsData)
         # Get Data from all QLineEdit Widgets in Window Layout
         for i in range(0, 3):
             groupWidget = self.PersonalDataLayout.itemAtPosition(i, 0)
@@ -112,6 +121,12 @@ class PersonalDataDialog(QWidget):
     def displayDialog(self):
         self.show()
 
+# ======================================================================================================================
+#
+# End of DialogWindow
+#
+# ======================================================================================================================
+
 
 # Order Window to show selected cruise with images and cabin selection
 class OrderWindow(QWidget):
@@ -120,6 +135,7 @@ class OrderWindow(QWidget):
         self.personalDataDialog = PersonalDataDialog()
         self.cruiseData = []
         self.cityData = []
+        self.bestellData = []
         self.currCityIndex = 0
         self.setWindowTitle('Bestellung')
         self.setWindowIcon(QIcon("data\images\SchiffIcon.png"))
@@ -127,7 +143,7 @@ class OrderWindow(QWidget):
         self.setFixedWidth(760)
         self.setFixedHeight(560)
         self.setStyleSheet("""
-            background-color: rgb(252, 237, 217);
+            background-color: rgb(153, 216, 244);
             QLabel{
                 font-size: 14px
             }
@@ -145,7 +161,7 @@ class OrderWindow(QWidget):
         # Create Child Layouts and Widgets
         # Layout fuer Schiffstyp(Vorschau), Region, Uebernachtungen, Buchungsnummer
         self.LaInform = QLabel("Hier sehen Sie die Zusammenfassung Ihrer ausgewählten Reise.\nWählen Sie bitte noch Ihre gewünschte Kabinenart aus:")
-        self.LaInform.setStyleSheet("font-size: 18px")
+        self.LaInform.setStyleSheet("font-size: 18px; background-color: rgb(255,255,255); padding-left: 5px; border-radius: 10px")
         #self.LaInform.setWordWrap(True)
         BestellGridLayout.addWidget(self.LaInform, 0, 0, 1, 0)      # row, column, row-span, column-span
 
@@ -161,17 +177,22 @@ class OrderWindow(QWidget):
         self.SchiffstypLayout.addWidget(self.SchiffsTypVorschau)
         self.SchiffstypLayout.addWidget(self.SchiffsTyp)
         self.VerticalLayoutLO.addLayout(self.SchiffstypLayout)
+        self.SchiffsTyp.setStyleSheet("font-size: 10pt; background-color: rgba(255,255,255,0.8); margin-right: 20px")
         #self.VerticalLayoutLO.addStretch()
 
         # ===== Reise Informationen ===== Anzeige der Informationen zur ausgewaehlten Reise
         self.LaRegion = QLabel("Region: ")
+        self.LaRegion.setStyleSheet("font-size: 10pt; background-color: rgba(255,255,255,0.8); margin-right: 150px;")
         self.VerticalLayoutLO.addWidget(self.LaRegion)
         self.LaUebernachtungen = QLabel("Uebernachtungen: ")
+        self.LaUebernachtungen.setStyleSheet("font-size: 10pt; background-color: rgba(255,255,255,0.8); margin-right: 150px")
         self.VerticalLayoutLO.addWidget(self.LaUebernachtungen)
         self.LaBuchungsnummer = QLabel()
+        self.LaBuchungsnummer.setStyleSheet("font-size: 10pt; background-color: rgba(255,255,255,0.8); margin-right: 150px")
         self.VerticalLayoutLO.addWidget(self.LaBuchungsnummer)
         #self.VerticalLayoutLO.addStretch()
         #BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0)  # (self.layout, reihe, spalte)
+
 
         # =========================================================
         # Alte Staedte View Ansicht
@@ -208,6 +229,8 @@ class OrderWindow(QWidget):
         changeCityViewMenu.addAction(singleAction)
         changeCityViewMenu.addAction(listAction)
         self.changeCityViewButton.setMenu(changeCityViewMenu)
+        self.changeCityViewButton.setStyleSheet("background-color: rgb(208, 255, 163); margin-right: 10px")
+        changeCityViewMenu.setStyleSheet("background-color: rgb(208, 255, 163);")
         self.VerticalLayoutLO.addWidget(self.changeCityViewButton)
         self.changeCityViewButton.resize(self.changeCityViewButton.sizeHint())
 
@@ -276,6 +299,7 @@ class OrderWindow(QWidget):
         self.SingleCityViewLayout.addWidget(self.StadtView)
         #self.vStaedteViewLayout = QVBoxLayout()  # Layout fuer Stadtnamen-Label und darunter dessen Buttons
         self.LaStadt = QLabel()  # Label zum anzeigen des Namen der in "StadtView" angezeigten Stadt
+        self.LaStadt.setStyleSheet("background-color: rgba(255,255,255,0.8); font-size: 10pt; border-radius: 10px; padding: 2px")
         self.SingleCityViewLayout.addWidget(self.LaStadt)  # Hinzufuegen des Widgets in das QVBoxlayout
         self.hPrevNextButtonLayout = QHBoxLayout()  # Horizontales Box Layout um die Buttons nebeneinander zu haben
 
@@ -347,6 +371,7 @@ class OrderWindow(QWidget):
         # ===== BestaetigungsLayout ===== LayoutBox welche den Summenpreis & Buchungsbutton beinhaltet
         self.vBestaetigungsLayout = QVBoxLayout()
         self.LaGesamtpreis = QLabel("Summe: ......€")
+        self.LaGesamtpreis.setStyleSheet("font-size: 12pt")
         self.LaGesamtpreis.setAlignment(QtCore.Qt.AlignCenter)  # Text in die mitte setzen
         self.vBestaetigungsLayout.addWidget(self.LaGesamtpreis)
         self.ConfirmButton = QPushButton('Buchen')
@@ -361,6 +386,15 @@ class OrderWindow(QWidget):
     # Confirm Order, open personalDataDialog
     def confirmOrder(self):
         self.personalDataDialog.displayDialog()
+
+        print("Uebergabe an DialogWindow")
+        self.bestellData.append(str(self.LaBuchungsnummer.text()))
+        self.bestellData.append(self.cruiseData[0:4])
+        self.bestellData.append(str(self.LaGesamtpreis.text()))
+        print(self.bestellData)
+        # Ab der Zeile bricht das Progamm ab
+        # self.PersonalDataDialog.bestellData = buchungsData
+
         self.close()
 
     # Open Order Window and put selected cruise data in Labels
@@ -399,7 +433,7 @@ class OrderWindow(QWidget):
         self.updateCityLabel(0)
 
         self.LaRegion.setText("Region: " + self.cruiseData[0])
-        self.LaUebernachtungen.setText("Uebernachtungen: " + self.cruiseData[1])
+        self.LaUebernachtungen.setText("Übernachtungen: " + self.cruiseData[1])
         self.LaBuchungsnummer.setText("Buchungsnummer: " + str(random.randrange(2, 999999, 2)))
         self.SchiffsTyp.setText("Schiffstyp: " + self.cruiseData[3])
         self.SchiffsTypPixmap = QPixmap('data/images/Schiffstypen/Schiffstyp ' + str(self.cruiseData[3]))
@@ -426,6 +460,7 @@ class OrderWindow(QWidget):
             self.SchiffsTypVorschau.move(int(-x), 0)
 
         self.InnenPreis.setText("Innenkabine\nPreis: " + self.cruiseData[4])
+        self.InnenPreis.setStyleSheet("font-size: 10pt")
         self.InnenKabinePixmap = QPixmap('data/images/Kabinentypen/Innenkabine.jpg')
         InnenKabinePixmap = self.InnenKabinePixmap.scaled(
             QtCore.QSize(330, 202),             # old value 300, 172
@@ -434,6 +469,7 @@ class OrderWindow(QWidget):
         )
         self.InnenVorschau.setPixmap(InnenKabinePixmap)
         self.AussenPreis.setText("Aussenkabine\nPreis: " + self.cruiseData[5])
+        self.AussenPreis.setStyleSheet("font-size: 10pt")
         self.AussenKabinePixmap = QPixmap('data/images/Kabinentypen/Aussenkabine.jpg')
         AussenKabinePixmap = self.AussenKabinePixmap.scaled(
             QtCore.QSize(330, 202),
@@ -442,6 +478,7 @@ class OrderWindow(QWidget):
         )
         self.AussenVorschau.setPixmap(AussenKabinePixmap)
         self.BalkonPreis.setText("Balkonkabine \nPreis: " + self.cruiseData[6])
+        self.BalkonPreis.setStyleSheet("font-size: 10pt")
         self.BalkonKabinePixmap = QPixmap('data/images/Kabinentypen/Balkonkabine.jpg')
         BalkonKabinePixmap = self.BalkonKabinePixmap.scaled(
             QtCore.QSize(330, 202), # old values 300, 172
@@ -614,7 +651,8 @@ class OrderWindow(QWidget):
                 # Stadtname
                 CityName = QLabel(city)
                 #self.orderWindow.ScrollLayout.addWidget(CityName)
-                CityName.setStyleSheet("background-color: rgb(255, 255,255); margin-left: 2px")
+                CityName.setStyleSheet("background-color: rgba(255,255,255,0.8); font-size: 10pt; border-radius: 10px; padding: 2px; margin-left: 2px; margin-right: 12px")
+                #CityName.setStyleSheet("background-color: rgb(255, 255,255); ")
                 self.ListCityViewLayout.addWidget(CityName)
                 #self.ListCityViewLayout.addStretch()
                 #ScrollLayout.addLayout(self.ListCityViewLayout)
@@ -796,6 +834,11 @@ class ImageCruiseShip(QWidget):
                 self.labelImage.move(int(-x), 0)
 
 
+# ===========================================================================================================================
+#
+# End of orderWindow
+#
+# ===========================================================================================================================
 
 # creating checkable combo box class which will stay open after a selection
 class CheckableComboBox(QComboBox):
@@ -924,7 +967,7 @@ class Window(QMainWindow):
         #Infotext for Filter
         self.FilterInfoLabel = QLabel()
         self.FilterInfoLabel.setText(
-            "Sie können den Filter nutzen, um Ihre Auswahl einzugrenzen\n(Auswahl der Städte wird durch die ausgewählten Regionen begrenzt)\n(Anzahl der Übernachtungen werden +- 2 Tage angezeigt)")
+            "Sie können den Filter nutzen, um Ihre Auswahl einzugrenzen. \n Die Auswahl der Städte wird durch die ausgewählten Regionen begrenzt und die Anzahl der Übernachtungen werden mit  +/- 2 Tagen angezeigt.")
         self.FilterInfoLabel.setStyleSheet("font-size: 12pt; background-color: rgba(255, 255, 255, 0.6);")
         self.FilterInfoLabel.setAlignment(QtCore.Qt.AlignCenter)
         ApplicationVerticalLayout.addWidget(self.FilterInfoLabel)
@@ -937,8 +980,8 @@ class Window(QMainWindow):
         # Infotext for Tabelle
         self.FilterInfoLabel = QLabel()
         self.FilterInfoLabel.setText(
-            "Klicken Sie die Reise an, welche Sie auswählen wollen")
-        self.FilterInfoLabel.setStyleSheet("font-size: 12pt; background-color: rgba(255, 255, 255, 0.6);")
+            "Klicken Sie die Reise an, welche Sie auswählen wollen.")
+        self.FilterInfoLabel.setStyleSheet("font-size: 14pt; background-color: rgba(255, 255, 255, 0.6); margin-left: 400px; margin-right: 400px")
         self.FilterInfoLabel.setAlignment(QtCore.Qt.AlignCenter)
         ApplicationVerticalLayout.addWidget(self.FilterInfoLabel)
 
@@ -958,7 +1001,7 @@ class Window(QMainWindow):
         self.sendSelectionButton = QPushButton("Auswahl bestellen", self)
         self.sendSelectionButton.setAutoFillBackground(True)
         self.sendSelectionButton.resize(150, 70)
-        self.sendSelectionButton.setStyleSheet("background-color: rgb(0, 130, 0); color: white;")
+        self.sendSelectionButton.setStyleSheet("background-color: rgb(0, 130, 0); color: white; font-size: 14pt")
         ApplicationVerticalLayout.addWidget(self.sendSelectionButton)
 
         # central widget
@@ -1009,13 +1052,13 @@ class Window(QMainWindow):
         self.SearchButton.setText("Suchen")
         # self.SearchButton.setGeometry(730, 20, 61, 41)
         self.SearchButton.setAutoFillBackground(True)
-        self.SearchButton.setStyleSheet("background-color: rgb(0, 130, 0); color: white;")
+        self.SearchButton.setStyleSheet("background-color: rgb(0, 130, 0); color: white; font-size: 11pt")
 
         # Reset Knopf
         self.ResetButton = QPushButton()
         self.ResetButton.setText("Filter zurücksetzen")
         self.ResetButton.setAutoFillBackground(True)
-        self.ResetButton.setStyleSheet("background-color: rgb(130, 0, 0); color: white;")
+        self.ResetButton.setStyleSheet("background-color: rgb(130, 0, 0); color: white; font-size: 11pt")
 
         # adding Widgets to the Grid-layout   (widget, row, column, alignment)
         FilterGridLayout.addWidget(self.RegionLabel, 1, 1)
