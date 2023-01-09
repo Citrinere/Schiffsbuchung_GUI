@@ -229,7 +229,7 @@ class OrderWindow(QWidget):
         changeCityViewMenu.addAction(singleAction)
         changeCityViewMenu.addAction(listAction)
         self.changeCityViewButton.setMenu(changeCityViewMenu)
-        self.changeCityViewButton.setStyleSheet("background-color: rgb(208, 255, 163); margin-right: 10px")
+        self.changeCityViewButton.setStyleSheet("background-color: rgb(208, 255, 163); margin-right: 10px; font-size: 11pt")
         changeCityViewMenu.setStyleSheet("background-color: rgb(208, 255, 163);")
         self.VerticalLayoutLO.addWidget(self.changeCityViewButton)
         self.changeCityViewButton.resize(self.changeCityViewButton.sizeHint())
@@ -405,16 +405,12 @@ class OrderWindow(QWidget):
         self.currCityIndex = 0                          # zuruecksetzen des Indexes bei aufruf des Fensters
         self.LaGesamtpreis.setText("Summe: ......€")    # zuruecksetzen des Gesamtpreises bei aufruf des Fensters
 
-
         self.InnenPreis.setCheckable(False)
         self.InnenPreis.setCheckable(True)
         self.AussenPreis.setCheckable(False)
         self.AussenPreis.setCheckable(True)
         self.BalkonPreis.setCheckable(False)
         self.BalkonPreis.setCheckable(True)
-
-
-
 
 
         # Create List of Citys out of String
@@ -584,7 +580,7 @@ class OrderWindow(QWidget):
             self.BalkonPreis.setCheckable(True)
 
 
-    # Funktion um SUmme passend zur Auswahl zu setzen
+    # Funktion um Summe passend zur Auswahl zu setzen
     def summecheck(self):
         if self.InnenPreis.isChecked():
             self.LaGesamtpreis.setText("Summe: " + self.cruiseData[4])
@@ -682,7 +678,7 @@ class OrderWindow(QWidget):
                     )
                     CityImage.setPixmap(CityImagePixmap)
                 self.ListCityViewLayout.addWidget(CityImage)
-
+                self.ListCityScrollArea.setStyleSheet("margin-right: 10px")
 
 
         # # Das layout vor schleifen begin leeren
