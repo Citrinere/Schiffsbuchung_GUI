@@ -288,9 +288,8 @@ class OrderWindow(QWidget):
         self.ListCityView = QWidget()                               # Widget erstellen
         self.ListCityViewLayout = QVBoxLayout(self.ListCityView)    # Layout für widget erstellen
         self.ListCityViewLayout.setContentsMargins(0, 0, 0, 0)      # Margin setzen damit inhalt weiter links ist
-
         self.ScrollLayout.addWidget(self.ListCityView)                   # Widget in Scroll-Layout setzen
-
+        self.ScrollContent.setStyleSheet("background-color: rgba(255, 255, 255, 0.6)")
         self.VerticalLayoutLO.addWidget(self.ListCityScrollArea)         # ScrollArea in Layout setzen
         # ======================================================
 
@@ -678,9 +677,9 @@ class OrderWindow(QWidget):
                     )
                     CityImage.setPixmap(CityImagePixmap)
                 self.ListCityViewLayout.addWidget(CityImage)
-                CitySpacer = QLabel("    ")
+                CitySpacer = QLabel(" \n \n ")
                 self.ListCityViewLayout.addWidget(CitySpacer)
-                self.ListCityScrollArea.setStyleSheet("margin-right: 10px")
+                self.ListCityScrollArea.setStyleSheet("margin-right: 6px")
 
 
         # # Das layout vor schleifen begin leeren
