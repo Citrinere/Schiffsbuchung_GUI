@@ -161,7 +161,7 @@ class OrderWindow(QWidget):
         # Create Child Layouts and Widgets
         # Layout fuer Schiffstyp(Vorschau), Region, Uebernachtungen, Buchungsnummer
         self.LaInform = QLabel("Hier sehen Sie die Zusammenfassung Ihrer ausgewählten Reise.\nWählen Sie bitte noch Ihre gewünschte Kabinenart aus:")
-        self.LaInform.setStyleSheet("font-size: 18px; background-color: rgb(255,255,255); padding-left: 5px; border-radius: 10px")
+        self.LaInform.setStyleSheet("font-size: 18px; background-color: rgb(255,255,255); padding-left: 8px; border-radius: 20px")
         #self.LaInform.setWordWrap(True)
         BestellGridLayout.addWidget(self.LaInform, 0, 0, 1, 0)      # row, column, row-span, column-span
 
@@ -177,18 +177,14 @@ class OrderWindow(QWidget):
         self.SchiffstypLayout.addWidget(self.SchiffsTypVorschau)
         self.SchiffstypLayout.addWidget(self.SchiffsTyp)
         self.VerticalLayoutLO.addLayout(self.SchiffstypLayout)
-        self.SchiffsTyp.setStyleSheet("font-size: 10pt; background-color: rgba(255,255,255,0.8); margin-right: 20px")
         #self.VerticalLayoutLO.addStretch()
 
         # ===== Reise Informationen ===== Anzeige der Informationen zur ausgewaehlten Reise
         self.LaRegion = QLabel("Region: ")
-        self.LaRegion.setStyleSheet("font-size: 10pt; background-color: rgba(255,255,255,0.8); margin-right: 150px;")
         self.VerticalLayoutLO.addWidget(self.LaRegion)
-        self.LaUebernachtungen = QLabel("Uebernachtungen: ")
-        self.LaUebernachtungen.setStyleSheet("font-size: 10pt; background-color: rgba(255,255,255,0.8); margin-right: 150px")
+        self.LaUebernachtungen = QLabel("Übernachtungen: ")
         self.VerticalLayoutLO.addWidget(self.LaUebernachtungen)
         self.LaBuchungsnummer = QLabel()
-        self.LaBuchungsnummer.setStyleSheet("font-size: 10pt; background-color: rgba(255,255,255,0.8); margin-right: 150px")
         self.VerticalLayoutLO.addWidget(self.LaBuchungsnummer)
         #self.VerticalLayoutLO.addStretch()
         #BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0)  # (self.layout, reihe, spalte)
@@ -299,7 +295,7 @@ class OrderWindow(QWidget):
         self.SingleCityViewLayout.addWidget(self.StadtView)
         #self.vStaedteViewLayout = QVBoxLayout()  # Layout fuer Stadtnamen-Label und darunter dessen Buttons
         self.LaStadt = QLabel()  # Label zum anzeigen des Namen der in "StadtView" angezeigten Stadt
-        self.LaStadt.setStyleSheet("background-color: rgba(255,255,255,0.8); font-size: 10pt; border-radius: 10px; padding: 2px")
+        self.LaStadt.setStyleSheet("background-color: rgba(255, 255, 255, 0.6); font-size: 10pt; border-radius: 10px; padding: 2px")
         self.SingleCityViewLayout.addWidget(self.LaStadt)  # Hinzufuegen des Widgets in das QVBoxlayout
         self.hPrevNextButtonLayout = QHBoxLayout()  # Horizontales Box Layout um die Buttons nebeneinander zu haben
 
@@ -429,9 +425,13 @@ class OrderWindow(QWidget):
         self.updateCityLabel(0)
 
         self.LaRegion.setText("Region: " + self.cruiseData[0])
+        self.LaRegion.setStyleSheet("background-color: rgba(255, 255, 255, 0.6); font-size: 11pt; border-radius: 10px; margin-right: 150px;")
         self.LaUebernachtungen.setText("Übernachtungen: " + self.cruiseData[1])
+        self.LaUebernachtungen.setStyleSheet("background-color: rgba(255, 255, 255, 0.6); font-size: 11pt; border-radius: 10px; margin-right: 150px;")
         self.LaBuchungsnummer.setText("Buchungsnummer: " + str(random.randrange(2, 999999, 2)))
+        self.LaBuchungsnummer.setStyleSheet("background-color: rgba(255, 255, 255, 0.6); font-size: 11pt; border-radius: 10px; margin-right: 150px;")
         self.SchiffsTyp.setText("Schiffstyp: " + self.cruiseData[3])
+        self.SchiffsTyp.setStyleSheet("background-color: rgba(255, 255, 255, 0.6); font-size: 11pt; border-radius: 40%; margin-right: 20px; ")
         self.SchiffsTypPixmap = QPixmap('data/images/Schiffstypen/Schiffstyp ' + str(self.cruiseData[3]))
 
         img_width = self.SchiffsTypPixmap.size().width()
@@ -647,7 +647,7 @@ class OrderWindow(QWidget):
                 # Stadtname
                 CityName = QLabel(city)
                 #self.orderWindow.ScrollLayout.addWidget(CityName)
-                CityName.setStyleSheet("background-color: rgba(255,255,255,0.8); font-size: 10pt; border-radius: 10px; padding: 2px; margin-left: 2px; margin-right: 12px")
+                CityName.setStyleSheet("background-color: rgba(255, 255, 255, 0.6); font-size: 10pt; border-radius: 10px; padding: 2px; margin-left: 2px; margin-right: 12px")
                 #CityName.setStyleSheet("background-color: rgb(255, 255,255); ")
                 self.ListCityViewLayout.addWidget(CityName)
                 #self.ListCityViewLayout.addStretch()
@@ -678,7 +678,7 @@ class OrderWindow(QWidget):
                     )
                     CityImage.setPixmap(CityImagePixmap)
                 self.ListCityViewLayout.addWidget(CityImage)
-                self.ListCityScrollArea.setStyleSheet("margin-right: 10px")
+                self.ListCityScrollArea.setStyleSheet("margin-right: 10px; background-color: rgba(255,255,255,0.6);")
 
 
         # # Das layout vor schleifen begin leeren
