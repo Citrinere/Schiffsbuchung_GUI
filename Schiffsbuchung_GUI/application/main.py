@@ -647,7 +647,7 @@ class OrderWindow(QWidget):
                 # Stadtname
                 CityName = QLabel(city)
                 #self.orderWindow.ScrollLayout.addWidget(CityName)
-                CityName.setStyleSheet("background-color: rgba(255,255,255,0.8); font-size: 10pt; border-radius: 10px; padding: 2px; margin-left: 2px; margin-right: 12px")
+                CityName.setStyleSheet("background-color: rgba(255,255,255,0.8); font-size: 12pt; border-radius: 10px; padding: 2px; margin-left: 2px; margin-right: 12px")
                 #CityName.setStyleSheet("background-color: rgb(255, 255,255); ")
                 self.ListCityViewLayout.addWidget(CityName)
                 #self.ListCityViewLayout.addStretch()
@@ -660,17 +660,17 @@ class OrderWindow(QWidget):
                 if file_exists('data/images/Hafenstädte/' + city + '.jpg') == True:
                     self.CityImagePixmap = QPixmap('data/images/Hafenstädte/' + city + '.jpg')
                     CityImagePixmap = self.CityImagePixmap.scaled(
-                        QtCore.QSize(300, 400),     # (old values: 330, 202  # new values 370, 242
+                        QtCore.QSize(300, 150),     # (old values: 330, 202 with KeepAspectRatioByExpanding  / 300, 190 with IgnoreAR / 300 400 with KeepAspectRatio
                         #Qt.KeepAspectRatioByExpanding,
-                        #Qt.IgnoreAspectRatio,
-                        Qt.KeepAspectRatio,
+                        Qt.IgnoreAspectRatio,
+                        #Qt.KeepAspectRatio,
                         Qt.SmoothTransformation,
                     )
                     CityImage.setPixmap(CityImagePixmap)
                 elif file_exists('data/images/Hafenstädte/' + city + '.jpg') == False:
                     self.CityImagePixmap = QPixmap('data/images/Hafenstädte/keinevorschau2.jpg')
                     CityImagePixmap = self.CityImagePixmap.scaled(
-                        QtCore.QSize(300, 300),  # (old values: 330, 202 with KeepAspectRatioByExpanding  / 300, 190 with IgnoreAR
+                        QtCore.QSize(300, 180),  # (old values: 330, 202 with KeepAspectRatioByExpanding  / 300, 190 with IgnoreAR / 300 400 with KeepAspectRatio
                         #Qt.KeepAspectRatioByExpanding,
                         #Qt.IgnoreAspectRatio,
                         Qt.KeepAspectRatio,
@@ -678,6 +678,8 @@ class OrderWindow(QWidget):
                     )
                     CityImage.setPixmap(CityImagePixmap)
                 self.ListCityViewLayout.addWidget(CityImage)
+                CitySpacer = QLabel("    ")
+                self.ListCityViewLayout.addWidget(CitySpacer)
                 self.ListCityScrollArea.setStyleSheet("margin-right: 10px")
 
 
