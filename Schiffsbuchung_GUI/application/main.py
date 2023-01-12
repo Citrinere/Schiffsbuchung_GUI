@@ -415,11 +415,6 @@ class OrderWindow(QWidget):
         # for cityviewlist in enumerate:
         #     print(s)
         #     print(cityviewlist)
-        print(self.cruiseData)
-        print("-----create City Info-----------")
-        print(self.currCityIndex)
-        print(cityString)
-        print(self.cityData)
 
         self.updateCityLabel(0)
 
@@ -809,6 +804,7 @@ class ImageCruiseShip(QWidget):
         super(ImageCruiseShip, self).__init__()
 
         if file_exists(image):
+
             self.labelImage = QLabel(self)
             self.pixmap = QPixmap(image)
             img_width = self.pixmap.size().width()
@@ -919,6 +915,7 @@ class TableView(QTableWidget):
                     item = self.getImageLabel(imagePath)
                     self.setCellWidget(row_number, column_number, item)
 
+
                 # Format pricing
                 if 5 <= column_number <= 7:
                     if column_data != "nicht vorhanden":
@@ -1019,7 +1016,7 @@ class Window(QMainWindow):
         self.NachtLabel = QLabel()
         #self.NachtLabelErgebnis = QLabel()  # Label zum Anzeigen der Auswahl
         # self.NachtLabelErgebnis.setStyleSheet("background-color: white; border-color: black;")
-        self.NachtLabel.setText("Übernachtungen")
+        self.NachtLabel.setText("Übernachtungen\n(7-21 Tage)")
         self.NachtLabel.setStyleSheet("font-size: 12pt;font-weight: bold; background-color: rgba(255, 255, 255, 0.6);")
         self.NachtLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.NachtSpinBox = QSpinBox()
@@ -1106,8 +1103,16 @@ class Window(QMainWindow):
             # item.setCheckState(Qt.Unchecked)
 
         # add items to Schiffstyp
-        for i in ["A", "B", "C", "D", "E", "F"]:
+        for j, i in enumerate(["A", "B", "C", "D", "E", "F"]):
             self.SchiffsTypComboBox.addItem(i)
+
+            if file_exists('./data/images/Schiffstypen/Schiffstyp ' + i + '.jpg'):
+                self.SchiffsTypComboBox.setItemData(j,
+                                               '<img src="./data/images/Schiffstypen/Schiffstyp ' + i + '.jpg" width="500" '
+                                                                                               'height="350" />',
+                                               QtCore.Qt.ToolTipRole)
+            else:
+                self.SchiffsTypComboBox.setItemData(j, "Kein Vorschaubild vorhanden", QtCore.Qt.ToolTipRole)
 
         # self.SearchComponents() # calling method
         self.show()
