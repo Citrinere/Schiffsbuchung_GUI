@@ -299,6 +299,8 @@ class OrderWindow(QWidget):
         self.currCityIndex = 0                          # zuruecksetzen des Indexes bei aufruf des Fensters
         self.LaGesamtpreis.setText("Summe: ......€")    # zuruecksetzen des Gesamtpreises bei aufruf des Fensters
 
+
+        # Radiobutton auswahl bei neuem fenster entfernen durch aus und wieder anschalten
         self.InnenPreis.setCheckable(False)
         self.InnenPreis.setCheckable(True)
         self.AussenPreis.setCheckable(False)
