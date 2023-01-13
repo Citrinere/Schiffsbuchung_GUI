@@ -45,11 +45,13 @@ def getCityList(regiontype="all"):  # example: getCityList("Nordsee")
 class PersonalDataDialog(QWidget):
     def __init__(self):
         super().__init__()
+
+        #self.OrderWindow = OrderWindow()
         self.editElement = None
         self.labelElement = None
         self.setWindowTitle("Persönliche Daten")
         self.setWindowIcon(QIcon("data\images\SchiffIcon.png"))
-        self.buchungsData = ["lol"]
+        self.buchungsData = []
         self.setFixedWidth(300)
         self.setFixedHeight(440)
         self.setStyleSheet("font-size: 12px; background-color: rgb(200, 255, 255);") #
@@ -92,20 +94,15 @@ class PersonalDataDialog(QWidget):
     # Save Input Data and close Window
     def saveData(self):
 
-        # Test Print
-        # print("Uebertragungs Test")
-        # print("Test: ", self.buchungsData)#, self.buchungsData)
-        # print("Test zwei:", self.bestellData)
-
+        self.OrderWindow = OrderWindow()
         textboxValue = []
-        #textboxValue.append(self.confirmOrder.bestellData)                     # lässt das programm am ende abstürzen
         # Get Data from all QLineEdit Widgets in Window Layout
         for i in range(0, 3):
             groupWidget = self.PersonalDataLayout.itemAtPosition(i, 0)
             for textWidget in groupWidget.widget().children():
                 if isinstance(textWidget, QLineEdit):
                     textboxValue.append(textWidget.text())
-        print(textboxValue)
+
         # Save Data to file
         with open('data\PersonDaten.txt', 'w') as file:
             file.write('\n'.join(textboxValue))
@@ -136,7 +133,7 @@ class OrderWindow(QWidget):
         self.personalDataDialog = PersonalDataDialog()
         self.cruiseData = []
         self.cityData = []
-        # self.bestellData = []
+        self.bestellData = []
         self.currCityIndex = 0
         self.setWindowTitle('Bestellung')
         self.setWindowIcon(QIcon("data\images\SchiffIcon.png"))
@@ -163,7 +160,6 @@ class OrderWindow(QWidget):
         # Layout fuer Schiffstyp(Vorschau), Region, Uebernachtungen, Buchungsnummer
         self.LaInform = QLabel("Hier sehen Sie die Zusammenfassung Ihrer ausgewählten Reise.\nWählen Sie bitte noch Ihre gewünschte Kabinenart aus:")
         self.LaInform.setStyleSheet("font-size: 18px; background-color: rgb(255,255,255); padding-left: 8px; border-radius: 20px")
-        #self.LaInform.setWordWrap(True)
         BestellGridLayout.addWidget(self.LaInform, 0, 0, 1, 0)      # row, column, row-span, column-span
 
         # ===== VerticalLayout ===== LayoutBox für Schiffstyp- & Staedtebilder Widget
@@ -178,7 +174,6 @@ class OrderWindow(QWidget):
         self.SchiffstypLayout.addWidget(self.SchiffsTypVorschau)
         self.SchiffstypLayout.addWidget(self.SchiffsTyp)
         self.VerticalLayoutLO.addLayout(self.SchiffstypLayout)
-        #self.VerticalLayoutLO.addStretch()
 
         # ===== Reise Informationen ===== Anzeige der Informationen zur ausgewaehlten Reise
         self.LaRegion = QLabel("Region: ")
@@ -187,32 +182,6 @@ class OrderWindow(QWidget):
         self.VerticalLayoutLO.addWidget(self.LaUebernachtungen)
         self.LaBuchungsnummer = QLabel()
         self.VerticalLayoutLO.addWidget(self.LaBuchungsnummer)
-        #self.VerticalLayoutLO.addStretch()
-        #BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0)  # (self.layout, reihe, spalte)
-
-
-        # =========================================================
-        # Alte Staedte View Ansicht
-        """
-            #self.input1 = QLabel()
-            #BestellGridLayout.addWidget(self.input1, 1, 0)  # (self.widget, reihe, spalte)
-            self.StadtView = QLabel(self)           # Label zum anzeigen des Bildes der Stadt
-            self.VerticalLayoutLO.addWidget(self.StadtView)
-            self.vStaedteViewLayout = QVBoxLayout()  # Layout fuer Stadnamen-Label und dessen Buttons
-            self.LaStadt = QLabel()                 # Label zum anzeigen des Namen der in "StadtView" angezeigten Stadt
-            self.vStaedteViewLayout.addWidget(self.LaStadt)
-            #self.LaStadt.setWordWrap(True)
-            #BestellGridLayout.addWidget(self.LaStadt, 1, 0)     # (self.widget, reihe, spalte)
-            self.hPrevNextButtonLayout = QHBoxLayout()
-            self.PrevStadtButton = QPushButton("Vorherige Stadt")
-            self.NextStadtButton = QPushButton("Naechste Stadt")
-            self.hPrevNextButtonLayout.addWidget(self.PrevStadtButton)
-            self.hPrevNextButtonLayout.addWidget(self.NextStadtButton)
-            self.vStaedteViewLayout.addLayout(self.hPrevNextButtonLayout)
-            #BestellGridLayout.addLayout(self.PrevNextButtonLayout, 1, 0)    # (self.widget, reihe, spalte)
-            BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0)
-        """
-        # ======================================================
 
         # ===== StaedteViewChangeButton ===== Button zum Wechseln der Bilderansicht von Einzelnen Bilder zu einer Bilderliste
         # Create Menu to switch City View
@@ -238,57 +207,24 @@ class OrderWindow(QWidget):
         self.StadtView = QLabel(self)                               # Label zum anzeigen des Bildes der Stadt
         self.VerticalLayoutLO.addWidget(self.SingleCityView)
 
-        # #========================================
-        # List of Citys Layout
-        # Dieses Widget muss an die gleiche Stelle, wie das Widget obendrüber
-        #
-        #1 self.view = QtWidgets.QWidget()                          # view widget erstellen
-        #2 self.layout = QtWidgets.QVBoxLayout(self.view)           # layout erstellen
-        #3 self.scroll = QtWidgets.QScrollArea(self)                # scrollarea erstellen
-        #4 self.scroll.setWidgetResizable(True)                     # scrollarea resizable machen
-        #5 self.scroll.setWidget(self.view)                         # scrollarea
-        #6 self.setCentralWidget(self.scroll)                       # scrollarea als central widget setzen (machen wir ja nicht)
-        #
 
-        # self.ListCityView = QWidget()                                   #1 widget erstellen um es verstecken zu können
-        # self.ListCityViewLayout = QVBoxLayout(self.ListCityView)        #2 layout im widget erstellen
-        # self.ListCityScrollArea = QScrollArea(self)                     #3
-        # self.ListCityScrollArea.setWidgetResizable(True)                #4
-        # self.ListCityScrollArea.setWidget(self.ListCityView)            #5
-        #self.ScrollContent = QWidget()
-
-
-        # Widget mit Layout darin, mit Scroll-Area darin
-        #self.ListCityView = QWidget()                                   # Pack Single-City-Preview-Layout in a Widget, to allow hiding it #1 self.view = QtWidgets.QWidget()                  # view widget erstellen
-        #self.ListCityViewLayout = QVBoxLayout(self.ListCityView)        #2 self.layout = QtWidgets.QVBoxLayout(self.view)   # layout erstellen
-        #self.ListCityView.setLayout(self.ListCityViewLayout)
-        #ListCityScroll = QScrollArea(self)                              #3 self.scroll = QtWidgets.QScrollArea(self)        # scrollarea erstellen
-        #ListCityScroll.setWidgetResizable(True)                         #4 self.scroll.setWidgetResizable(True)             # scrollarea resizable machen
-        #ScrollContent = QWidget(ListCityScroll)
-        #ScrollLayout = QVBoxLayout(ScrollContent)
-        #ScrollContent.setLayout(ScrollLayout)
-        #self.ListCityViewLayout.addWidget(ListCityScroll)               #6 Scroll Area in Layout bringen
-
-        #ListCityScroll.setWidget(ScrollContent)
-        #self.VerticalLayoutLO.addWidget(self.ListCityView)
 
 
         # Scroll-Area mit Widget darin, mit Layout darin
-        self.ListCityScrollArea = QScrollArea(self)                      # Scrollarea erstellen
-        self.ListCityScrollArea.setWidgetResizable(True)                 # Scroll-Area resizable machen
+        self.ListCityScrollArea = QScrollArea(self)                                     # Scrollarea erstellen
+        self.ListCityScrollArea.setWidgetResizable(True)                                # Scroll-Area resizable machen
         self.ListCityScrollArea.setFixedHeight(202)
         #ListCityScrollArea.setContentsMargins(, 0, 0, 0, 0)
-        self.ScrollContent = QWidget(self.ListCityScrollArea)                 # Inhalt-Widget mit Scrollarea als parent?
-        self.ScrollLayout = QVBoxLayout(self.ScrollContent)                   # scroll-layout mit scroll-content als parent?
-        self.ScrollContent.setLayout(self.ScrollLayout)                       # Content layout zuweisen zu Content
-        self.ListCityScrollArea.setWidget(self.ScrollContent)                 # der Scroll-Area das inhalt-widget zuweisen
-        self.ListCityView = QWidget()                               # Widget erstellen
-        self.ListCityViewLayout = QVBoxLayout(self.ListCityView)    # Layout für widget erstellen
-        self.ListCityViewLayout.setContentsMargins(0, 0, 0, 0)      # Margin setzen damit inhalt weiter links ist
-        self.ScrollLayout.addWidget(self.ListCityView)                   # Widget in Scroll-Layout setzen
+        self.ScrollContent = QWidget(self.ListCityScrollArea)                           # Inhalt-Widget mit Scrollarea als parent?
+        self.ScrollLayout = QVBoxLayout(self.ScrollContent)                             # scroll-layout mit scroll-content als parent?
+        self.ScrollContent.setLayout(self.ScrollLayout)                                 # Content layout zuweisen zu Content
+        self.ListCityScrollArea.setWidget(self.ScrollContent)                           # der Scroll-Area das inhalt-widget zuweisen
+        self.ListCityView = QWidget()                                                   # Widget erstellen
+        self.ListCityViewLayout = QVBoxLayout(self.ListCityView)                        # Layout für widget erstellen
+        self.ListCityViewLayout.setContentsMargins(0, 0, 0, 0)                          # Margin setzen damit inhalt weiter links ist
+        self.ScrollLayout.addWidget(self.ListCityView)                                  # Widget in Scroll-Layout setzen
         self.ScrollContent.setStyleSheet("background-color: rgba(255, 255, 255, 0.6)")
-        self.VerticalLayoutLO.addWidget(self.ListCityScrollArea)         # ScrollArea in Layout setzen
-        # ======================================================
+        self.VerticalLayoutLO.addWidget(self.ListCityScrollArea)                        # ScrollArea in Layout setzen
 
 
         # self.StadtView.resize(330, 202)
@@ -312,36 +248,7 @@ class OrderWindow(QWidget):
 
         self.SingleCityViewLayout.addLayout(self.hPrevNextButtonLayout)
         BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0, 3, 1, )  # row, column, r-span, c-span
-        #BestellGridLayout.addLayout(self.vStaedteViewLayout, 0, 0)
 
-        """
-        # List of Citys Layout
-        # Dieses Widget muss an die gleiche Stelle, wie das Widget obendrüber
-        # 
-        self.MultiCityView = QWidget()
-        self.VerticalLayoutLO.addWidget(self.SingleCityView)
-        self.MultiCityViewLayout = QVBoxLayout()
-
-        MultiCityScroll = QScrollArea(self)
-        self.MultiCityViewLayout.addWidget(MultiCityScroll)
-        MultiCityScroll.setWidgetResizable(True)
-        ScrollContent = QWidget(MultiCityScroll)
-
-        ScrollLayout = QVBoxLayout(ScrollContent)
-        ScrollContent.setLayout(ScrollLayout)
-
-        # Die for-Schleife muss in displayWindow() ODER changeCityView(), in __init__ ist self.cruiseData[2] noch leer
-        for city in ["test", "test","test","test","test","test","test"]:  # self.cruiseData[2]
-            # Stadtname
-            CityName = QLabel(city)
-            ScrollLayout.addWidget(CityName)
-
-            # Bild erstellen
-            CityImage = QLabel()
-            ScrollLayout.addWidget(CityImage)
-            # Spacer nach jeder Vorschau?
-        MultiCityScroll.setWidget(ScrollContent)
-        """
 
         # Layout fuer Kabinen-Preise und Vorschau
         # ===== KabinenLayout ===== LayoutBox zur Auswahl der zu Buchbaren Kabine
@@ -382,16 +289,6 @@ class OrderWindow(QWidget):
     # Confirm Order, open personalDataDialog
     def confirmOrder(self):
         self.personalDataDialog.displayDialog()
-
-        # print("Uebergabe an DialogWindow")
-        # self.bestellData.append(str(self.LaBuchungsnummer.text()))      # buchungsnammer anhängen
-        # self.bestellData.append(self.cruiseData[0:4])                   # Region bis Typ anhängen
-        # self.bestellData.append(str(self.LaGesamtpreis.text()))         # Summe anhängen
-        # print("bestelldata:", self.bestellData)
-        # Ab der Zeile bricht das Progamm ab
-        # self.PersonalDataDialog.bestellData = self.buchungsData
-        # print("buchungsdata:", self.orderWindow.buchungsData)
-
         self.close()
 
     # Open Order Window and put selected cruise data in Labels
@@ -413,10 +310,6 @@ class OrderWindow(QWidget):
         # Create List of Citys out of String
         cityString = self.cruiseData[2]
         self.cityData = cityString.split(", ")
-        # s = 0  # anzahl splits
-        # for cityviewlist in enumerate:
-        #     print(s)
-        #     print(cityviewlist)
 
         self.updateCityLabel(0)
 
@@ -479,86 +372,13 @@ class OrderWindow(QWidget):
         )
         self.BalkonVorschau.setPixmap(BalkonKabinePixmap)
 
-        #print(cityviewlist[i])
-
-        # for i in range(self.cruiseData[2].count()):
-        # self.StadtViewPixmap = QPixmap('data/images/Hafenstädte' + str(cityviewlist) + '.jpg')
-
-        # self.cruiseData[2] = koblenz, wormms, bobenheim, mannheim
-        #
-        # QPixmap('data/images/Hafenstädte/' + self.cruiseData[2][i+1] + '.jpg')
-        # i = 1
-        #
-        # while i > 0
-        #     prevpushbutton = i-1;
-        # while i < self.cruiseData[2].count()
-        #     nextbutton = i+1
-
-        # Reset City-Pointer after calling bestellwindow
-        # if self.displayWindow.isVisible() == False:
-
-
-
-        #self.PrevStadtButton.clicked.connect(lambda: self.stadtbuttons(self.stadtstelle))
-        #self.NextStadtButton.clicked.connect(lambda: self.stadtbuttons(self.stadtstelle))
-
-        #if self.PrevStadtButton.clicked()
-        # if self.stadtstelle == 0:
-        #     #self.PrevStadtButton.setText(" ")
-        #     self.PrevStadtButton.hide()
-        # elif self.stadtstelle + 1 == stadtanzahl:
-        #     #self.NextStadtButton.setText(" ")
-        #     self.NextStadtButton.hide()
-        # else:
-        #     self.PrevStadtButton.show()
-        #     self.NextStadtButton.show()
-
-        """
-        self.LaStadt.setText("Stadt: " + cityviewlist[self.stadtstelle])
-        self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + cityviewlist[self.stadtstelle] + '.jpg')
-        StadtViewPixmap = self.StadtViewPixmap.scaled(
-            QtCore.QSize(350, 222),
-            Qt.KeepAspectRatioByExpanding,
-            Qt.SmoothTransformation
-        )
-        self.StadtView.setPixmap(StadtViewPixmap)
-        """
         self.changeCityView("single")
         self.show()
-
-        # print(self.cruiseData[2])
-        # self.cityviewlist = list()
-        # self.tempcruiseData = self.cruiseData[2]
-        # for i in range self.tempcruiseData:
-        #     while i != ("," & " "):
-        #         i+1
-        #         self.templist = list()
-        #     self.templist.extned(i)
-        #     self.cityviewlist.append(self.templist)
-        #     self.templist.remove()
-        #
-        #     self.cityviewlist.extend(self.cruiseData[2])
-        # print(self.cityviewlist)
-        # for c in range(self.cityviewlist.count()):
-        #     min = 0
-        #     max =
 
         # radiobutton mit funktion verbinden
         self.InnenPreis.clicked.connect(self.summecheck)
         self.AussenPreis.clicked.connect(self.summecheck)
         self.BalkonPreis.clicked.connect(self.summecheck)
-
-
-    # # Die for-Schleife muss in displayWindow() ODER changeCityView(), in __init__ ist self.cruiseData[2] noch leer
-    # for city in ["test", "test", "test", "test", "test", "test", "test"]:  # self.cruiseData[2]
-    #     # Stadtname
-    #     CityName = QLabel(city)
-    #     self.orderWindow.ScrollLayout.addWidget(CityName)
-    #
-    #     # Bild erstellen
-    #     CityImage = QLabel()
-    #     self.orderWindow.ScrollLayout.addWidget(CityImage)
-    #     # Spacer nach jeder Vorschau?
 
 
         # pruefen ob eine kabine nicht vorhanden ist und das anklicken verhindern
@@ -642,14 +462,8 @@ class OrderWindow(QWidget):
             for city in self.cityData:
                 # Stadtname
                 CityName = QLabel(city)
-                #self.orderWindow.ScrollLayout.addWidget(CityName)
                 CityName.setStyleSheet("background-color: rgba(255, 255, 255, 0.6); font-size: 10pt; border-radius: 10px; padding: 2px; margin-left: 2px; margin-right: 12px")
-                #CityName.setStyleSheet("background-color: rgb(255, 255,255); ")
                 self.ListCityViewLayout.addWidget(CityName)
-                #self.ListCityViewLayout.addStretch()
-                #ScrollLayout.addLayout(self.ListCityViewLayout)
-
-                #print(city)
 
                 # # Bild erstellen
                 CityImage = QLabel()
@@ -678,125 +492,6 @@ class OrderWindow(QWidget):
                 self.ListCityViewLayout.addWidget(CitySpacer)
                 self.ListCityScrollArea.setStyleSheet("margin-right: 6px")
                 self.ListCityScrollArea.setStyleSheet("margin-right: 10px; background-color: rgba(255,255,255,0.6);")
-
-
-        # # Das layout vor schleifen begin leeren
-        # for oldcitylabel in self.ListCityViewLayout:
-        #     self.ListCityViewLayout.removeWidget(oldcitylabel)
-            #ScrollLayout.addLayout(self.ListCityViewLayout)
-
-            #ScrollLayout.addWidget(CityImage)
-
-            #self.MultiCityViewLayout.addSpacing()
-            #self.MultiCityViewLayout.addStretch()
-
-
-
-            # CityImage = QLabel()
-            # self.orderWindow.ScrollLayout.addWidget(CityImage)
-            # # Spacer nach jeder Vorschau?
-            #
-            # # Platz zwischen Staedten lassen
-            # self.orderWindow.ScrollLayout.addStretch()
-    """
-    def PrevStadt(self, stadtstelle):
-        # c = self.cruiseData[2]
-        # cityviewlist = c.split(", ")
-        # #stadtanzahl = c.count(",") + 1
-        # # y = stadtanzahl + 1
-        # # max = y+1
-
-        self.currCityIndex -= 1
-        print(self.currCityIndex)
-
-        if self.currCityIndex == 0:
-            self.PrevStadtButton.hide()
-        else:
-            self.PrevStadtButton.show()
-            self.NextStadtButton.show()
-        return self.currCityIndex
-
-    def NextStadt(self, stadtstelle):
-        c = self.cruiseData[2]
-        # cityviewlist = c.split(", ")
-        stadtcount = c.count(",") + 1
-        # x = cityviewlist
-        # # y = stadtanzahl
-        # # max = y+1
-
-        self.currCityIndex += 1
-        print(self.currCityIndex)
-        #print(stadtcount)
-
-        if self.currCityIndex + 1 == stadtcount:
-            self.NextStadtButton.hide()
-        else:
-            self.PrevStadtButton.show()
-            self.NextStadtButton.show()
-        return self.currCityIndex
-
-    """
-
-    # def stadtbuttons(self, stadtstelle):
-    #     # if i == 0:
-    #     #     self.PrevStadtButton.isEnabled() == False
-    #     # elif i == max:
-    #     #     self.NextStadtButton.isEnabled() == False
-    #     # else:
-    #     #     self.PrevStadtButton.isEnabled() == True
-    #     #     self.NextStadtButton.isEnabled() == True
-    #
-    #     if self.PrevStadtButton.clicked():
-    #         #i = i - i
-    #         self.stadtstelle -= 1
-    #         #return self.stadtstelle
-    #     elif self.NextStadtButton.clicked():
-    #         #i = i + 1
-    #         self.stadtstelle += 1
-    #         #return self.stadtstelle
-    #
-    #     c = self.cruiseData[2]
-    #     # cityviewlist = c.split(", ")
-    #     stadtcount = c.count(",") + 1
-    #     # = cityviewlist
-    #     # y = stadtanzahl
-    #     # max = y+1
-    #
-    #     if self.stadtstelle == 0:
-    #         self.PrevStadtButton.hide()
-    #     else:
-    #         self.PrevStadtButton.show()
-    #
-    #     if self.stadtstelle + 1 == stadtcount:
-    #         self.NextStadtButton.hide()
-    #     else:
-    #         self.NextStadtButton.show()
-    #
-    #
-    #     return self.stadtstelle
-
-
-
-
-        # while i > 0:
-        #     if self.PrevStadtButton.clicked():
-        #         i-1
-        #         #self.LaStadt.setText("Stadt: " + './data/images/Hafenstädte' + x[i] + '.jpg')
-        # while i < max:
-        #     if self.NextStadtButton.clicked():
-        #         i+1
-                  #self.LaStadt.setText("Stadt: " + './data/images/Hafenstädte' + x[i] + '.jpg')
-
-        # self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + cityviewlist[i] + '.jpg')
-        # StadtViewPixmap = self.displayWindow.StadtViewPixmap.scaled(
-        #     QtCore.QSize(350, 222),
-        #     Qt.KeepAspectRatioByExpanding,
-        #     Qt.SmoothTransformation
-        # )
-        # self.orderWindow.StadtView.setPixmap(StadtViewPixmap)
-        # self.LaStadt.setText("Stadt: " + './data/images/Hafenstädte' + cityviewlist[i] + '.jpg')
-
-
 
 
 # Class to show Cruisship image
@@ -1027,8 +722,6 @@ class Window(QMainWindow):
 
         # Zu besuchende Staedte
         self.StadtLabel = QLabel()
-        #self.StadtLabelErgebnis = QLabel()  # Label zum Anzeigen der Auswahl
-        # self.StadtLabelErgebnis.setStyleSheet("background-color: white;")
         self.StadtLabel.setText("Städte")
         self.StadtLabel.setStyleSheet("font-size: 12pt;font-weight: bold; background-color: rgba(255, 255, 255, 0.6);")
         self.StadtLabel.setAlignment(QtCore.Qt.AlignCenter)
@@ -1037,8 +730,6 @@ class Window(QMainWindow):
 
         # Schiffstyp Auswahl
         self.SchiffsTypLabel = QLabel()
-        #self.SchiffsTypLabelErgebnis = QLabel()  # Label zum Anzeigen der Auswahl
-        # self.SchiffsTypLabelErgebnis.setStyleSheet("background-color: white;")
         self.SchiffsTypLabel.setText("Schiffstyp")
         self.SchiffsTypLabel.setStyleSheet("font-size: 12pt;font-weight: bold; background-color: rgba(255, 255, 255, 0.6);")
         self.SchiffsTypLabel.setAlignment(QtCore.Qt.AlignCenter)
@@ -1047,7 +738,6 @@ class Window(QMainWindow):
         # Such Knopf
         self.SearchButton = QPushButton()
         self.SearchButton.setText("Suchen")
-        # self.SearchButton.setGeometry(730, 20, 61, 41)
         self.SearchButton.setAutoFillBackground(True)
         self.SearchButton.setStyleSheet("background-color: rgb(0, 130, 0); color: white; font-size: 11pt")
 
@@ -1060,23 +750,18 @@ class Window(QMainWindow):
         # adding Widgets to the Grid-layout   (widget, row, column, alignment)
         FilterGridLayout.addWidget(self.RegionLabel, 1, 1)
         FilterGridLayout.addWidget(self.RegionComboBox, 2, 1)
-        #FilterGridLayout.addWidget(self.RegionLabelErgebnis, 3, 1)
 
         FilterGridLayout.addWidget(self.NachtLabel, 1, 2)
         FilterGridLayout.addWidget(self.NachtSpinBox, 2, 2)
-        #FilterGridLayout.addWidget(self.NachtLabelErgebnis, 3, 2)
 
         FilterGridLayout.addWidget(self.StadtLabel, 1, 3)
         FilterGridLayout.addWidget(self.StadtComboBox, 2, 3)
-        #FilterGridLayout.addWidget(self.StadtLabelErgebnis, 3, 3)
 
         FilterGridLayout.addWidget(self.SchiffsTypLabel, 1, 4)
         FilterGridLayout.addWidget(self.SchiffsTypComboBox, 2, 4)
-        #FilterGridLayout.addWidget(self.SchiffsTypLabelErgebnis, 3, 4)
 
         FilterGridLayout.addWidget(self.SearchButton, 2, 5)
         FilterGridLayout.addWidget(self.ResetButton, 1, 5)
-        # myLayout.addStretch()
 
         # add items to Region CB
         self.RegionComboBox.addItem("Ostsee")
@@ -1084,9 +769,6 @@ class Window(QMainWindow):
         self.RegionComboBox.addItem("Mittelmeer")
         self.RegionComboBox.activated.connect(self.updateCityFilter)
 
-        # traversing items
-        # for i in range(1):         # setzt leere checkboxen vor die items (Fehler: for i in range(i) ist die anzahl
-        # wie viele items eine box bekommen aber auch wie oft die items ge-added werden
 
         # add items to StadtComboBox with Image Tooltip
         for city_num, city in enumerate(getCityList()):
@@ -1098,11 +780,6 @@ class Window(QMainWindow):
                                                QtCore.Qt.ToolTipRole)
             else:
                 self.StadtComboBox.setItemData(city_num, "Kein Vorschaubild vorhanden", QtCore.Qt.ToolTipRole)
-
-            # item = self.StadtComboBox.model().item(i, 0)
-
-            # setting item unchecked
-            # item.setCheckState(Qt.Unchecked)
 
         # add items to Schiffstyp
         for j, i in enumerate(["A", "B", "C", "D", "E", "F"]):
@@ -1116,17 +793,12 @@ class Window(QMainWindow):
             else:
                 self.SchiffsTypComboBox.setItemData(j, "Kein Vorschaubild vorhanden", QtCore.Qt.ToolTipRole)
 
-        # self.SearchComponents() # calling method
         self.show()
 
         # adding action to button
-        # self.RegionComboBox = QComboBox(self)
         self.SearchButton.pressed.connect(self.Search)
         self.ResetButton.pressed.connect(self.Reset)
         self.sendSelectionButton.pressed.connect(self.sendData)
-        # self.RegionLabelErgebnis = QLabel(self)
-        # self.RegionComboBox.setGeometry(100, 100, 200, 50)
-
 
 
     def updateCityFilter(self):
@@ -1172,44 +844,10 @@ class Window(QMainWindow):
         data = []
 
         for x in range(1, 8):
-            # data.append(self.table_view.horizontalHeaderItem(x).text())
             data.append(self.table_view.item(currRow, x).text())
-
-
 
         # Übergabe des Datensatzes der ausgewählten Reise
         self.orderWindow.cruiseData = data
-
-
-
-
-        # if self.orderWindow.cruiseData[4] == 'nicht vorhanden':
-        #     self.orderWindow.InnenPreis.setCheckable(False)
-        # else:
-        #     self.orderWindow.InnenPreis.setCheckable(True)
-        # if self.orderWindow.cruiseData[5] == 'nicht vorhanden':
-        #     self.orderWindow.AussenPreis.setCheckable(False)
-        # else:
-        #     self.orderWindow.AussenPreis.setCheckable(True)
-        # if self.orderWindow.cruiseData[6] == 'nicht vorhanden':
-        #     self.orderWindow.BalkonPreis.setCheckable(False)
-        # else:
-        #     self.orderWindow.BalkonPreis.setCheckable(True)
-
-
-        """
-        self.orderWindow.LaRegion.setText("Region: " + data[0])
-        self.orderWindow.LaUebernachtungen.setText("Uebernachtungen: " + data[1])
-        #self.orderWindow.LaStadt.setText("Staedte: " + data[2])
-        self.orderWindow.LaBuchungsnummer.setText("Buchungsnummer: " + str(random.randrange(2, 999999, 2)))
-        self.orderWindow.InnenPreis.setText("Innenkabine\nPreis: " + data[4])
-        self.orderWindow.AussenPreis.setText("Aussenkabine\nPreis: " + data[5])
-        self.orderWindow.BalkonPreis.setText("Balkonkabine \nPreis: " + data[6])
-        """
-
-        # Gesamtpreis notwendig, wenn es keine Personenauswahl gibt?
-        #
-        # self.orderWindow.LaGestamtpreis.setText("Summe: " + str())
 
         # Funktion ausführen zum Anzeigen des Fensters
         self.orderWindow.displayWindow()
@@ -1255,13 +893,6 @@ class Window(QMainWindow):
 
         FilterErgebnis = [region, naechte, staedte, typ]
 
-        # showing content on the screen though label
-        #self.RegionLabelErgebnis.setText("Region: " + str(region))
-        #self.NachtLabelErgebnis.setText("Uebernachtungen: " + str(naechte))
-        #self.StadtLabelErgebnis.setText("Staedte: " + str(staedte))
-        #self.SchiffsTypLabelErgebnis.setText("Schiffstyp: " + str(typ))
-
-
         # Reset old Filter before applying new one
         for row_count in range(self.table_view.rowCount()):
             self.table_view.showRow(row_count)
@@ -1283,15 +914,6 @@ class Window(QMainWindow):
                 if check is False:
                     self.table_view.hideRow(row_count)
 
-                """
-                for cityNum, cityElement in enumerate(FilterErgebnis[2]):
-                    # Ändern, dass alle ausgewählten Städte enthalten sein MÜSSEN
-
-                    if cityElement in self.table_view.item(row_count, 3).text():
-                        break
-                    elif cityElement not in self.table_view.item(row_count, 3).text():
-                        self.table_view.hideRow(row_count)
-                """
             # Check Schiffstyp
             if len(FilterErgebnis[3]) != 0:
                 if self.table_view.item(row_count, 4).text() not in FilterErgebnis[3]:
