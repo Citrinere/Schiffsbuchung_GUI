@@ -49,7 +49,7 @@ class PersonalDataDialog(QWidget):
         self.labelElement = None
         self.setWindowTitle("Persönliche Daten")
         self.setWindowIcon(QIcon("data\images\SchiffIcon.png"))
-        self.buchungsData = []
+        self.buchungsData = ["lol"]
         self.setFixedWidth(300)
         self.setFixedHeight(440)
         self.setStyleSheet("font-size: 12px; background-color: rgb(200, 255, 255);") #
@@ -92,19 +92,20 @@ class PersonalDataDialog(QWidget):
     # Save Input Data and close Window
     def saveData(self):
 
-        #Test Print
-        print("Uebertragungs Test")
-        print(self.buchungsData)
+        # Test Print
+        # print("Uebertragungs Test")
+        # print("Test: ", self.buchungsData)#, self.buchungsData)
+        # print("Test zwei:", self.bestellData)
 
         textboxValue = []
-        textboxValue.append(self.buchungsData)
+        #textboxValue.append(self.confirmOrder.bestellData)                     # lässt das programm am ende abstürzen
         # Get Data from all QLineEdit Widgets in Window Layout
         for i in range(0, 3):
             groupWidget = self.PersonalDataLayout.itemAtPosition(i, 0)
             for textWidget in groupWidget.widget().children():
                 if isinstance(textWidget, QLineEdit):
                     textboxValue.append(textWidget.text())
-
+        print(textboxValue)
         # Save Data to file
         with open('data\PersonDaten.txt', 'w') as file:
             file.write('\n'.join(textboxValue))
@@ -135,7 +136,7 @@ class OrderWindow(QWidget):
         self.personalDataDialog = PersonalDataDialog()
         self.cruiseData = []
         self.cityData = []
-        self.bestellData = []
+        # self.bestellData = []
         self.currCityIndex = 0
         self.setWindowTitle('Bestellung')
         self.setWindowIcon(QIcon("data\images\SchiffIcon.png"))
@@ -382,13 +383,14 @@ class OrderWindow(QWidget):
     def confirmOrder(self):
         self.personalDataDialog.displayDialog()
 
-        print("Uebergabe an DialogWindow")
-        self.bestellData.append(str(self.LaBuchungsnummer.text()))
-        self.bestellData.append(self.cruiseData[0:4])
-        self.bestellData.append(str(self.LaGesamtpreis.text()))
-        print(self.bestellData)
+        # print("Uebergabe an DialogWindow")
+        # self.bestellData.append(str(self.LaBuchungsnummer.text()))      # buchungsnammer anhängen
+        # self.bestellData.append(self.cruiseData[0:4])                   # Region bis Typ anhängen
+        # self.bestellData.append(str(self.LaGesamtpreis.text()))         # Summe anhängen
+        # print("bestelldata:", self.bestellData)
         # Ab der Zeile bricht das Progamm ab
-        # self.PersonalDataDialog.bestellData = buchungsData
+        # self.PersonalDataDialog.bestellData = self.buchungsData
+        # print("buchungsdata:", self.orderWindow.buchungsData)
 
         self.close()
 
