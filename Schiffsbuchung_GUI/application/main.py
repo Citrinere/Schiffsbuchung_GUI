@@ -157,15 +157,15 @@ class OrderWindow(QWidget):
         BestellGridLayout = QGridLayout()
 
         # Create Child Layouts and Widgets
-        # Layout fuer Schiffstyp(Vorschau), Region, Uebernachtungen, Buchungsnummer
+        # Layout for Schiffstyp(Vorschau), Region, Uebernachtungen, Buchungsnummer
         self.LaInform = QLabel("Hier sehen Sie die Zusammenfassung Ihrer ausgewählten Reise.\nWählen Sie bitte noch Ihre gewünschte Kabinenart aus:")
         self.LaInform.setStyleSheet("font-size: 18px; background-color: rgb(255,255,255); padding-left: 8px; border-radius: 20px")
         BestellGridLayout.addWidget(self.LaInform, 0, 0, 1, 0)      # row, column, row-span, column-span
 
-        # ===== VerticalLayout ===== LayoutBox für Schiffstyp- & Staedtebilder Widget
+        # VerticalLayout = LayoutBox for Schiffstyp- & Staedtebilder Widget
         self.VerticalLayoutLO = QVBoxLayout()
 
-        # ===== Schiffstyp Layout ===== LayoutBox für Schiffstyp-Widget
+        # Schiffstyp Layout = LayoutBox for Schiffstyp-Widget
         self.SchiffstypLayout = QVBoxLayout()
         self.SchiffsTypVorschau = QLabel(self)
         self.SchiffsTypVorschau.resize(330, 202)
@@ -175,7 +175,7 @@ class OrderWindow(QWidget):
         self.SchiffstypLayout.addWidget(self.SchiffsTyp)
         self.VerticalLayoutLO.addLayout(self.SchiffstypLayout)
 
-        # ===== Reise Informationen ===== Anzeige der Informationen zur ausgewaehlten Reise
+        # Cruise information = Shows region, "Uebernachtungen" & Order number
         self.LaRegion = QLabel("Region: ")
         self.VerticalLayoutLO.addWidget(self.LaRegion)
         self.LaUebernachtungen = QLabel("Übernachtungen: ")
@@ -183,7 +183,7 @@ class OrderWindow(QWidget):
         self.LaBuchungsnummer = QLabel()
         self.VerticalLayoutLO.addWidget(self.LaBuchungsnummer)
 
-        # ===== StaedteViewChangeButton ===== Button zum Wechseln der Bilderansicht von Einzelnen Bilder zu einer Bilderliste
+        # StaedteViewChangeButton = Button to change between single Image-View or Scroll-Area-View
         # Create Menu to switch City View
         self.changeCityViewButton = QPushButton("Städte-Ansicht wechseln", self)
         self.changeCityViewButton.setFixedWidth(350)
@@ -200,7 +200,7 @@ class OrderWindow(QWidget):
         self.VerticalLayoutLO.addWidget(self.changeCityViewButton)
         self.changeCityViewButton.resize(self.changeCityViewButton.sizeHint())
 
-        # ===== Single City Image Layout ===== Layout Information für einzelne Bilderanzeige
+        # Single City Image Layout = Layout Information for single Image-View
         self.SingleCityView = QWidget()                             # Pack Single-City-Preview-Layout in a Widget, to allow hiding it
         self.SingleCityViewLayout = QVBoxLayout()
         self.SingleCityView.setLayout(self.SingleCityViewLayout)
@@ -210,9 +210,9 @@ class OrderWindow(QWidget):
 
 
 
-        # Scroll-Area mit Widget darin, mit Layout darin
-        self.ListCityScrollArea = QScrollArea(self)                                     # Scrollarea erstellen
-        self.ListCityScrollArea.setWidgetResizable(True)                                # Scroll-Area resizable machen
+        # Scroll-Area-View Widget & Layout
+        self.ListCityScrollArea = QScrollArea(self)                                     # create Scroll-Area
+        self.ListCityScrollArea.setWidgetResizable(True)                                # make Scroll-Area resizable
         self.ListCityScrollArea.setFixedHeight(202)
         #ListCityScrollArea.setContentsMargins(, 0, 0, 0, 0)
         self.ScrollContent = QWidget(self.ListCityScrollArea)                           # Inhalt-Widget mit Scrollarea als parent?
@@ -235,7 +235,7 @@ class OrderWindow(QWidget):
         self.SingleCityViewLayout.addWidget(self.LaStadt)  # Hinzufuegen des Widgets in das QVBoxlayout
         self.hPrevNextButtonLayout = QHBoxLayout()  # Horizontales Box Layout um die Buttons nebeneinander zu haben
 
-        # ===== Bilder Vor- & Zurueckbuttons =====
+        # Single Image-View back & forward buttons
         self.PrevStadtButton = QPushButton("Vorherige Stadt")
         self.PrevStadtButton.setStyleSheet("background-color: rgb(208, 255, 163);")
         self.NextStadtButton = QPushButton("Naechste Stadt")
@@ -250,8 +250,7 @@ class OrderWindow(QWidget):
         BestellGridLayout.addLayout(self.VerticalLayoutLO, 1, 0, 3, 1, )  # row, column, r-span, c-span
 
 
-        # Layout fuer Kabinen-Preise und Vorschau
-        # ===== KabinenLayout ===== LayoutBox zur Auswahl der zu Buchbaren Kabine
+        # Layout for Cabin prices & images
         self.hKabinenLayout = QHBoxLayout()
         BestellGridLayout.addLayout(self.hKabinenLayout, 1, 1,)
         self.vKabinenPreisLayout = QVBoxLayout()
@@ -271,7 +270,7 @@ class OrderWindow(QWidget):
         self.vKabinenVorschauLayout.addWidget(self.BalkonVorschau)
         self.hKabinenLayout.addLayout(self.vKabinenVorschauLayout)
 
-        # ===== BestaetigungsLayout ===== LayoutBox welche den Summenpreis & Buchungsbutton beinhaltet
+        # "BestaetigungsLayout" = LayoutBox which contains the cabin price & confirm button
         self.vBestaetigungsLayout = QVBoxLayout()
         self.LaGesamtpreis = QLabel("Summe: ......€")
         self.LaGesamtpreis.setStyleSheet("font-size: 12pt")
@@ -283,7 +282,6 @@ class OrderWindow(QWidget):
         self.vBestaetigungsLayout.addWidget(self.ConfirmButton)
         # BestellGridLayout.addWidget(self.ConfirmButton, 1, 1)
         BestellGridLayout.addLayout(self.vBestaetigungsLayout, 2, 1)
-        # ===== Festlegung & Bestätigung des Layouts =====
         self.setLayout(BestellGridLayout)
 
     # Confirm Order, open personalDataDialog
@@ -300,7 +298,7 @@ class OrderWindow(QWidget):
         self.LaGesamtpreis.setText("Summe: ......€")    # zuruecksetzen des Gesamtpreises bei aufruf des Fensters
 
 
-        # Radiobutton auswahl bei neuem fenster entfernen durch aus und wieder anschalten
+        # Reset Radiobutton selection by turning them off and on again
         self.InnenPreis.setCheckable(False)
         self.InnenPreis.setCheckable(True)
         self.AussenPreis.setCheckable(False)
@@ -377,13 +375,13 @@ class OrderWindow(QWidget):
         self.changeCityView("single")
         self.show()
 
-        # radiobutton mit funktion verbinden
+        # connect radiobutton with functions
         self.InnenPreis.clicked.connect(self.summecheck)
         self.AussenPreis.clicked.connect(self.summecheck)
         self.BalkonPreis.clicked.connect(self.summecheck)
 
 
-        # pruefen ob eine kabine nicht vorhanden ist und das anklicken verhindern
+        # check if a Cabin is unavailable
         if self.cruiseData[4] == 'nicht vorhanden':
             self.InnenPreis.setCheckable(False)
         else:
@@ -398,7 +396,7 @@ class OrderWindow(QWidget):
             self.BalkonPreis.setCheckable(True)
 
 
-    # Funktion um Summe passend zur Auswahl zu setzen
+    # function to check if sum is correct to selection
     def summecheck(self):
         if self.InnenPreis.isChecked():
             self.LaGesamtpreis.setText("Summe: " + self.cruiseData[4])
@@ -419,7 +417,7 @@ class OrderWindow(QWidget):
 
             self.LaStadt.setText("Stadt: " + self.cityData[self.currCityIndex])
 
-            # prüfen ob Bild vorhanden ist
+            # check for images
             if file_exists('data/images/Hafenstädte/' + self.cityData[self.currCityIndex] + '.jpg') == True:
                 self.StadtViewPixmap = QPixmap('data/images/Hafenstädte/' + self.cityData[self.currCityIndex] + '.jpg')
                 StadtViewPixmap = self.StadtViewPixmap.scaled(
@@ -444,17 +442,19 @@ class OrderWindow(QWidget):
             self.NextStadtButton.hide()
 
     def changeCityView(self, keyword):
+        # if "single" open Single-Image-View
         if keyword == "single":
             self.SingleCityView.show()
             self.ListCityView.hide()
             self.ListCityScrollArea.hide()
 
-            # Leeren des ListCityViewLayouts in der ScrollArea
+            # empty ListCityViewLayout in the ScrollArea
             for city in reversed(range(self.ListCityViewLayout.count())):
                 self.ListCityViewLayout.itemAt(city).widget().setParent(None)
 
 
             #self.OrderWindow.ListCityScrollArea.hide()
+        # if "list" open Scrollarea-Image-View
         elif keyword == "list":
             self.SingleCityView.hide()
             self.ListCityView.show()
@@ -467,7 +467,7 @@ class OrderWindow(QWidget):
                 CityName.setStyleSheet("background-color: rgba(255, 255, 255, 0.6); font-size: 10pt; border-radius: 10px; padding: 2px; margin-left: 2px; margin-right: 12px")
                 self.ListCityViewLayout.addWidget(CityName)
 
-                # # Bild erstellen
+                # create Image
                 CityImage = QLabel()
                 if file_exists('data/images/Hafenstädte/' + city + '.jpg') == True:
                     self.CityImagePixmap = QPixmap('data/images/Hafenstädte/' + city + '.jpg')
@@ -552,7 +552,7 @@ class CheckableComboBox(QComboBox):
     def hidePopup(self):
         if not self._changed:
             super(CheckableComboBox, self).hidePopup()
-        self._changed = False  # verhindert, dass wenn die combobox geoeffnett ist, man nichts anderes anklicken kann
+        self._changed = False  # makes that only the combobox can be clicked, when it´s opened
 
     def itemChecked(self, index):
         item = self.model().item(index, self.modelColumn())
@@ -604,7 +604,7 @@ class TableView(QTableWidget):
 
 
 
-        # Schleife, die alle Tabellenelemente durchgeht
+        # Reading the Excel sheet
         for row_number, row_data in enumerate(self.data):
             for column_number, column_data in enumerate(row_data):
 
@@ -702,7 +702,7 @@ class Window(QMainWindow):
         self.setCentralWidget(myQWidget)
 
         # creating widgets and their details
-        # Region Auswahl
+        # Region selection
         self.RegionLabel = QLabel()
         #self.RegionLabelErgebnis = QLabel()  # Label zum Anzeigen der Auswahl
         # self.RegionLabelErgebnis.setStyleSheet("background-color: white;")
@@ -711,7 +711,7 @@ class Window(QMainWindow):
         self.RegionLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.RegionComboBox = CheckableComboBox()
 
-        # Uebernachtungen Anzahl
+        # Uebernachtungen selection
         self.NachtLabel = QLabel()
         #self.NachtLabelErgebnis = QLabel()  # Label zum Anzeigen der Auswahl
         # self.NachtLabelErgebnis.setStyleSheet("background-color: white; border-color: black;")
@@ -722,7 +722,7 @@ class Window(QMainWindow):
         self.NachtSpinBox.setMinimum(7)
         self.NachtSpinBox.setMaximum(21)
 
-        # Zu besuchende Staedte
+        # Cities
         self.StadtLabel = QLabel()
         self.StadtLabel.setText("Städte")
         self.StadtLabel.setStyleSheet("font-size: 12pt;font-weight: bold; background-color: rgba(255, 255, 255, 0.6);")
@@ -730,20 +730,20 @@ class Window(QMainWindow):
         self.StadtComboBox = CheckableComboBox()
         # self.StadtComboBox.setGeometry(QtCore.QRect(310, 70, 200, 41))
 
-        # Schiffstyp Auswahl
+        # Schiffstype
         self.SchiffsTypLabel = QLabel()
         self.SchiffsTypLabel.setText("Schiffstyp")
         self.SchiffsTypLabel.setStyleSheet("font-size: 12pt;font-weight: bold; background-color: rgba(255, 255, 255, 0.6);")
         self.SchiffsTypLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.SchiffsTypComboBox = CheckableComboBox()
 
-        # Such Knopf
+        # Search Button
         self.SearchButton = QPushButton()
         self.SearchButton.setText("Suchen")
         self.SearchButton.setAutoFillBackground(True)
         self.SearchButton.setStyleSheet("background-color: rgb(0, 130, 0); color: white; font-size: 11pt")
 
-        # Reset Knopf
+        # Reset Button
         self.ResetButton = QPushButton()
         self.ResetButton.setText("Filter zurücksetzen")
         self.ResetButton.setAutoFillBackground(True)
@@ -848,10 +848,10 @@ class Window(QMainWindow):
         for x in range(1, 8):
             data.append(self.table_view.item(currRow, x).text())
 
-        # Übergabe des Datensatzes der ausgewählten Reise
+        # Transfer the Data of choosen cruise
         self.orderWindow.cruiseData = data
 
-        # Funktion ausführen zum Anzeigen des Fensters
+        # Open new Window => orderWindow
         self.orderWindow.displayWindow()
 
     # Reset Filter with nothing selected and Übernachtungen = 7
