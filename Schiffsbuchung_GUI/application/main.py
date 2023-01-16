@@ -61,6 +61,7 @@ class PersonalDataDialog(QWidget):
 
         self.PersonalDataLayout = QGridLayout()
         self.InformationLabel = QLabel("Geben Sie Ihre Kontaktinformationen und\nBankverbindung an, um die Bestellung abzuschließen.")
+        self.InformationLabel.setStyleSheet("font-size: 12px; background-color: rgb(255,255,255); padding-left: 8px; border-radius: 10px")
         self.PersonalDataLayout.addWidget(self.InformationLabel)
 
         # Add Personal Information Input
@@ -88,6 +89,7 @@ class PersonalDataDialog(QWidget):
             self.labelElement = QLabel(element)
             self.editElement = QLineEdit(self)
             self.editElement.resize(280, 20)
+            self.editElement.setStyleSheet("background-color: rgb(255,255,255)")
 
             vLayout.addWidget(self.labelElement)
             vLayout.addWidget(self.editElement)
@@ -338,7 +340,7 @@ class OrderWindow(QWidget):
         self.LaBuchungsnummer.setText("Buchungsnummer: " + str(random.randrange(2, 999999, 2)))
         self.LaBuchungsnummer.setStyleSheet("background-color: rgba(255, 255, 255, 0.6); font-size: 11pt; border-radius: 10px; margin-right: 150px;")
         self.SchiffsTyp.setText("Schiffstyp: " + self.cruiseData[3])
-        self.SchiffsTyp.setStyleSheet("background-color: rgba(255, 255, 255, 0.6); font-size: 11pt; border-radius: 40%; margin-right: 20px; ")
+        self.SchiffsTyp.setStyleSheet("background-color: rgba(255, 255, 255, 0.6); font-size: 11pt; border-radius: 10px; margin-right: 20px; ")
         self.SchiffsTypPixmap = QPixmap('data/images/Schiffstypen/Schiffstyp ' + str(self.cruiseData[3]))
 
         img_width = self.SchiffsTypPixmap.size().width()
