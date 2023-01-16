@@ -4,10 +4,10 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
 
-from os.path import exists as file_exists
+from os.path import exists as file_exists   # To check, if files exists
 import sys
 import random
-import pandas
+import pandas                               # Read Excel file
 
 IMGPATH = r'data\images\Schiffstypen'  # Schiffstypen Bilder
 TABLEPATH = r'data\Schiffreisen.xlsx'  # Excel Tabelle
@@ -18,7 +18,7 @@ def getTable():
     df = pandas.read_excel(TABLEPATH, header=3, usecols=lambda x: 'Unnamed' not in x, skiprows=range(25, 29))
     dfList = df.values.tolist()
 
-    return dfList
+    return dfList   # Returns List
 
 
 # Get a list of citynames depending on selected region
@@ -52,17 +52,21 @@ class PersonalDataDialog(QWidget):
         self.setWindowTitle("Persönliche Daten")
         self.setWindowIcon(QIcon("data\images\SchiffIcon.png"))
         self.buchungsData = []
-        self.setFixedWidth(300)
-        self.setFixedHeight(440)
+        self.setFixedWidth(340)
+        self.setFixedHeight(480)
         self.setStyleSheet("font-size: 12px; background-color: rgb(200, 255, 255);") #
 
 
 
-        # Add Personal Information Input
+
         self.PersonalDataLayout = QGridLayout()
-        self.PersonalDataLayout.addWidget(self.createDialog("Name", ["Nachname", "Vorname"]), 0, 0)
-        self.PersonalDataLayout.addWidget(self.createDialog("Adresse", ["Postleitzahl", "Ort", "Straße, Hausnummer"]), 1, 0)
-        self.PersonalDataLayout.addWidget(self.createDialog("Bankdaten", ["IBAN"]), 2, 0)
+        self.InformationLabel = QLabel("Geben Sie Ihre Kontaktinformationen und\nBankverbindung an, um die Bestellung abzuschließen.")
+        self.PersonalDataLayout.addWidget(self.InformationLabel)
+
+        # Add Personal Information Input
+        self.PersonalDataLayout.addWidget(self.createDialog("Name", ["Nachname", "Vorname"]), 1, 0)
+        self.PersonalDataLayout.addWidget(self.createDialog("Adresse", ["Postleitzahl", "Ort", "Straße, Hausnummer"]), 2, 0)
+        self.PersonalDataLayout.addWidget(self.createDialog("Bankdaten", ["IBAN"]), 3, 0)
 
         # Save Button
         self.saveButton = QPushButton("Abspeichern", self)
@@ -94,6 +98,7 @@ class PersonalDataDialog(QWidget):
     # Save Input Data and close Window
     def saveData(self):
 
+        isFilled = True
         self.OrderWindow = OrderWindow()
         textboxValue = []
         # Get Data from all QLineEdit Widgets in Window Layout
@@ -101,19 +106,32 @@ class PersonalDataDialog(QWidget):
             groupWidget = self.PersonalDataLayout.itemAtPosition(i, 0)
             for textWidget in groupWidget.widget().children():
                 if isinstance(textWidget, QLineEdit):
+                    if not textWidget.text():   # Check if all QLineEdits are filled with text
+                        isFilled = False
                     textboxValue.append(textWidget.text())
 
-        # Save Data to file
-        with open('data\PersonDaten.txt', 'w') as file:
-            file.write('\n'.join(textboxValue))
+        # Finish Saving, when all QLines are filled
+        if isFilled == True:
+            # Save Data to file
+            with open('data\PersonDaten.txt', 'w') as file:
+                file.write('\n'.join(textboxValue))
 
-        # Close Window and inform User about completion
-        self.close()
-        finishDialog = QMessageBox(self)
-        finishDialog.setWindowTitle("Bestellung abgeschlossen")
-        finishDialog.setText(
-            "Bestellung abgeschlossen.\nSie können das Programm nun schließen oder weitere Reisen buchen.")
-        finishDialog.exec()
+            # Close Window and inform User about completion
+            self.close()
+            finishDialog = QMessageBox(self)
+            finishDialog.setWindowTitle("Bestellung abgeschlossen")
+            finishDialog.setText(
+                "Bestellung abgeschlossen.\nSie können das Programm nun schließen oder weitere Reisen buchen.")
+            finishDialog.exec()
+
+        # Else inform user
+        else:
+            noTextDialog = QMessageBox(self)
+            noTextDialog.setWindowTitle("Bitte Ausfüllen")
+            noTextDialog.setText(
+                "Sie müssen alle Felder ausfüllen, um die Bestellung abzuschließen"
+            )
+            noTextDialog.exec()
 
     # Call Window to open
     def displayDialog(self):
@@ -495,6 +513,11 @@ class OrderWindow(QWidget):
                 self.ListCityScrollArea.setStyleSheet("margin-right: 6px")
                 self.ListCityScrollArea.setStyleSheet("margin-right: 10px; background-color: rgba(255,255,255,0.6);")
 
+# ===========================================================================================================================
+#
+# End of orderWindow
+#
+# ===========================================================================================================================
 
 # Class to show Cruisship image
 class ImageCruiseShip(QWidget):
@@ -503,7 +526,6 @@ class ImageCruiseShip(QWidget):
         super(ImageCruiseShip, self).__init__()
 
         if file_exists(image):
-
             self.labelImage = QLabel(self)
             self.pixmap = QPixmap(image)
             img_width = self.pixmap.size().width()
@@ -526,12 +548,6 @@ class ImageCruiseShip(QWidget):
                 x = abs((img_width / (img_height / 128) - 256) / 2) # Get Pixel Difference between scaled Image and original Image (Cut section)
                 self.labelImage.move(int(-x), 0)
 
-
-# ===========================================================================================================================
-#
-# End of orderWindow
-#
-# ===========================================================================================================================
 
 # creating checkable combo box class which will stay open after a selection
 class CheckableComboBox(QComboBox):
@@ -579,7 +595,7 @@ class TableView(QTableWidget):
         self.setData()
 
         self.setStyleSheet(
-            "font-size: 12pt; background-color: rgba(255, 255, 255, 0.6); selection-background-color: rgba(156,222,"
+            "font-size: 12pt; font-weight: bold; background-color: rgba(255, 255, 255, 0.6); selection-background-color: rgba(156,222,"
             "255, 0.8); selection-color: black;")
         self.setSelectionBehavior(QAbstractItemView.SelectRows)  # Whole Row will be marked on click
         self.setSelectionMode(QAbstractItemView.SingleSelection)  # Only one Row can be selected at any time
@@ -604,7 +620,7 @@ class TableView(QTableWidget):
 
 
 
-        # Reading the Excel sheet
+        # Reading the List from Excel sheet
         for row_number, row_data in enumerate(self.data):
             for column_number, column_data in enumerate(row_data):
 
@@ -632,7 +648,7 @@ class TableView(QTableWidget):
         # Set Header
         self.setHorizontalHeaderLabels(horHeaders)
 
-    # Get resized and repositioned image
+
 
 
 # Main Window
@@ -666,7 +682,7 @@ class Window(QMainWindow):
         self.FilterInfoLabel.setAlignment(QtCore.Qt.AlignCenter)
         ApplicationVerticalLayout.addWidget(self.FilterInfoLabel)
 
-        # Grid Layout for fILTER
+        # Grid Layout for Filter
         FilterGridLayout = QGridLayout()
         FilterGridLayout.setSpacing(5)
         ApplicationVerticalLayout.addLayout(FilterGridLayout)
