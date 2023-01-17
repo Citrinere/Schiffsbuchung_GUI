@@ -104,7 +104,7 @@ class PersonalDataDialog(QWidget):
         self.OrderWindow = OrderWindow()
         textboxValue = []
         # Get Data from all QLineEdit Widgets in Window Layout
-        for i in range(0, 3):
+        for i in range(0, 4):
             groupWidget = self.PersonalDataLayout.itemAtPosition(i, 0)
             for textWidget in groupWidget.widget().children():
                 if isinstance(textWidget, QLineEdit):
